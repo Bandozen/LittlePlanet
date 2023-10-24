@@ -6,5 +6,6 @@ COPY .env /app/.env
 COPY build/libs/server-0.0.1-SNAPSHOT.jar /app/server-0.0.1-SNAPSHOT.jar
 # 외부와 통신할 포트 지정
 EXPOSE 8080
+EXPOSE 18080
 # 컨테이너가 시작될 때 실행할 명령 지정
 CMD ["java", "-jar", "/app/server-0.0.1-SNAPSHOT.jar"]
