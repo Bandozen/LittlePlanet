@@ -6,9 +6,7 @@ function MainPage() {
 	return (
 		<div>
 			<NavBar />
-			<div>
-				<Main />
-			</div>
+			<Main />
 		</div>
 	);
 }
