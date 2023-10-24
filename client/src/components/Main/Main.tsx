@@ -1,11 +1,18 @@
 import React from 'react';
-import './Main.css';
+import PlayButton from 'components/Button/PlayButton';
+import { MainWrapper } from './style';
 
 function Main() {
 	return (
-		<div className="main">
-			<h1>메인페이지</h1>
-		</div>
+		<MainWrapper>
+			<div className="bgimage">
+				<div className="main-div">
+					<div className="sub-text">작은 행동으로 성장할 수 있습니다.</div>
+					<div className="main-text">소 행 성</div>
+					<PlayButton />
+				</div>
+			</div>
+		</MainWrapper>
 	);
 }
 
