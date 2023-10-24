@@ -3,7 +3,7 @@ import styled from 'styled-components';
 
 export const Button = styled.div`
 	.play-btn {
-		font-size: 24px;
+		font-size: 1.5vw;
 		background-color: #faff00;
 		color: black;
 		border: none;
@@ -11,11 +11,11 @@ export const Button = styled.div`
 		border-radius: 40px;
 		cursor: pointer;
 		transition: background-color 0.3s;
-		width: 100px;
-		height: 50px;
-		display: flex; // Flexbox 사용
-		justify-content: center; // 텍스트를 수평 중앙에 배치
-		align-items: center; // 텍스트를 수직 중앙에 배치
+		width: 6vw;
+		height: 4.5vh;
+		display: flex;
+		justify-content: center;
+		align-items: center;
 
 		&:hover {
 			background-color: #188eb7;
