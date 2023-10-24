@@ -1,9 +1,14 @@
 import React from 'react';
+import NavBar from '../components/NavBar/NavBar';
+import Main from '../components/Main/Main';
 
 function MainPage() {
 	return (
 		<div>
-			<h1>소행성 메인페이지</h1>
+			<NavBar />
+			<div>
+				<Main />
+			</div>
 		</div>
 	);
 }
