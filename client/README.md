@@ -52,3 +52,4 @@ npx create-jb-app my-project
 
 # info
 - creator : [Jeonny](https://github.com/wjs5025/)
+
