@@ -13,7 +13,7 @@ export const NavBarWrapper = styled.div`
 	}
 
 	.nav-container h1 {
-		font-size: 1.5rem;
+		font-size: 1.5vw;
 	}
 
 	.nav-container ul {
@@ -26,7 +26,7 @@ export const NavBarWrapper = styled.div`
 		cursor: pointer;
 		transition: color 0.3s ease;
 		margin: 2rem;
-		font-size: 1.5rem;
+		font-size: 1.5vw;
 	}
 
 	.nav-container li:hover {
