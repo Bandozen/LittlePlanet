@@ -17,7 +17,7 @@ const LoginBg = styled.div`
 	}
 	.page-box {
 		background-color: white;
-		height: 70%;
+		height: 50%;
 		opacity: 0.9;
 		border-radius: 30px;
 	}
