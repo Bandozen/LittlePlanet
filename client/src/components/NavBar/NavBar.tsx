@@ -1,4 +1,5 @@
 import React from 'react';
+import { Link } from 'react-router-dom';
 import { NavBarWrapper } from './style';
 import logo from '../../assets/logo.png';
 
@@ -7,13 +8,23 @@ function NavBar() {
 		<NavBarWrapper>
 			<div className="nav-container">
 				<div className="main_logo">
-					<img src={logo} alt="" />
+					<Link to="/">
+						<img src={logo} alt="" />
+					</Link>
 				</div>
 				<ul>
-					<li>시뮬레이션</li>
-					<li>게임</li>
-					<li>마이페이지</li>
-					<li>로그인 / 회원가입</li>
+					<Link to="/simulationlist">
+						<li>시뮬레이션</li>
+					</Link>
+					<Link to="/gamelist">
+						<li>게임</li>
+					</Link>
+					<Link to="/mypage">
+						<li>마이페이지</li>
+					</Link>
+					<Link to="/login">
+						<li>(임시)로그인</li>
+					</Link>
 				</ul>
 			</div>
 		</NavBarWrapper>
