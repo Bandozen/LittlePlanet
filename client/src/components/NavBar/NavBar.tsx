@@ -1,6 +1,6 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
-import { NavBarWrapper } from './style';
+import { NavBarWrapper, NavBarLink } from './style';
 import logo from '../../assets/logo.png';
 
 function NavBar() {
@@ -13,18 +13,26 @@ function NavBar() {
 					</Link>
 				</div>
 				<ul>
-					<Link to="/simulationlist">
-						<li>시뮬레이션</li>
-					</Link>
-					<Link to="/gamelist">
-						<li>게임</li>
-					</Link>
-					<Link to="/mypage">
-						<li>마이페이지</li>
-					</Link>
-					<Link to="/login">
-						<li>(임시)로그인</li>
-					</Link>
+					<li>
+						<NavBarLink to="/simulationlist" className={({ isActive }) => (isActive ? 'active' : '')}>
+							시뮬레이션
+						</NavBarLink>
+					</li>
+					<li>
+						<NavBarLink to="/gamelist" className={({ isActive }) => (isActive ? 'active' : '')}>
+							게임
+						</NavBarLink>
+					</li>
+					<li>
+						<NavBarLink to="/mypage" className={({ isActive }) => (isActive ? 'active' : '')}>
+							마이페이지
+						</NavBarLink>
+					</li>
+					<li>
+						<NavBarLink to="/login" className={({ isActive }) => (isActive ? 'active' : '')}>
+							(임시)로그인
+						</NavBarLink>
+					</li>
 				</ul>
 			</div>
 		</NavBarWrapper>
