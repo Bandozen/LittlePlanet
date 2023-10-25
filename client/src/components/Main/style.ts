@@ -13,7 +13,6 @@ export const MainWrapper = styled.div`
 		flex-direction: row-reverse;
 		align-items: center;
 	}
-
 	.main-div {
 		display: flex;
 		flex-direction: column;
@@ -22,11 +21,11 @@ export const MainWrapper = styled.div`
 		margin-right: 4rem;
 	}
 	.main-text {
-		font-size: 5vw;
+		font-size: 5rem;
 		font-weight: bold;
 		padding: 0rem 0rem 3rem 0rem;
 	}
 	.sub-text {
-		font-size: 2.5vw;
+		font-size: 2.5rem;
 	}
 `;
