@@ -6,6 +6,7 @@ function SimulationListPage() {
 	return (
 		<div>
 			<NavBar />
+			<hr />
 			<Simulation />
 		</div>
 	);
