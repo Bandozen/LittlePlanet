@@ -1,5 +1,5 @@
 import React from 'react';
-import NavBar from '../components/NavBar/NavBar';
+import NavBar from 'components/common/NavBar/NavBar';
 import Game from '../components/Game/Game';
 
 function GameListPage() {
