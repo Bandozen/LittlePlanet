@@ -1,8 +1,10 @@
 package project.c203.server.member.service;
 
 import org.springframework.security.authentication.BadCredentialsException;
+import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Service;
 import project.c203.server.config.security.jwt.JwtUtils;
+import project.c203.server.member.dto.MemberEditRequest;
 import project.c203.server.member.dto.MemberLoginRequest;
 import project.c203.server.member.dto.MemberSignupRequest;
 import project.c203.server.member.entity.Member;
@@ -29,10 +31,10 @@ public class MemberService {
 
     public void signup(MemberSignupRequest memberSignupRequest) {
 
-        // 중복 검사
-        if (memberRepository.existsMemberByMemberEmail(memberSignupRequest.getMemberEmail())) {
-            throw new EntityExistsException();
-        }
+//        중복 검사
+//        if (memberRepository.existsMemberByMemberEmail(memberSignupRequest.getMemberEmail())) {
+//            throw new EntityExistsException();
+//        }
 
         Member member = Member.builder()
                 .memberEmail(memberSignupRequest.getMemberEmail())
@@ -44,11 +46,37 @@ public class MemberService {
 
     public String login(MemberLoginRequest memberLoginRequest) {
         Member member = memberRepository.findMemberByMemberEmail(memberLoginRequest.getMemberEmail())
-                .orElseThrow(() -> new EntityNotFoundException("Invalid credentials."));
+                .orElseThrow(() -> new EntityNotFoundException());
         if (!passwordEncoder.matches(memberLoginRequest.getMemberPassword(), member.getMemberPassword())) {
-            throw new BadCredentialsException("Invalid credentials.");
+            throw new BadCredentialsException("");
         }
-        String token = jwtUtils.generateToken(member.getMemberEmail(), member.getMemberSeq());
+        String token = jwtUtils.generateToken(member.getMemberEmail());
         return token;
+    }
+
+    public Member getMemberInfo(Authentication authentication) {
+        String memberEmail = authentication.getName();
+        Member member = memberRepository.findMemberByMemberEmail(memberEmail).get();
+        return member;
+    }
+
+    public void editMemberInfo(Authentication authentication, MemberEditRequest memberEditRequest) {
+        String memberEmail = authentication.getName();
+        Member member = memberRepository.findMemberByMemberEmail(memberEmail).get();
+
+        if (passwordEncoder.matches(memberEditRequest.getMemberPassword(), member.getMemberPassword())) {
+            if (memberEditRequest.getMemberSchool() != null) {
+                member.setMemberSchool(memberEditRequest.getMemberSchool());
+            }
+
+            if (memberEditRequest.getMemberNewPassword() != null) {
+                member.setMemberPassword(passwordEncoder.encode(memberEditRequest.getMemberNewPassword()));
+            }
+
+            memberRepository.save(member);
+        } else {
+            throw new BadCredentialsException("");
+        }
+
     }
 }
