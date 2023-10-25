@@ -16,17 +16,17 @@ import javax.persistence.*;
 @Table( name= "member")
 public class Member {
     @Id
+    @Column(name = "member_seq")
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name="member_seq")
     private Integer memberSeq;
 
-    @Column(name="member_email", unique = true, length = 50)
+    @Column(name = "member_email", unique = true, length = 50)
     private String memberEmail;
 
     @JsonIgnore
-    @Column(name="member_password", length = 64)
+    @Column(name = "member_password", length = 64)
     private String memberPassword;
 
-    @Column(name="member_school", length = 40)
+    @Column(name = "member_school", length = 40)
     private String memberSchool;
 }
