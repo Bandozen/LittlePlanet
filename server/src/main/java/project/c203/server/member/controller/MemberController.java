@@ -2,16 +2,16 @@ package project.c203.server.member.controller;
 
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.authentication.AuthenticationServiceException;
 import org.springframework.security.authentication.BadCredentialsException;
+import org.springframework.security.core.Authentication;
 import org.springframework.validation.BindingResult;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 
+import project.c203.server.member.dto.MemberEditRequest;
 import project.c203.server.member.dto.MemberLoginRequest;
 import project.c203.server.member.dto.MemberSignupRequest;
 import project.c203.server.member.dto.MemberResponse;
@@ -20,6 +20,7 @@ import project.c203.server.member.service.MemberService;
 
 import javax.persistence.EntityExistsException;
 import javax.persistence.EntityNotFoundException;
+import javax.persistence.GeneratedValue;
 import javax.validation.Valid;
 
 @RestController
@@ -27,20 +28,15 @@ import javax.validation.Valid;
 public class MemberController {
     private final MemberService memberService;
 
-    @Autowired
     public MemberController(MemberService memberService) {
         this.memberService = memberService;
     }
 
     @PostMapping("/signup")
     public ResponseEntity<MemberResponse> signup(@Valid @RequestBody MemberSignupRequest memberSignupRequest) {
-        try {
-            memberService.signup(memberSignupRequest);
-            return ResponseEntity.ok(new MemberResponse(true, "회원가입을 성공했습니다."));
-        } catch (EntityExistsException ex) {
-            return ResponseEntity.status(HttpStatus.CONFLICT)
-                    .body(new MemberResponse(false, "회원가입을 실패했습니다. 이미 존재하는 사용자입니다."));
-        }
+        memberService.signup(memberSignupRequest);
+        return ResponseEntity.status(HttpStatus.CREATED)
+                .body(new MemberResponse(true, "회원가입에 성공했습니다."));
     }
 
     @PostMapping("/login")
@@ -48,12 +44,29 @@ public class MemberController {
         try {
             String token = memberService.login(memberLoginRequest);
             return ResponseEntity.ok(new MemberResponse(true, token));
-        } catch (EntityExistsException ex) {
-            return ResponseEntity.status(HttpStatus.NOT_FOUND)
-                    .body(new MemberResponse(false, "로그인에 실패했습니다."));
-        } catch (BadCredentialsException ex) {
+        } catch (EntityNotFoundException | BadCredentialsException ex) {
             return ResponseEntity.status(HttpStatus.BAD_REQUEST)
                     .body(new MemberResponse(false, "로그인에 실패했습니다."));
         }
     }
+
+    @GetMapping
+    public ResponseEntity<Member> memberInfo(Authentication authentication) {
+        Member member = memberService.getMemberInfo(authentication);
+        return ResponseEntity.status(HttpStatus.OK)
+                .body(member);
+    }
+
+    @PutMapping("/edit")
+    public ResponseEntity<MemberResponse> editMemberInfo(@RequestBody MemberEditRequest memberEditRequest, Authentication authentication ) {
+        try {
+            memberService.editMemberInfo(authentication, memberEditRequest);
+            return ResponseEntity.status(HttpStatus.OK)
+                    .body(new MemberResponse(true, "정보 수정에 성공했습니다."));
+        } catch (BadCredentialsException ex) {
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST)
+                    .body(new MemberResponse(false, "현재 비밀번호를 잘못 입력하였습니다."));
+        }
+    }
+
 }
