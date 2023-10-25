@@ -20,14 +20,14 @@ export const NavBarWrapper = styled.div`
 	.nav-container ul {
 		list-style: none;
 		display: flex;
-		gap: 1rem;
+		margin: 0px;
 	}
 
 	.nav-container li {
 		cursor: pointer;
 		transition: color 0.3s ease;
 		margin: 2rem;
-		font-size: 1.5vw;
+		font-size: 1.5rem;
 	}
 
 	.nav-container li:hover {
@@ -45,5 +45,6 @@ export const NavBarLink = styled(NavLink)`
 	color: black;
 	&.active {
 		color: #188eb7; // 활성화된 링크의 색상
+		font-weight: bold;
 	}
 `;

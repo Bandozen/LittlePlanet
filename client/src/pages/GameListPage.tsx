@@ -6,6 +6,7 @@ function GameListPage() {
 	return (
 		<div>
 			<NavBar />
+			<hr />
 			<Game />
 		</div>
 	);
