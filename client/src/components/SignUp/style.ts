@@ -6,4 +6,10 @@ export const SignUpWrapper = styled.div`
 		font-weight: bold;
 		color: white;
 	}
+	.signup-box {
+		height: 70%;
+		display: flex;
+		flex-direction: column;
+		justify-content: space-around;
+	}
 `;
