@@ -1,9 +1,18 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
 import logo from 'assets/images/logo.png';
+import api from '../../../api';
 import { NavBarWrapper, NavBarLink } from './style';
 
 function NavBar() {
+	const handleLogout = async () => {
+		try {
+			const response = await api.post('/member/logout');
+			console.log(response);
+		} catch (error) {
+			console.log(error);
+		}
+	};
 	return (
 		<NavBarWrapper>
 			<div className="nav-container">
@@ -31,6 +40,11 @@ function NavBar() {
 					<li>
 						<NavBarLink to="/login" className={({ isActive }) => (isActive ? 'active' : '')}>
 							(임시)로그인
+						</NavBarLink>
+					</li>
+					<li>
+						<NavBarLink to="/" onClick={handleLogout}>
+							로그아웃
 						</NavBarLink>
 					</li>
 				</ul>

@@ -19,7 +19,7 @@ const LoginBg = styled.div`
 		background-color: white;
 		height: 50%;
 		opacity: 0.9;
-		border-radius: 30px;
+		border-radius: 15px;
 	}
 	.change-bar {
 		display: flex;
