@@ -22,9 +22,9 @@ function AppRouter() {
 					<Route path="/" element={<MainPage />} />
 					<Route path="/login" element={<LoginPage />} />
 					<Route path="/simulationlist" element={<SimulationListPage />} />
-					<Route path="/simulationdetail" element={<SimulationDetailPage />} />
+					<Route path="/simulationdetail/:simulationId" element={<SimulationDetailPage />} />
 					<Route path="/gamelist" element={<GameListPage />} />
-					<Route path="/gamedetail" element={<GameDetailPage />} />
+					<Route path="/gamedetail/:gameId" element={<GameDetailPage />} />
 					<Route path="/mypage" element={<MyPage />} />
 					<Route path="/simulationmachine" element={<SimulationMachinePage />} />
 				</Routes>

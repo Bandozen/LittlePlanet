@@ -27,12 +27,14 @@ function Simulation() {
 						</div>
 						<div className="btn-div">
 							<div className="btn-div-detail">
-								<SimulationLink to="/simulationdetail">
+								<SimulationLink to={`/simulationdetail/${simulation.id}`}>
 									<DetailButton text="자세히 +" />
 								</SimulationLink>
 							</div>
 							<div className="btn-div-play">
-								<PlayButton text="시작하기" />
+								<SimulationLink to="/simulationmachine">
+									<PlayButton text="시작하기" />
+								</SimulationLink>
 							</div>
 						</div>
 					</div>

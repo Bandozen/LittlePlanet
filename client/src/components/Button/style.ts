@@ -40,10 +40,5 @@ export const Button = styled.div`
 		&:hover {
 			color: #188eb7;
 		}
-		// 테스트해보기
-		// &.active {
-		// 	color: #188eb7;
-		// 	font-weight: bold;
-		// }
 	}
 `;
