@@ -14,14 +14,13 @@ function GameDetail() {
 		<GameWrapper>
 			<div className="container">
 				<div className="info">
-					<p>게임디테일 컴포넌트</p>
+					<p className="text-xl">{game.name}</p>
 				</div>
 				<div className="game-item">
 					<div className="game-img">
 						<img src={game.imageUrl} alt={game.name} />
 					</div>
 					<div className="game-data">
-						<h2>{game.name}</h2>
 						{game.description.split('\n').map((line) => (
 							<p key={line}>{line}</p>
 						))}

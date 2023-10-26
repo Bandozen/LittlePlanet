@@ -90,3 +90,35 @@ export const SimulationDetailWrapper = styled.div`
 		margin: 10px;
 	}
 `;
+
+export const SimulationMainWrapper = styled.div`
+	.main-container {
+		margin: 40px 0px 40px 0px;
+	}
+	.main-info {
+		display: flex;
+		justify-content: space-between;
+		align-items: center;
+	}
+	.main-info p {
+		font-size: 2rem;
+		font-weight: bold;
+		padding: 0px 0px 0px 30px;
+	}
+	.main-sims {
+		display: flex;
+	}
+	.main-simulation-item {
+		display: flex;
+		padding: 20px 20px;
+	}
+	.main-simulation-img img {
+		width: 300px;
+		height: auto;
+		padding: 0px 20px 0px 20px;
+	}
+
+	.main-btn-div-detail {
+		margin: 10px;
+	}
+`;
