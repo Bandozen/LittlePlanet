@@ -14,7 +14,7 @@ function SimulationDetail() {
 		<SimulationDetailWrapper>
 			<div className="detail-container">
 				<div className="detail-info">
-					<p>{simulation.name}</p>
+					<p className="text-xl">{simulation.name}</p>
 				</div>
 				<div className="simulation-item">
 					<div className="simulation-img">
