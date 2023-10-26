@@ -19,7 +19,7 @@ function Simulation() {
 							<img src={simulation.imageUrl} alt={simulation.name} />
 						</div>
 						<div className="simulation-data">
-							<h2>{simulation.name}</h2>
+							<p className="text-2xl font-bold">{simulation.name}</p>
 							{simulation.description.split('\n').map((line) => (
 								<p key={line}>{line}</p>
 							))}
