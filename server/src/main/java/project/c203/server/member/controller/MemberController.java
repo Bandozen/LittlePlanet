@@ -21,6 +21,8 @@ import project.c203.server.member.service.MemberService;
 import javax.persistence.EntityExistsException;
 import javax.persistence.EntityNotFoundException;
 import javax.persistence.GeneratedValue;
+import javax.servlet.http.Cookie;
+import javax.servlet.http.HttpServletResponse;
 import javax.validation.Valid;
 
 @RestController
@@ -40,14 +42,22 @@ public class MemberController {
     }
 
     @PostMapping("/login")
-    public ResponseEntity<MemberResponse> login(@RequestBody MemberLoginRequest memberLoginRequest){
+    public ResponseEntity<MemberResponse> login(@RequestBody MemberLoginRequest memberLoginRequest, HttpServletResponse response){
         try {
             String token = memberService.login(memberLoginRequest);
-            return ResponseEntity.ok(new MemberResponse(true, token));
+            response.setHeader("Set-Cookie", "JWT=" + token + "; Path=/; Max-Age=86400; Secure; HttpOnly; Domain=k9c203.p.ssafy.io;");
+            return ResponseEntity.ok(new MemberResponse(true, "로그인에 성공했습니다."));
         } catch (EntityNotFoundException | BadCredentialsException ex) {
             return ResponseEntity.status(HttpStatus.BAD_REQUEST)
                     .body(new MemberResponse(false, "로그인에 실패했습니다."));
         }
+    }
+
+    @PostMapping("/logout")
+    public ResponseEntity<MemberResponse> logout(HttpServletResponse response) {
+        response.setHeader("Set-Cookie", "JWT=" + null + "; Path=/; Max-Age=0;");
+        return ResponseEntity.status(HttpStatus.OK)
+                .body(new MemberResponse(true, "로그아웃에 성공했습니다."));
     }
 
     @GetMapping
