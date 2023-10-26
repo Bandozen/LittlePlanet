@@ -1,9 +1,10 @@
 /* eslint-disable import/prefer-default-export */
 import styled from 'styled-components';
+import { NavLink } from 'react-router-dom';
 
 export const GameWrapper = styled.div`
 	.container {
-		margin: 40px 40px;
+		margin: 40px 0px 40px 100px;
 	}
 	.game-item {
 		display: flex;
@@ -38,3 +39,6 @@ export const GameWrapper = styled.div`
 		margin: 10px;
 	}
 `;
+export const GameLink = styled(NavLink)`
+	text-decoration: none;
+	}`;

@@ -1,7 +1,7 @@
 import React from 'react';
 import PlayButton from 'components/Button/PlayButton';
 import DetailButton from 'components/Button/DetailButton';
-import { SimulationWrapper } from './style';
+import { SimulationWrapper, SimulationLink } from './style';
 import simulations from '../../dummys/simulations';
 
 function Simulation() {
@@ -27,7 +27,9 @@ function Simulation() {
 						</div>
 						<div className="btn-div">
 							<div className="btn-div-detail">
-								<DetailButton text="자세히 +" />
+								<SimulationLink to="/simulationdetail">
+									<DetailButton text="자세히 +" />
+								</SimulationLink>
 							</div>
 							<div className="btn-div-play">
 								<PlayButton text="시작하기" />

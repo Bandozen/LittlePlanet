@@ -6,7 +6,9 @@ import { BrowserRouter, Route, Routes } from 'react-router-dom';
 import LoginPage from 'pages/LoginPage';
 import MainPage from 'pages/MainPage';
 import SimulationListPage from 'pages/SimulationListPage';
+import SimulationDetailPage from 'pages/SimulationDetailPage';
 import GameListPage from 'pages/GameListPage';
+import GameDetailPage from 'pages/GameDetailPage';
 import MyPage from 'pages/MyPage';
 
 function AppRouter() {
@@ -18,9 +20,10 @@ function AppRouter() {
 				<Routes>
 					<Route path="/" element={<MainPage />} />
 					<Route path="/login" element={<LoginPage />} />
-
 					<Route path="/simulationlist" element={<SimulationListPage />} />
+					<Route path="/simulationdetail" element={<SimulationDetailPage />} />
 					<Route path="/gamelist" element={<GameListPage />} />
+					<Route path="/gamedetail" element={<GameDetailPage />} />
 					<Route path="/mypage" element={<MyPage />} />
 				</Routes>
 			</BrowserRouter>

@@ -1,7 +1,7 @@
 import React from 'react';
 import PlayButton from 'components/Button/PlayButton';
 import DetailButton from 'components/Button/DetailButton';
-import { GameWrapper } from './style';
+import { GameWrapper, GameLink } from './style';
 import games from '../../dummys/games';
 
 function Game() {
@@ -26,7 +26,9 @@ function Game() {
 						</div>
 						<div className="btn-div">
 							<div className="btn-div-detail">
-								<DetailButton text="자세히 +" />
+								<GameLink to="/gamedetail">
+									<DetailButton text="자세히 +" />
+								</GameLink>
 							</div>
 							<div className="btn-div-play">
 								<PlayButton text="게임시작" />
