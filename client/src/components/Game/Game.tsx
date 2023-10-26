@@ -26,7 +26,7 @@ function Game() {
 						</div>
 						<div className="btn-div">
 							<div className="btn-div-detail">
-								<GameLink to="/gamedetail">
+								<GameLink to={`/gamedetail/${game.id}`}>
 									<DetailButton text="자세히 +" />
 								</GameLink>
 							</div>

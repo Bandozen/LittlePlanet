@@ -1,14 +1,13 @@
 import React from 'react';
-import NavBar from '../components/NavBar/NavBar';
-// import Game from '../components/Game/Game';
+import NavBar from '../components/common/NavBar/NavBar';
+import GameDetail from '../components/Game/GameDetail';
 
 function GameDetailPage() {
 	return (
 		<div>
 			<NavBar />
 			<hr />
-			<h1>여긴 게임디테일페이지!</h1>
-			{/* <Game /> */}
+			<GameDetail />
 		</div>
 	);
 }
