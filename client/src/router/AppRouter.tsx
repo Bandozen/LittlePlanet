@@ -10,6 +10,7 @@ import SimulationDetailPage from 'pages/SimulationDetailPage';
 import GameListPage from 'pages/GameListPage';
 import GameDetailPage from 'pages/GameDetailPage';
 import MyPage from 'pages/MyPage';
+import SimulationMachinePage from 'pages/SimulationMachinePage';
 
 function AppRouter() {
 	return (
@@ -25,6 +26,7 @@ function AppRouter() {
 					<Route path="/gamelist" element={<GameListPage />} />
 					<Route path="/gamedetail" element={<GameDetailPage />} />
 					<Route path="/mypage" element={<MyPage />} />
+					<Route path="/simulationmachine" element={<SimulationMachinePage />} />
 				</Routes>
 			</BrowserRouter>
 		</RecoilRoot>
