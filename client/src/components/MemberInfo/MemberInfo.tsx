@@ -1,11 +1,10 @@
 import React, { useState, useEffect } from 'react';
-import axios from 'axios';
 import { MemberInfoWrapper } from './style';
+import api from '../../api';
 
 type MemberData = {
 	memberEmail: string;
 	memberSchool: string;
-	memberSeq: number;
 };
 
 type StudentData = {
@@ -16,28 +15,15 @@ type StudentData = {
 };
 
 function MemberInfo() {
-	// const [token, setToken] = useState(null);
-	const token =
-		'eyJhbGciOiJIUzUxMiJ9.eyJtZW1iZXJFbWFpbCI6InRlc3RAbmF2ZXIuY29tIiwiaWF0IjoxNjk4MjIwMDU3LCJleHAiOjE2OTgzMDY0NTd9.B-KHCOaIbj57i3qmlGILrk42ECDfOTCpgGhgbivxYvgHONDNaEqk43u4cOL-wpFort-hZJ4tr8q5wr0RzvCTxQ';
-
 	const [member, setMember] = useState<MemberData | null>(null);
 	const [students, setStudents] = useState<StudentData[]>([]);
 
 	useEffect(() => {
 		const fetchData = async () => {
 			try {
-				const memberResponse = await axios.get('http://localhost:8080/api/v1/member', {
-					headers: {
-						Authorization: `Bearer ${token}`,
-					},
-				});
+				const memberResponse = await api.get('/member');
 				setMember(memberResponse.data);
-
-				const studentResponse = await axios.get('http://localhost:8080/api/v1/student', {
-					headers: {
-						Authorization: `Bearer ${token}`,
-					},
-				});
+				const studentResponse = await api.get('/student');
 				setStudents(studentResponse.data);
 			} catch (error) {
 				console.log('api 요청 실패', error);
