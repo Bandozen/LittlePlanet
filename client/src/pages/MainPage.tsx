@@ -1,6 +1,6 @@
 import React from 'react';
 import styled from 'styled-components';
-import PlayButton from 'components/Button/PlayButton';
+import DownloadModal from 'components/simualtionapplication/DownloadModal/DownloadModal';
 import NavBar from '../components/common/NavBar/NavBar';
 import Footer from '../components/Footer/Footer';
 import Main from '../components/Main/Main';
@@ -23,7 +23,7 @@ function MainPage() {
 			<MainContents>
 				<div className="main-box">
 					<SimulationMain />
-					<PlayButton text="앱 다운로드" />
+					<DownloadModal />
 					<GameMain />
 				</div>
 			</MainContents>
