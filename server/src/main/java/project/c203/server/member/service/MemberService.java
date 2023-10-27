@@ -46,7 +46,7 @@ public class MemberService {
         memberRepository.save(member);
     }
 
-    public void createAuthcode(String emailAddress) throws Exception {
+    public void createAuthCode(String emailAddress) throws Exception {
         if (memberRepository.existsMemberByMemberEmail(emailAddress)) {
             throw new EntityExistsException();
         } else {
