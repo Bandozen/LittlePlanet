@@ -37,7 +37,7 @@ function AppRouter() {
 						<Route path="/simulationapplication" element={<SimulationApplicationPage />} />
 						<Route path="/machineconfirm" element={<MachineConfirmPage />} />
 						<Route path="/sockettest" element={<SocketTestPage />} />
-				</Routes>
+					</Routes>
 				</BrowserRouter>
 			</ApplicationLayout>
 		</RecoilRoot>
