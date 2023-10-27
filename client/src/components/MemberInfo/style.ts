@@ -23,4 +23,9 @@ export const MemberInfoWrapper = styled.div`
 		height: 30%;
 		width: 50%;
 	}
+
+	.studentsinfo {
+		background-color: yellowgreen;
+		width: 100%;
+	}
 `;
