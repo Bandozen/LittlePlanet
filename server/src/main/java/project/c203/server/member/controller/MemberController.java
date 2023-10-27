@@ -33,10 +33,10 @@ public class MemberController {
                 .body(new MemberResponse(true, "회원가입에 성공했습니다."));
     }
 
-    @PostMapping("/signup/authcode")
-    public ResponseEntity<MemberResponse> createAuthcode(@RequestParam String emailAddress) {
+    @PostMapping("/signup/authCode")
+    public ResponseEntity<MemberResponse> createAuthCode(@RequestParam String emailAddress) {
         try {
-            memberService.createAuthcode(emailAddress);
+            memberService.createAuthCode(emailAddress);
             return ResponseEntity.ok(new MemberResponse(true, "인증번호가 메일로 발송되었습니다."));
         } catch (EntityExistsException ex) {
             return ResponseEntity.status(HttpStatus.CONFLICT)
@@ -48,9 +48,7 @@ public class MemberController {
 
     @PostMapping("/signup/verify")
     public ResponseEntity<MemberResponse> verifyAuthCode(@RequestBody MemberAuthCodeRequest memberAuthCodeRequest) {
-
             boolean isVerified = memberService.verifyAuthCode(memberAuthCodeRequest);
-
             if (isVerified) {
                 return ResponseEntity.ok(new MemberResponse(true, "인증 성공"));
             }
