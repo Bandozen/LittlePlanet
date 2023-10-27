@@ -19,7 +19,7 @@ function Game() {
 							<img src={game.imageUrl} alt={game.name} />
 						</div>
 						<div className="game-data">
-							<h2>{game.name}</h2>
+							<p className="text-2xl font-bold">{game.name}</p>
 							{game.description.split('\n').map((line) => (
 								<p key={line}>{line}</p>
 							))}

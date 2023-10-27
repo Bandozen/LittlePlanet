@@ -10,7 +10,9 @@ import SimulationDetailPage from 'pages/SimulationDetailPage';
 import GameListPage from 'pages/GameListPage';
 import GameDetailPage from 'pages/GameDetailPage';
 import MyPage from 'pages/MyPage';
-import SimulationMachinePage from 'pages/SimulationMachinePage';
+import SimulationMachinePage from 'pages/SimulationMachinePage/SimulationMachinePage';
+import SimulationApplicationPage from 'pages/SimulationApplicationPage';
+import MachineConfirmPage from 'pages/MachineConfirmPage';
 
 function AppRouter() {
 	return (
@@ -27,6 +29,8 @@ function AppRouter() {
 					<Route path="/gamedetail/:gameId" element={<GameDetailPage />} />
 					<Route path="/mypage" element={<MyPage />} />
 					<Route path="/simulationmachine" element={<SimulationMachinePage />} />
+					<Route path="/simulationapplication" element={<SimulationApplicationPage />} />
+					<Route path="/machineconfirm" element={<MachineConfirmPage />} />
 				</Routes>
 			</BrowserRouter>
 		</RecoilRoot>
