@@ -11,10 +11,7 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 
-import project.c203.server.member.dto.MemberEditRequest;
-import project.c203.server.member.dto.MemberLoginRequest;
-import project.c203.server.member.dto.MemberSignupRequest;
-import project.c203.server.member.dto.MemberResponse;
+import project.c203.server.member.dto.*;
 import project.c203.server.member.entity.Member;
 import project.c203.server.member.service.MemberService;
 
@@ -41,6 +38,33 @@ public class MemberController {
                 .body(new MemberResponse(true, "회원가입에 성공했습니다."));
     }
 
+    @PostMapping("/signup/authcode")
+    public ResponseEntity<MemberResponse> createAuthcode(@RequestParam String emailAddress) {
+        try {
+            memberService.createAuthcode(emailAddress);
+            return ResponseEntity.ok(new MemberResponse(true, "인증번호가 메일로 발송되었습니다."));
+        } catch (EntityExistsException ex) {
+            return ResponseEntity.status(HttpStatus.CONFLICT)
+                    .body(new MemberResponse(false, "이미 가입된 메일입니다."));
+        }
+    }
+    @PostMapping("/signup/verify")
+    public ResponseEntity<MemberResponse> verifyAuthCode(@RequestBody MemberAuthcodeRequest memberAuthcodeRequest) {
+
+            boolean isVerified = memberService.verifyAuthCode(memberAuthcodeRequest);
+
+            if (isVerified) {
+                return ResponseEntity.ok(new MemberResponse(true, "인증 성공"));
+            }
+            else {
+                return ResponseEntity.status(HttpStatus.BAD_REQUEST)
+                        .body(new MemberResponse(false, "인증 실패"));
+            }
+//
+    }
+
+
+
     @PostMapping("/login")
     public ResponseEntity<MemberResponse> login(@RequestBody MemberLoginRequest memberLoginRequest, HttpServletResponse response){
         try {
@@ -55,7 +79,7 @@ public class MemberController {
 
     @PostMapping("/logout")
     public ResponseEntity<MemberResponse> logout(HttpServletResponse response) {
-        response.setHeader("Set-Cookie", "JWT=" + null + "; Path=/; Max-Age=0;");
+        response.setHeader("Set-Cookie", "JWT=" + null + "; Path=/; Max-Age=0; Secure; HttpOnly; Domain=k9c203.p.ssafy.io;");
         return ResponseEntity.status(HttpStatus.OK)
                 .body(new MemberResponse(true, "로그아웃에 성공했습니다."));
     }
