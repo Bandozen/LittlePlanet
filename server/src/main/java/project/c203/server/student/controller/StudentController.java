@@ -9,6 +9,7 @@ import project.c203.server.student.dto.StudentResponse;
 import project.c203.server.student.entity.Student;
 import project.c203.server.student.service.StudentService;
 
+import javax.persistence.EntityNotFoundException;
 import javax.validation.Valid;
 import java.util.List;
 
@@ -35,4 +36,11 @@ public class StudentController {
         return ResponseEntity.status(HttpStatus.CREATED)
                 .body(new StudentResponse(true, "학생 정보가 등록되었습니다."));
     }
+
+    @DeleteMapping("/delete")
+    public ResponseEntity<StudentResponse> deleteStudent(@RequestParam Integer studentSeq, Authentication authentication) {
+        studentService.deleteStudent(authentication, studentSeq);
+        return ResponseEntity.ok(new StudentResponse(true, "학생 정보가 삭제되었습니다."));
+    }
+
 }
