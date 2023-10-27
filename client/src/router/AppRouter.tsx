@@ -13,6 +13,7 @@ import MyPage from 'pages/MyPage';
 import SimulationMachinePage from 'pages/SimulationMachinePage/SimulationMachinePage';
 import SimulationApplicationPage from 'pages/SimulationApplicationPage';
 import MachineConfirmPage from 'pages/MachineConfirmPage';
+import SocketTestPage from 'pages/SocketTestPage';
 
 function AppRouter() {
 	return (
@@ -31,6 +32,7 @@ function AppRouter() {
 					<Route path="/simulationmachine" element={<SimulationMachinePage />} />
 					<Route path="/simulationapplication" element={<SimulationApplicationPage />} />
 					<Route path="/machineconfirm" element={<MachineConfirmPage />} />
+					<Route path="/sockettest" element={<SocketTestPage />} />
 				</Routes>
 			</BrowserRouter>
 		</RecoilRoot>
