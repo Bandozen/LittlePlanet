@@ -11,10 +11,7 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 
-import project.c203.server.member.dto.MemberEditRequest;
-import project.c203.server.member.dto.MemberLoginRequest;
-import project.c203.server.member.dto.MemberSignupRequest;
-import project.c203.server.member.dto.MemberResponse;
+import project.c203.server.member.dto.*;
 import project.c203.server.member.entity.Member;
 import project.c203.server.member.service.MemberService;
 
@@ -51,6 +48,22 @@ public class MemberController {
                     .body(new MemberResponse(false, "이미 가입된 메일입니다."));
         }
     }
+    @PostMapping("/signup/verify")
+    public ResponseEntity<MemberResponse> verifyAuthCode(@RequestBody MemberAuthcodeRequest memberAuthcodeRequest) {
+
+            boolean isVerified = memberService.verifyAuthCode(memberAuthcodeRequest);
+
+            if (isVerified) {
+                return ResponseEntity.ok(new MemberResponse(true, "인증 성공"));
+            }
+            else {
+                return ResponseEntity.status(HttpStatus.BAD_REQUEST)
+                        .body(new MemberResponse(false, "인증 실패"));
+            }
+//
+    }
+
+
 
     @PostMapping("/login")
     public ResponseEntity<MemberResponse> login(@RequestBody MemberLoginRequest memberLoginRequest, HttpServletResponse response){

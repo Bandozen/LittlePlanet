@@ -6,6 +6,7 @@ import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Service;
 import project.c203.server.config.security.jwt.JwtUtils;
+import project.c203.server.member.dto.MemberAuthcodeRequest;
 import project.c203.server.member.dto.MemberEditRequest;
 import project.c203.server.member.dto.MemberLoginRequest;
 import project.c203.server.member.dto.MemberSignupRequest;
@@ -57,6 +58,16 @@ public class MemberService {
             System.out.println(authCode);
         }
 
+    }
+    public boolean verifyAuthCode (MemberAuthcodeRequest memberAuthcodeRequest) {
+        String emailAddress = memberAuthcodeRequest.getEmailAddress();
+        String inputAuthCode = memberAuthcodeRequest.getAuthcode();
+        String storedAuthCode = stringRedisTemplate.opsForValue().get(emailAddress);
+        if(storedAuthCode == null) {
+            return false;
+        }
+
+        return storedAuthCode.equals(inputAuthCode);
     }
     public String login(MemberLoginRequest memberLoginRequest) {
         Member member = memberRepository.findMemberByMemberEmail(memberLoginRequest.getMemberEmail())
