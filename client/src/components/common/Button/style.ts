@@ -9,8 +9,6 @@ export const ButtonWrapper = styled.button`
 	border-radius: 40px;
 	cursor: pointer;
 	transition: background-color 0.3s;
-	width: 6vw;
-	height: 4.5vh;
 	display: flex;
 	justify-content: center;
 	align-items: center;
