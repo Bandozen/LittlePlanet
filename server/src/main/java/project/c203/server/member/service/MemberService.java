@@ -1,5 +1,7 @@
 package project.c203.server.member.service;
 
+import io.micrometer.core.instrument.util.StringUtils;
+import org.springframework.data.redis.core.StringRedisTemplate;
 import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Service;
@@ -13,6 +15,7 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 
 import javax.persistence.EntityExistsException;
 import javax.persistence.EntityNotFoundException;
+import java.util.concurrent.TimeUnit;
 
 
 @Service
@@ -22,20 +25,18 @@ public class MemberService {
     private final PasswordEncoder passwordEncoder;
     private final JwtUtils jwtUtils;
 
+    private StringRedisTemplate stringRedisTemplate;
 
-    public MemberService(MemberRepository memberRepository, PasswordEncoder passwordEncoder, JwtUtils jwtUtils) {
+
+
+    public MemberService(MemberRepository memberRepository, PasswordEncoder passwordEncoder, JwtUtils jwtUtils, StringRedisTemplate stringRedisTemplate) {
         this.memberRepository = memberRepository;
         this.passwordEncoder = passwordEncoder;
         this.jwtUtils = jwtUtils;
+        this.stringRedisTemplate= stringRedisTemplate;
     }
 
     public void signup(MemberSignupRequest memberSignupRequest) {
-
-//        중복 검사
-//        if (memberRepository.existsMemberByMemberEmail(memberSignupRequest.getMemberEmail())) {
-//            throw new EntityExistsException();
-//        }
-
         Member member = Member.builder()
                 .memberEmail(memberSignupRequest.getMemberEmail())
                 .memberPassword(passwordEncoder.encode(memberSignupRequest.getMemberPassword()))
@@ -44,6 +45,19 @@ public class MemberService {
         memberRepository.save(member);
     }
 
+    public void createAuthcode(String emailAddress) {
+
+        System.out.println(emailAddress);
+
+        if (memberRepository.existsMemberByMemberEmail(emailAddress)) {
+            throw new EntityExistsException();
+        } else {
+            String authCode = String.format("%06d", (int)(Math.random() * 1000000));
+            stringRedisTemplate.opsForValue().set(emailAddress, authCode, 180, TimeUnit.SECONDS);
+            System.out.println(authCode);
+        }
+
+    }
     public String login(MemberLoginRequest memberLoginRequest) {
         Member member = memberRepository.findMemberByMemberEmail(memberLoginRequest.getMemberEmail())
                 .orElseThrow(() -> new EntityNotFoundException());
@@ -65,11 +79,11 @@ public class MemberService {
         Member member = memberRepository.findMemberByMemberEmail(memberEmail).get();
 
         if (passwordEncoder.matches(memberEditRequest.getMemberPassword(), member.getMemberPassword())) {
-            if (memberEditRequest.getMemberSchool() != null) {
+            if (StringUtils.isNotBlank(memberEditRequest.getMemberSchool())) {
                 member.setMemberSchool(memberEditRequest.getMemberSchool());
             }
 
-            if (memberEditRequest.getMemberNewPassword() != null) {
+            if (StringUtils.isNotBlank(memberEditRequest.getMemberNewPassword())) {
                 member.setMemberPassword(passwordEncoder.encode(memberEditRequest.getMemberNewPassword()));
             }
 
