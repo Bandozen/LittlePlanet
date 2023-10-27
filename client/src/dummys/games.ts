@@ -10,9 +10,16 @@ const games: Game[] = [
 	},
 	{
 		id: 2,
-		name: '친구와 함께 단어를 맞춰요!',
-		description: '제시되는 문제에 빈칸에 들어갈 낱말을\n친구와 함께 맟춰볼까요?',
+		name: '어느 병원으로 가야 할까요?',
+		description: '친구가 아픈 곳이 있어요!\n어느 병원을 가야 하는지 맟춰볼까요?',
 		imageUrl: 'https://littleplanet.s3.ap-northeast-2.amazonaws.com/game/%EC%96%B4%EB%8A%90%EB%B3%91%EC%9B%90.jpg',
+	},
+	{
+		id: 3,
+		name: '이를 잘 닦아보아요!',
+		description: '이~ 하면 보이는 세균을 칫솔질로 물리쳐보아요!\n치카포카~치카포카~ 깨끗해지면 기분이 좋아질거에요!',
+		imageUrl:
+			'https://littleplanet.s3.ap-northeast-2.amazonaws.com/game/%EC%9D%B4%EB%A5%BC%EC%9E%98%EB%8B%A6%EC%95%84%EC%9A%94.jpg',
 	},
 ];
 
