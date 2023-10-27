@@ -41,6 +41,8 @@ public class MemberController {
         } catch (EntityExistsException ex) {
             return ResponseEntity.status(HttpStatus.CONFLICT)
                     .body(new MemberResponse(false, "이미 가입된 메일입니다."));
+        } catch (Exception e) {
+            throw new RuntimeException(e);
         }
     }
 
