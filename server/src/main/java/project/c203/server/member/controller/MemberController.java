@@ -1,11 +1,8 @@
 package project.c203.server.member.controller;
 
 
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.security.authentication.AuthenticationServiceException;
 import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.core.Authentication;
-import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 
 import org.springframework.http.HttpStatus;
@@ -17,8 +14,6 @@ import project.c203.server.member.service.MemberService;
 
 import javax.persistence.EntityExistsException;
 import javax.persistence.EntityNotFoundException;
-import javax.persistence.GeneratedValue;
-import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletResponse;
 import javax.validation.Valid;
 
@@ -48,10 +43,11 @@ public class MemberController {
                     .body(new MemberResponse(false, "이미 가입된 메일입니다."));
         }
     }
-    @PostMapping("/signup/verify")
-    public ResponseEntity<MemberResponse> verifyAuthCode(@RequestBody MemberAuthcodeRequest memberAuthcodeRequest) {
 
-            boolean isVerified = memberService.verifyAuthCode(memberAuthcodeRequest);
+    @PostMapping("/signup/verify")
+    public ResponseEntity<MemberResponse> verifyAuthCode(@RequestBody MemberAuthCodeRequest memberAuthCodeRequest) {
+
+            boolean isVerified = memberService.verifyAuthCode(memberAuthCodeRequest);
 
             if (isVerified) {
                 return ResponseEntity.ok(new MemberResponse(true, "인증 성공"));
@@ -60,16 +56,13 @@ public class MemberController {
                 return ResponseEntity.status(HttpStatus.BAD_REQUEST)
                         .body(new MemberResponse(false, "인증 실패"));
             }
-//
     }
-
-
 
     @PostMapping("/login")
     public ResponseEntity<MemberResponse> login(@RequestBody MemberLoginRequest memberLoginRequest, HttpServletResponse response){
         try {
             String token = memberService.login(memberLoginRequest);
-            response.setHeader("Set-Cookie", "JWT=" + token + "; Path=/; Max-Age=86400; Secure; HttpOnly; Domain=k9c203.p.ssafy.io;");
+            response.setHeader("Set-Cookie", "JWT=" + token + "; Path=/; Max-Age=86400; Secure;");
             return ResponseEntity.ok(new MemberResponse(true, "로그인에 성공했습니다."));
         } catch (EntityNotFoundException | BadCredentialsException ex) {
             return ResponseEntity.status(HttpStatus.BAD_REQUEST)
@@ -79,7 +72,7 @@ public class MemberController {
 
     @PostMapping("/logout")
     public ResponseEntity<MemberResponse> logout(HttpServletResponse response) {
-        response.setHeader("Set-Cookie", "JWT=" + null + "; Path=/; Max-Age=0; Secure; HttpOnly; Domain=k9c203.p.ssafy.io;");
+        response.setHeader("Set-Cookie", "JWT=" + null + "; Path=/; Max-Age=0; Secure;");
         return ResponseEntity.status(HttpStatus.OK)
                 .body(new MemberResponse(true, "로그아웃에 성공했습니다."));
     }

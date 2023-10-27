@@ -2,6 +2,7 @@ package project.c203.server.student.service;
 
 import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import project.c203.server.member.entity.Member;
 import project.c203.server.member.repository.MemberRepository;
 import project.c203.server.student.dto.StudentRegisterRequest;
@@ -37,5 +38,10 @@ public class StudentService {
                 .member(member)
                 .build();
         studentRepository.save(student);
+    }
+    @Transactional
+    public void deleteStudent(Authentication authentication, Integer studentSeq) {
+        String memberEmail = authentication.getName();
+        studentRepository.deleteStudentByStudentSeqAndMember_MemberEmail(studentSeq, memberEmail);
     }
 }
