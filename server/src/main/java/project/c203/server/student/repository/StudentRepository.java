@@ -9,6 +9,6 @@ import java.util.Optional;
 
 @Repository
 public interface StudentRepository extends JpaRepository<Student, Integer> {
-    Optional<Student> findStudentByStudentSeq(Integer studentSeq);
     List<Student> findStudentByMember_MemberEmail(String memberEmail);
+    void deleteStudentByStudentSeqAndMember_MemberEmail(Integer studentSeq, String memberEmail);
 }

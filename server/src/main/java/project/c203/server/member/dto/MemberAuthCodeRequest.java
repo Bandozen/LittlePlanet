@@ -4,11 +4,12 @@ import lombok.Data;
 import org.jetbrains.annotations.NotNull;
 
 @Data
-public class MemberAuthcodeRequest {
+public class MemberAuthCodeRequest {
+
     @NotNull
     private String emailAddress;
 
     @NotNull
-    private String authcode;
+    private String authCode;
 
 }

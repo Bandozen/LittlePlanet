@@ -4,7 +4,6 @@ import lombok.Data;
 import org.springframework.lang.Nullable;
 
 import javax.validation.constraints.NotNull;
-import javax.validation.constraints.Null;
 
 @Data
 public class MemberEditRequest {
