@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { PencilSquareIcon } from '@heroicons/react/24/outline';
+import { PencilSquareIcon, UserPlusIcon, XCircleIcon } from '@heroicons/react/24/outline';
 import { Button, Dialog, Card, CardBody, CardFooter, Typography, Input, Alert } from '@material-tailwind/react';
 import { MemberInfoWrapper } from './style';
 import api from '../../api';
@@ -21,13 +21,19 @@ function MemberInfo() {
 	const [students, setStudents] = useState<StudentData[]>([]);
 	const [open, setOpen] = React.useState(false);
 	const [confirmOpen, setConfirmOpen] = React.useState(false);
-
 	const handleOpen = () => setOpen((cur) => !cur);
 
 	const [password, setPassword] = useState('');
 	const [school, setSchool] = useState('');
 	const [newPassword, setNewPassword] = useState('');
 	const [passwordConfirm, setPasswordConfirm] = useState('');
+
+	const [studentOpen, setStudentOpen] = useState(false);
+	const handleStudentOpen = () => setStudentOpen((cur) => !cur);
+
+	const [newStudentName, setNewStudentName] = useState('');
+	const [newStudentGrade, setNewStudentGrade] = useState('');
+	const [newStudentClass, setNewStudentClass] = useState('');
 
 	const handlePassword = (e: React.ChangeEvent<HTMLInputElement>) => {
 		setPassword(e.target.value);
@@ -43,6 +49,18 @@ function MemberInfo() {
 
 	const handlePasswordConfirm = (e: React.ChangeEvent<HTMLInputElement>) => {
 		setPasswordConfirm(e.target.value);
+	};
+
+	const handleNewStudentName = (e: React.ChangeEvent<HTMLInputElement>) => {
+		setNewStudentName(e.target.value);
+	};
+
+	const handleNewStudentGrade = (e: React.ChangeEvent<HTMLInputElement>) => {
+		setNewStudentGrade(e.target.value);
+	};
+
+	const handleNewStudentClass = (e: React.ChangeEvent<HTMLInputElement>) => {
+		setNewStudentClass(e.target.value);
 	};
 
 	const fetchData = async () => {
@@ -77,6 +95,42 @@ function MemberInfo() {
 			}
 		} else {
 			setConfirmOpen(true);
+		}
+	};
+
+	const registerStudent = async () => {
+		try {
+			const response = await api.post('/student/register', {
+				studentName: newStudentName,
+				studentGrade: `${newStudentGrade}학년`,
+				studentClass: `${newStudentClass}반`,
+			});
+			setNewStudentName('');
+			setNewStudentGrade('');
+			setNewStudentClass('');
+			fetchData();
+			console.log(response);
+		} catch (e) {
+			console.log(e);
+		}
+	};
+
+	const handleRegister = async () => {
+		await registerStudent();
+	};
+
+	const handleRegisterEnd = async () => {
+		await registerStudent();
+		setStudentOpen(false);
+	};
+
+	const handleDelete = async (studentSeq: number) => {
+		try {
+			const response = await api.delete(`/student/delete?studentSeq=${studentSeq}`);
+			console.log(response);
+			fetchData();
+		} catch (e) {
+			console.log(e);
 		}
 	};
 
@@ -144,17 +198,57 @@ function MemberInfo() {
 				)}
 			</div>
 			<div className="memberinfoimg" />
-			<div>
-				<h1>학생 정보</h1>
-				<ul>
-					{students.map((student) => (
-						<li key={student.studentSeq}>
-							<p>
-								{student.studentName} {student.studentGrade} {student.studentClass}
-							</p>
-						</li>
-					))}
-				</ul>
+			<div className="studentsinfo">
+				{students && (
+					<>
+						<div className="flex items-center">
+							<p className="text-3xl mr-3">학생 정보</p>
+							<UserPlusIcon className="h-6 w-6" onClick={handleStudentOpen} />
+						</div>
+						<Dialog size="xs" open={studentOpen} handler={handleStudentOpen} className="bg-transparent shadow-none">
+							<Card className="mx-auto w-full max-w-[24rem]">
+								<CardBody className="flex flex-col gap-4">
+									<Typography variant="h4" color="blue-gray">
+										학생 정보 등록
+									</Typography>
+									<Typography className="mb-3 font-normal" variant="paragraph" color="gray">
+										학생 정보를 입력 후, 등록 버튼을 클릭하세요.
+									</Typography>
+									<Input label="이름" size="lg" value={newStudentName} onChange={handleNewStudentName} crossOrigin="" />
+									<Input
+										label="학년"
+										size="lg"
+										value={newStudentGrade}
+										onChange={handleNewStudentGrade}
+										crossOrigin=""
+									/>
+									<Input label="반" size="lg" value={newStudentClass} onChange={handleNewStudentClass} crossOrigin="" />
+									<Alert variant="outlined" color="red" open={confirmOpen} onClose={() => setConfirmOpen(false)}>
+										비밀번호가 일치하지 않습니다.
+									</Alert>
+								</CardBody>
+								<CardFooter className="flex justify-end">
+									<Button className="mr-5" variant="gradient" onClick={handleRegister}>
+										계속 등록
+									</Button>
+									<Button variant="gradient" onClick={handleRegisterEnd}>
+										등록 완료
+									</Button>
+								</CardFooter>
+							</Card>
+						</Dialog>
+						<ul>
+							{students.map((student) => (
+								<li key={student.studentSeq}>
+									<div className="flex flex-row items-center justify-around">
+										{student.studentName} {student.studentGrade} {student.studentClass}
+										<XCircleIcon className="h-5 w-5 ml-5" onClick={() => handleDelete(student.studentSeq)} />
+									</div>
+								</li>
+							))}
+						</ul>
+					</>
+				)}
 			</div>
 		</MemberInfoWrapper>
 	);
