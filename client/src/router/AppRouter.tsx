@@ -12,7 +12,9 @@ import GameDetailPage from 'pages/GameDetailPage';
 import MyPage from 'pages/MyPage';
 import SimulationMachinePage from 'pages/SimulationMachinePage/SimulationMachinePage';
 import SimulationApplicationPage from 'pages/SimulationApplicationPage';
-import MachineConfirmPage from 'pages/MachineConfirmPage';
+import MachineConfirmPage from 'pages/MachineConfirmPage/MachineConfirmPage';
+import ApplicationLayout from 'layouts/common/ApplicationLayout';
+import ScrollToTop from 'components/common/ScrollToTop';
 import SocketTestPage from 'pages/SocketTestPage';
 
 function AppRouter() {
@@ -20,21 +22,24 @@ function AppRouter() {
 		<RecoilRoot>
 			<GlobalFonts />
 			<GlobalStyles />
-			<BrowserRouter>
-				<Routes>
-					<Route path="/" element={<MainPage />} />
-					<Route path="/login" element={<LoginPage />} />
-					<Route path="/simulationlist" element={<SimulationListPage />} />
-					<Route path="/simulationdetail/:simulationId" element={<SimulationDetailPage />} />
-					<Route path="/gamelist" element={<GameListPage />} />
-					<Route path="/gamedetail/:gameId" element={<GameDetailPage />} />
-					<Route path="/mypage" element={<MyPage />} />
-					<Route path="/simulationmachine" element={<SimulationMachinePage />} />
-					<Route path="/simulationapplication" element={<SimulationApplicationPage />} />
-					<Route path="/machineconfirm" element={<MachineConfirmPage />} />
-					<Route path="/sockettest" element={<SocketTestPage />} />
+			<ApplicationLayout>
+				<BrowserRouter>
+					<ScrollToTop />
+					<Routes>
+						<Route path="/" element={<MainPage />} />
+						<Route path="/login" element={<LoginPage />} />
+						<Route path="/simulationlist" element={<SimulationListPage />} />
+						<Route path="/simulationdetail/:simulationId" element={<SimulationDetailPage />} />
+						<Route path="/gamelist" element={<GameListPage />} />
+						<Route path="/gamedetail/:gameId" element={<GameDetailPage />} />
+						<Route path="/mypage" element={<MyPage />} />
+						<Route path="/simulationmachine" element={<SimulationMachinePage />} />
+						<Route path="/simulationapplication" element={<SimulationApplicationPage />} />
+						<Route path="/machineconfirm" element={<MachineConfirmPage />} />
+						<Route path="/sockettest" element={<SocketTestPage />} />
 				</Routes>
-			</BrowserRouter>
+				</BrowserRouter>
+			</ApplicationLayout>
 		</RecoilRoot>
 	);
 }
