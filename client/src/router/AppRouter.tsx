@@ -11,7 +11,6 @@ import GameListPage from 'pages/GameListPage';
 import GameDetailPage from 'pages/GameDetailPage';
 import MyPage from 'pages/MyPage';
 import SimulationMachinePage from 'pages/SimulationMachinePage/SimulationMachinePage';
-import SimulationApplicationPage from 'pages/SimulationApplicationPage';
 import MachineConfirmPage from 'pages/MachineConfirmPage/MachineConfirmPage';
 import ApplicationLayout from 'layouts/common/ApplicationLayout';
 import ScrollToTop from 'components/common/ScrollToTop';
@@ -34,7 +33,6 @@ function AppRouter() {
 						<Route path="/gamedetail/:gameId" element={<GameDetailPage />} />
 						<Route path="/mypage" element={<MyPage />} />
 						<Route path="/simulationmachine" element={<SimulationMachinePage />} />
-						<Route path="/simulationapplication" element={<SimulationApplicationPage />} />
 						<Route path="/machineconfirm" element={<MachineConfirmPage />} />
 						<Route path="/sockettest" element={<SocketTestPage />} />
 					</Routes>
