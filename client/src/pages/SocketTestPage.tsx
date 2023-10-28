@@ -1,43 +1,29 @@
 import React, { useEffect, useState } from 'react';
-import { w3cwebsocket as W3CWebSocket } from 'websocket';
+import io from 'socket.io-client';
 
-// import NavBar from 'components/common/NavBar/NavBar';
+function ImageDisplay() {
+	const [image, setImage] = useState('0');
 
-function SocketTestPage() {
-	const [imageURL, setImageURL] = useState('');
+	console.log(image);
 
 	useEffect(() => {
-		const client = new W3CWebSocket('wss://192.168.219.114:8090');
+		const socket = io('wss://k9c203.p.ssafy.io:18099');
+		console.log('here');
 
-		client.onopen = () => {
-			console.log('웹 소켓 연결이 열렸습니다.');
-		};
+		// 'requestImage' 이벤트를 트리거하여 이미지 요청
+		socket.emit('requestImage');
 
-		client.onmessage = (message) => {
-			if (message.data instanceof Blob) {
-				const imageBlob = new Blob([message.data]);
-				const imageUrl = URL.createObjectURL(imageBlob);
-				setImageURL(imageUrl);
-			}
-		};
-
-		client.onclose = () => {
-			console.log('웹 소켓 연결이 닫혔습니다.');
-		};
+		socket.on('image', (data) => {
+			setImage(data.url);
+			console.log('Received image data:', data.url);
+		});
 
 		return () => {
-			client.close();
+			socket.disconnect();
 		};
 	}, []);
 
-	return (
-		<div>
-			{/* <NavBar /> */}
-			<hr />
-			{imageURL && <img src={imageURL} alt="Received" />}
-			<h1>socket</h1>
-		</div>
-	);
+	return <div>{image && <img src={image} alt="character" />}</div>;
 }
 
-export default SocketTestPage;
+export default ImageDisplay;
