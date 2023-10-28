@@ -7,7 +7,7 @@ function SocketTestPage() {
 	const [imageURL, setImageURL] = useState('');
 
 	useEffect(() => {
-		const client = new W3CWebSocket('ws://192.168.219.114:8090');
+		const client = new W3CWebSocket('https://k9c203.p.ssafy.io/ws');
 
 		client.onopen = () => {
 			console.log('웹 소켓 연결이 열렸습니다.');
