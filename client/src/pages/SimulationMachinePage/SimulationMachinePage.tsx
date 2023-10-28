@@ -10,9 +10,15 @@ function SimulationMachinePage() {
 		<div>
 			<NavBar />
 			<SimulationMachineWrapper>
-				<SimulationMachine />
-				<HowToUse />
-				<OpenModal />
+				<div className="container">
+					<div className="title-btn">
+						<SimulationMachine />
+						<OpenModal />
+					</div>
+					<div className="how-item">
+						<HowToUse />
+					</div>
+				</div>
 			</SimulationMachineWrapper>
 		</div>
 	);
