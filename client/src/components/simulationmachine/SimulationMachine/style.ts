@@ -8,7 +8,8 @@ export const Wrapper = styled.div`
 	align-items: center;
 
 	.title {
-		font-size: 5rem;
+		font-size: 2rem;
+		padding: 0px 0px 0px 30px;
 		font-weight: bold;
 	}
 
