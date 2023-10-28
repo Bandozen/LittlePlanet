@@ -101,4 +101,26 @@ public class MemberService {
         }
 
     }
+
+    public String createOtp(Authentication authentication) {
+        String memberEmail = authentication.getName();
+        String otp = String.format("%06d", (int)(Math.random() * 1000000));
+        stringRedisTemplate.opsForValue().set(otp, memberEmail, 180, TimeUnit.SECONDS);
+        return otp;
+    }
+
+    public String verifyOtp(String otp) {
+        String memberEmail = stringRedisTemplate.opsForValue().get(otp);
+        stringRedisTemplate.opsForValue().set(otp, "true");
+        return memberEmail;
+    }
+
+    public boolean connectedOtp(String otp) {
+        String value = stringRedisTemplate.opsForValue().get(otp);
+        if (value.equals("true")) {
+            return true;
+        } else {
+            return false;
+        }
+    }
 }
