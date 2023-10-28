@@ -2,5 +2,14 @@
 import styled from 'styled-components';
 
 export const SimulationMachineWrapper = styled.div`
-	margin: 40px 40px;
+	margin: 20px 0px 0px 150px;
+
+	.how-item {
+		display: flex;
+	}
+
+	.title-btn {
+		display: flex;
+		align-items: center;
+	}
 `;
