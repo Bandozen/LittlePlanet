@@ -1,61 +1,47 @@
-import asyncio
-import websockets
 import socket
+# import cv2
 import numpy as np
 import time
-import os
-from dotenv import load_dotenv
-
-load_dotenv()
-
-EC2_PORT=os.getenv('EC2_PORT')
-EC2_WEBSOCKET_PORT=os.getenv('EC2_WEBSOCKET_PORT')
+import asyncio
 
 def recvall(sock, count):
     buf = b''
     while count:
         newbuf = sock.recv(count)
-        if not newbuf:
-            return None
+        if not newbuf: return None
         buf += newbuf
         count -= len(newbuf)
     return buf
 
-async def image_server(websocket, path):
-    # 이미지를 소켓 통신을 통해 받음
-    server_socket = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
-    server_socket.bind(('0.0.0.0', EC2_PORT))
-    server_socket.listen(10)
-    
-    # 클라이언트 연결 기다림
-    client_socket, client_address = server_socket.accept()
-    
+server_ip = '0.0.0.0'
+server_port = 12345
+
+while True:
+    socket_server = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+    socket_server.bind((server_ip, server_port))
+    socket_server.listen(10)
+
+    conn, addr = socket_server.accept()
+
     try:
         while True:
-            length = recvall(client_socket, 16)
+            length = recvall(conn, 16)
             if length is not None:
-                stringData = recvall(client_socket, int(length))
-                data = np.frombuffer(stringData, dtype='uint8')
-                await websocket.send(data.tobytes())
+                stringData = recvall(conn, int(length))
+                data = np.frombuffer(stringData, dtype = 'uint8')
+                # frame = cv2.imdecode(data, cv2.IMREAD_COLOR)
+                # cv2.namedWindow('cam', cv2.WINDOW_NORMAL)
+                # cv2.imshow('cam', frame)
+                # cv2.waitKey(1)
+
             else:
+                # cv2.destroyAllWindows()
                 break
 
-    except websockets.ConnectionClosed:
-        print("클라이언트와의 연결이 종료되었습니다.")
     except KeyboardInterrupt:
-        client_socket.close()
-        server_socket.close()
+        conn.close()
+        socket_server.close()
 
-    client_socket.close()
-    server_socket.close()
+    conn.close()
+    socket_server.close()
     time.sleep(5)
-
-async def main():
-    start_server = websockets.serve(image_server, "0.0.0.0", EC2_WEBSOCKET_PORT)
-    await start_server
-
-if __name__=="__main__":
-    asyncio.get_event_loop().run_until_complete(main())
-    asyncio.get_event_loop().run_forever()
-
-
