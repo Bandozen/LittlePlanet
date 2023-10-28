@@ -96,4 +96,27 @@ public class MemberController {
         }
     }
 
+    @PostMapping("/otp")
+    public ResponseEntity<MemberResponse> createOtp(Authentication authentication) {
+        String otp = memberService.createOtp(authentication);
+        return ResponseEntity.ok(new MemberResponse(true, otp));
+    }
+
+    @PostMapping("/otp/verify")
+    public ResponseEntity<MemberResponse> verifyOtp(@RequestParam String otp) {
+        //try {
+            String memberEmail = memberService.verifyOtp(otp);
+            return ResponseEntity.ok(new MemberResponse(true, memberEmail));
+        //}
+    }
+
+    @PostMapping("/otp/connected")
+    public ResponseEntity<MemberResponse> connectedOtp(@RequestParam String otp) {
+        boolean isConnected = memberService.connectedOtp(otp);
+        if (isConnected) {
+            return ResponseEntity.ok(new MemberResponse(true, "기기 연결에 성공했습니다."));
+        }   else {
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(new MemberResponse(false, "기기연결에 실패했습니다."));
+        }
+    }
 }
