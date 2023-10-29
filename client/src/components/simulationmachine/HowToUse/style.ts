@@ -8,7 +8,6 @@ export const Wrapper = styled.div`
 		display: flex;
 		align-items: center;
 		justify-content: center;
-		flex-direction: column;
 	}
 
 	.boxes {
@@ -25,19 +24,19 @@ export const Wrapper = styled.div`
 		justify-content: center;
 		cursor: pointer;
 		margin: 1.5rem;
-		width: 500px;
-		height: 600px;
+		width: 220px;
+		height: 220px;
 		background-color: #f8f8f8;
 		font-weight: bold;
-		font-size: 32px;
+		font-size: 20px;
 		text-align: center;
 		border-radius: 10px;
 	}
 
 	img {
 		justify-content: center;
-		width: 400px;
-		height: 400px;
+		width: 170px;
+		height: 170px;
 	}
 
 	.box.active {
@@ -57,7 +56,7 @@ export const Wrapper = styled.div`
 	.description {
 		position: absolute;
 		color: black;
-		font-size: 36px;
+		font-size: 20px;
 		display: flex;
 		justify-content: center;
 		text-align: center;
