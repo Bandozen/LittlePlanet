@@ -3,7 +3,7 @@ import loadingImage from 'assets/images/livecam_loading.jpg';
 import CheckStep from '../atoms/CheckStep';
 import { Wrapper } from './style';
 
-function StepOne() {
+function Step() {
 	const [activeStep, setActiveStep] = useState(1);
 
 	const testClick = () => {
@@ -35,4 +35,4 @@ function StepOne() {
 	);
 }
 
-export default StepOne;
+export default Step;
