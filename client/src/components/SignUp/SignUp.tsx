@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
-import { SignUpWrapper } from './style';
 import axios from 'axios';
+import { SignUpWrapper } from './style';
 
 function SignUp() {
 	// 각 입력이 발생함에 따라 상태 변수값을 바꿔주기 위해 설정
@@ -72,7 +72,7 @@ function SignUp() {
 			// 비밀번호 다르면 실패
 			alert(`입력한 비밀번호가 다릅니다!`);
 			return;
-		  }
+		}
 		if (school === '') {
 			alert('학교를 입력해주세요.');
 			return;
@@ -83,21 +83,21 @@ function SignUp() {
 			return;
 		}
 		// 가입하기 버튼 눌렀을 때 백으로 회원가입 api 쏘고 그 결과에 맞는 처리 함수
-		else {
-			axios
-				.post('http://localhost:8080/api/v1/member/signup', {
-					memberEmail: email,
-					memberPassword: password,
-					memberSchool: school,
-				})
-				.then((response) => {
-					console.log(response);
-					alert('회원가입에 성공하였습니다. 로그인 페이지로 이동합니다.')
-				})
-				.catch((error) => {
-					alert('회원가입 실패');
-				});
-		}
+
+		axios
+			.post('http://localhost:8080/api/v1/member/signup', {
+				memberEmail: email,
+				memberPassword: password,
+				memberSchool: school,
+			})
+			.then((response) => {
+				console.log(response);
+				alert('회원가입에 성공하였습니다. 로그인 페이지로 이동합니다.');
+			})
+			.catch((error) => {
+				alert('회원가입 실패');
+				console.log(error);
+			});
 	}
 	return (
 		<SignUpWrapper>
