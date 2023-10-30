@@ -48,6 +48,7 @@ public class MemberController {
 
     @PostMapping("/signup/verify")
     public ResponseEntity<MemberResponse> verifyAuthCode(@RequestBody MemberAuthCodeRequest memberAuthCodeRequest) {
+            System.out.println(memberAuthCodeRequest);
             boolean isVerified = memberService.verifyAuthCode(memberAuthCodeRequest);
             if (isVerified) {
                 return ResponseEntity.ok(new MemberResponse(true, "인증 성공"));
