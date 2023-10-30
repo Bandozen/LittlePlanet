@@ -35,7 +35,7 @@ function SignUp() {
 			// 중복되었다면
 			// alert('이미 가입된 이메일입니다.');
 			axios
-				.post('http://localhost:8080/api/v1/member/signup/authCode?emailAddress=' + email)
+				.post(`http://localhost:8080/api/v1/member/signup/authCode?emailAddress=${email}`)
 				.then((response) => {
 					console.log(response);
 					setVerifying(true);
