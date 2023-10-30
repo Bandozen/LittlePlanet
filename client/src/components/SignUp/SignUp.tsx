@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import { SignUpWrapper } from './style';
+import axios from 'axios';
 
 function SignUp() {
 	// 각 입력이 발생함에 따라 상태 변수값을 바꿔주기 위해 설정
@@ -7,6 +8,7 @@ function SignUp() {
 	const [password, setPassword] = useState('');
 	const [confirmPassword, setConfirmPassword] = useState('');
 	const [school, setSchool] = useState('');
+	const [verifyNumber, setVerifyNumber] = useState('');
 	// 현재 이메일 인증이 진행중인지를 나타내기 위해 설정 (true일 때 인증번호 입력칸이 생기고 false일 때 인증번호 입력칸 사라짐.)
 	const [verifying, setVerifying] = useState(false);
 	// 이메일 인증이 완료되었는지 상태를 확인하기 위해 설정
@@ -30,27 +32,72 @@ function SignUp() {
 			// 그 메일과 숫자를 redis에 저장
 			// 또한 인증번호 입력칸을 나타내기 위해 verifying 상태 변화
 			setEmailPass(false);
-			setVerifying(true);
 			// 중복되었다면
-			alert('이미 가입된 이메일입니다.');
+			// alert('이미 가입된 이메일입니다.');
+			axios
+				.post('http://localhost:8080/api/v1/member/signup/authCode?emailAddress=' + email)
+				.then((response) => {
+					console.log(response);
+					setVerifying(true);
+				})
+				.catch((error) => {
+					console.error('이메일 중복', error);
+					alert('이미 가입된 이메일입니다.');
+				});
 		}
 	}
 	// 인증번호가 유효한지 검사하는 함수
-	function verifyNumber() {
+	function verifyNumberCheck() {
 		// 인증번호가 이메일로 등록된 레디스의 값에 해당한다면
-		// 이메일 인증을 완료 상태로 변경
-		setEmailPass(true);
-		// 인증 중인 상태를 완료하기 위해 false로 변경
-		setVerifying(false);
-		// 인증번호가 틀리다면
-		alert('인증번호가 유효하지 않습니다. 다시 확인해 주세요.');
+		console.log(verifyNumber);
+		axios
+			.post('http://localhost:8080/api/v1/member/signup/verify', { emailAddress: email, authCode: verifyNumber })
+			.then((response) => {
+				console.log(response);
+				setEmailPass(true);
+				setVerifying(false);
+			})
+			.catch((error) => {
+				console.log(error);
+				alert('인증번호가 유효하지 않습니다. 다시 확인해 주세요.');
+			});
 	}
 	function signupClick() {
 		console.log(email, password, confirmPassword, school);
 		if (emailPass === false) {
 			alert('이메일 인증을 완료해 주세요.');
+			return;
+		}
+		if (password !== confirmPassword) {
+			// 비밀번호 다르면 실패
+			alert(`입력한 비밀번호가 다릅니다!`);
+			return;
+		  }
+		if (school === '') {
+			alert('학교를 입력해주세요.');
+			return;
+		}
+		const passwordRegex = /^(?=.*[A-Za-z])(?=.*\d)(?=.*[@$!%*#?&])[A-Za-z\d@$!%*#?&]{8,}$/;
+		if (!password.match(passwordRegex)) {
+			alert(`비밀번호는 8자 이상이면서 숫자와 영어와 특수문자를 모두 포함해야 합니다`);
+			return;
 		}
 		// 가입하기 버튼 눌렀을 때 백으로 회원가입 api 쏘고 그 결과에 맞는 처리 함수
+		else {
+			axios
+				.post('http://localhost:8080/api/v1/member/signup', {
+					memberEmail: email,
+					memberPassword: password,
+					memberSchool: school,
+				})
+				.then((response) => {
+					console.log(response);
+					alert('회원가입에 성공하였습니다. 로그인 페이지로 이동합니다.')
+				})
+				.catch((error) => {
+					alert('회원가입 실패');
+				});
+		}
 	}
 	return (
 		<SignUpWrapper>
@@ -66,8 +113,8 @@ function SignUp() {
 								console.log(email);
 							}}
 						/>
-						<button type="submit" onClick={verifyEmail}>
-							인증 확인
+						<button type="submit" onClick={verifyEmail} hidden={emailPass}>
+							인증 요청
 						</button>
 					</div>
 				</div>
@@ -78,11 +125,11 @@ function SignUp() {
 							<input
 								className="input-css"
 								onChange={(e) => {
-									setEmail(e.target.value);
-									console.log(email);
+									setVerifyNumber(e.target.value);
+									console.log(verifyNumber);
 								}}
 							/>
-							<button type="submit" onClick={verifyNumber}>
+							<button type="submit" onClick={verifyNumberCheck}>
 								인증
 							</button>
 						</div>
