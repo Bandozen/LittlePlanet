@@ -1,26 +1,12 @@
-import React, { useState, useEffect } from 'react';
-import { View, TouchableOpacity, StyleSheet, Text, Button } from 'react-native';
+import React from 'react';
+import { View, TouchableOpacity, StyleSheet, Text } from 'react-native';
 import { MaterialIcons } from '@expo/vector-icons';
-import { Audio } from 'expo-av';
-import PhoneKey from '../../Components/PhoneKey/PhoneKey';
 
-export default function App() {
-  const [isDialing, setIsDialing] = useState(false);
-
-  const handleStartDialing = () => {
-    setIsDialing(true);
-  };
-
-  const handleEndDialing = () => {
-    setIsDialing(false);
-  };
-
-  return isDialing ? (
-    <PhoneKey onEndCall={handleEndDialing} />
-  ) : (
+export default function Main({navigation}) {
+  return (
     <View style={styles.mainContainer}>
-        <Text>통화버튼을 눌러보세요!</Text>
-      <TouchableOpacity style={styles.callButton} onPress={handleStartDialing}>
+      <Text>통화버튼을 눌러보세요!</Text>
+      <TouchableOpacity style={styles.callButton} onPress={() => navigation.navigate('PhoneKey')}>
         <MaterialIcons name="call" size={32} color="white" />
       </TouchableOpacity>
     </View>
