@@ -11,4 +11,6 @@ import java.util.Optional;
 public interface StudentRepository extends JpaRepository<Student, Integer> {
     List<Student> findStudentByMember_MemberEmail(String memberEmail);
     void deleteStudentByStudentSeqAndMember_MemberEmail(Integer studentSeq, String memberEmail);
+    boolean existsStudentByStudentSeqAndAndMember_MemberEmail(Integer studentSeq, String MemberEmail);
+
 }
