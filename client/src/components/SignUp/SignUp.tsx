@@ -2,7 +2,11 @@ import React, { useState } from 'react';
 import axios from 'axios';
 import { SignUpWrapper } from './style';
 
-function SignUp() {
+type SignUpProps = {
+	setCondition: React.Dispatch<React.SetStateAction<'login' | 'signup'>>;
+};
+
+function SignUp({ setCondition }: SignUpProps) {
 	// 각 입력이 발생함에 따라 상태 변수값을 바꿔주기 위해 설정
 	const [email, setEmail] = useState('');
 	const [password, setPassword] = useState('');
@@ -32,8 +36,6 @@ function SignUp() {
 			// 그 메일과 숫자를 redis에 저장
 			// 또한 인증번호 입력칸을 나타내기 위해 verifying 상태 변화
 			setEmailPass(false);
-			// 중복되었다면
-			// alert('이미 가입된 이메일입니다.');
 			axios
 				.post(`/member/signup/authCode?emailAddress=${email}`)
 				.then((response) => {
@@ -93,6 +95,7 @@ function SignUp() {
 			.then((response) => {
 				console.log(response);
 				alert('회원가입에 성공하였습니다. 로그인 페이지로 이동합니다.');
+				setCondition('login');
 			})
 			.catch((error) => {
 				alert('회원가입 실패');
