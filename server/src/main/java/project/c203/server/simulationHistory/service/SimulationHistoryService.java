@@ -10,7 +10,9 @@ import project.c203.server.simulationHistory.repository.SimulationHistoryReposit
 import project.c203.server.student.entity.Student;
 import project.c203.server.student.repository.StudentRepository;
 
+import javax.persistence.EntityExistsException;
 import javax.persistence.EntityNotFoundException;
+import java.util.List;
 
 @Service
 public class SimulationHistoryService {
@@ -25,10 +27,10 @@ public class SimulationHistoryService {
         this.memberRepository = memberRepository;
     }
 
-    public boolean getHistory (SimulationHistoryRequest simulationHistoryRequest) {
-        Integer simulationSeq = simulationHistoryRequest.getSimulationSeq();
-        Integer studentSeq = simulationHistoryRequest.getStudentSeq();
-        return simulationHistoryRepository.existsSimulationHistoryBySimulationSeqAndAndStudent_StudentSeq(simulationSeq, studentSeq);
+    public List<SimulationHistory> getHistory (Integer seq, Authentication authentication) {
+        Integer simulationSeq = seq;
+        String memberEmail = authentication.getName();
+        return simulationHistoryRepository.findSimulationHistoriesBySimulationSeqAndMember_MemberEmail(simulationSeq, memberEmail);
     }
 
     public void createHistory (SimulationHistoryRequest simulationHistoryRequest, Authentication authentication) {
@@ -39,11 +41,17 @@ public class SimulationHistoryService {
                 .orElseThrow(()->new EntityNotFoundException());
         Member member = memberRepository.findMemberByMemberEmail(authentication.getName()).get();
 
-        SimulationHistory simulationHistory = SimulationHistory.builder()
-                .simulationSeq(simulationSeq)
-                .student(student)
-                .member(member)
-                .build();
-        simulationHistoryRepository.save(simulationHistory);
+        boolean isDuplicate = simulationHistoryRepository.existsSimulationHistoryBySimulationSeqAndStudent_StudentSeq(simulationSeq, studentSeq);
+
+        if (!isDuplicate) {
+            SimulationHistory simulationHistory = SimulationHistory.builder()
+                    .simulationSeq(simulationSeq)
+                    .student(student)
+                    .member(member)
+                    .build();
+            simulationHistoryRepository.save(simulationHistory);
+        } else {
+            throw new EntityExistsException();
+        }
     }
 }
