@@ -4,84 +4,14 @@ import { useNavigate } from 'react-router-dom';
 import api from '../../api';
 
 function Login() {
+	const navigate = useNavigate();
+
+	// 로그인
 	const [email, setEmail] = useState('');
 	const [password, setPassword] = useState('');
 	const [emailError, setEmailError] = useState('');
 	const [passwordError, setPasswordError] = useState('');
-
-	// 비밀번호 재설정 모달
-	const [open, setOpen] = useState(false);
-	const handleOpen = () => setOpen((cur) => !cur);
-
-	// 이메일 입력
-	const [emailResetPW, setEmailResetPW] = useState('');
-	const [codeOpen, setCodeOpen] = useState(false);
-	const handleEmailResetPWChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-		const { value } = e.target; // Object destructuring
-		setEmailResetPW(value);
-	};
-	const [notFound, setNotFound] = useState(false);
-	const handleCodeOpen = async () => {
-		try {
-			await api.post('/member/authCode', { emailAddress: emailResetPW, status: 2 });
-			setCodeOpen(true);
-		} catch (e) {
-			setNotFound(true);
-		}
-	};
-
-	// 인증번호 입력
-	const [authCode, setAuthCode] = useState('');
-	const handleAuthCodeChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-		const { value } = e.target;
-		setAuthCode(value);
-	};
-	const [pwOpen, setPWOpen] = useState(false);
-	const [notVerified, setNotVerified] = useState(false);
-	const handlePWOpen = async () => {
-		try {
-			await api.post('/member/verify', { emailAddress: emailResetPW, authCode });
-			setPWOpen(true);
-			setCodeOpen(false);
-		} catch (e) {
-			setNotVerified(true);
-		}
-	};
-
-	// 새로운 비밀번호 입력
-	const [newPassword, setNewPassword] = useState('');
-	const [passwordConfirm, setPasswordConfirm] = useState('');
-	const [isEqual, setIsEqual] = useState(true);
-	const handleNewPasswordChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-		const { value } = e.target;
-		setNewPassword(value);
-	};
-	const handlePasswordConfirmChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-		const { value } = e.target;
-		setPasswordConfirm(value);
-	};
-	const changePassword = async () => {
-		if (newPassword === passwordConfirm) {
-			try {
-				await api.post('/member/changePassword', {
-					emailAddress: emailResetPW,
-					memberPassword: newPassword,
-				});
-				setEmailResetPW('');
-				setAuthCode('');
-				setNewPassword('');
-				setPasswordConfirm('');
-				setOpen(false);
-				setPWOpen(false);
-			} catch (e) {
-				console.log(e);
-			}
-		} else {
-			setIsEqual(false);
-		}
-	};
-
-	const navigate = useNavigate();
+	const [loginFailed, setLoginFailed] = useState(false);
 
 	const isEmailValid = (inputEmail: string) => {
 		const regex = /^[a-zA-Z0-9._-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,6}$/;
@@ -123,9 +53,88 @@ function Login() {
 				memberPassword: password,
 			});
 			console.log(loginResponse);
-			navigate('/');
+			setLoginFailed(false);
+			navigate('/main');
 		} catch (error) {
 			console.log('api 요청 실패', error);
+			setLoginFailed(true);
+		}
+	};
+
+	// 비밀번호 재설정
+	const [open, setOpen] = useState(false);
+	const [emailResetPW, setEmailResetPW] = useState('');
+	const [authCode, setAuthCode] = useState('');
+	const [newPassword, setNewPassword] = useState('');
+	const [passwordConfirm, setPasswordConfirm] = useState('');
+
+	// 모달 열고 닫기
+	const handleOpen = () => setOpen((cur) => !cur);
+
+	// 이메일 입력 후 인증번호 입력 칸
+	const [codeOpen, setCodeOpen] = useState(false);
+	const handleEmailResetPWChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+		const { value } = e.target; // Object destructuring
+		setEmailResetPW(value);
+	};
+	const [notFound, setNotFound] = useState(false);
+	const handleCodeOpen = async () => {
+		try {
+			await api.post('/member/authCode', { emailAddress: emailResetPW, status: 2 });
+			setAuthCode('');
+			setCodeOpen(true);
+			setNotFound(false);
+		} catch (e) {
+			setNotFound(true);
+		}
+	};
+
+	// 인증번호 입력 후 비밀번호 입력 칸
+	const handleAuthCodeChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+		const { value } = e.target;
+		setAuthCode(value);
+	};
+	const [pwOpen, setPWOpen] = useState(false);
+	const [notVerified, setNotVerified] = useState(false);
+	const handlePWOpen = async () => {
+		try {
+			await api.post('/member/verify', { emailAddress: emailResetPW, authCode });
+			setNotVerified(false);
+			setPWOpen(true);
+			setCodeOpen(false);
+		} catch (e) {
+			setNotVerified(true);
+		}
+	};
+
+	// 새로운 비밀번호 입력
+	const [isEqual, setIsEqual] = useState(true);
+	const handleNewPasswordChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+		const { value } = e.target;
+		setNewPassword(value);
+	};
+	const handlePasswordConfirmChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+		const { value } = e.target;
+		setPasswordConfirm(value);
+	};
+	const changePassword = async () => {
+		if (newPassword === passwordConfirm) {
+			try {
+				await api.post('/member/changePassword', {
+					emailAddress: emailResetPW,
+					memberPassword: newPassword,
+				});
+				setEmailResetPW('');
+				setAuthCode('');
+				setNewPassword('');
+				setPasswordConfirm('');
+				setPWOpen(false);
+				setOpen(false);
+			} catch (e) {
+				console.log(e);
+			}
+		} else {
+			setIsEqual(false);
 		}
 	};
 
@@ -142,7 +151,6 @@ function Login() {
 				crossOrigin=""
 			/>
 			{emailError && <p className="text-red-500 text-xs ml-2 mb-3">{emailError}</p>}
-
 			<Input
 				type="password"
 				label="비밀번호"
@@ -152,8 +160,16 @@ function Login() {
 					className: 'm-2',
 				}}
 				crossOrigin=""
+				onKeyUp={(e) => {
+					if (e.key === 'Enter') {
+						handleLogin();
+					}
+				}}
 			/>
 			{passwordError && <p className="text-red-500 text-xs ml-2">{passwordError}</p>}
+			<Alert className="p-2 m-3" open={loginFailed} variant="outlined" color="red">
+				로그인 실패
+			</Alert>
 			<Button className="p-3 m-3" disabled={!isFormValid()} onClick={handleLogin}>
 				로그인
 			</Button>
