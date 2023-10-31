@@ -25,8 +25,8 @@ function AppRouter() {
 				<BrowserRouter>
 					<ScrollToTop />
 					<Routes>
-						<Route path="/" element={<MainPage />} />
-						<Route path="/login" element={<LoginPage />} />
+						<Route path="/" element={<LoginPage />} />
+						<Route path="/main" element={<MainPage />} />
 						<Route path="/simulationlist" element={<SimulationListPage />} />
 						<Route path="/simulationdetail/:simulationId" element={<SimulationDetailPage />} />
 						<Route path="/gamelist" element={<GameListPage />} />
