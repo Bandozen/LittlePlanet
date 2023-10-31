@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
-import axios from 'axios';
 import { SignUpWrapper } from './style';
+import api from '../../api';
 
 type SignUpProps = {
 	setCondition: React.Dispatch<React.SetStateAction<'login' | 'signup'>>;
@@ -23,7 +23,7 @@ function SignUp({ setCondition }: SignUpProps) {
 		return emailPattern.test(tt);
 	}
 	// 입력된 이메일을 통해 이메일 인증 요청을 보내는 함수
-	function verifyEmail() {
+	async function verifyEmail() {
 		console.log(email);
 		// 이메일 형식에 위배된 경우
 		if (isValidEmail(email) === false) {
@@ -36,7 +36,7 @@ function SignUp({ setCondition }: SignUpProps) {
 			// 그 메일과 숫자를 redis에 저장
 			// 또한 인증번호 입력칸을 나타내기 위해 verifying 상태 변화
 			setEmailPass(false);
-			axios
+			await api
 				.post(`/member/signup/authCode?emailAddress=${email}`)
 				.then((response) => {
 					console.log(response);
@@ -49,10 +49,10 @@ function SignUp({ setCondition }: SignUpProps) {
 		}
 	}
 	// 인증번호가 유효한지 검사하는 함수
-	function verifyNumberCheck() {
+	async function verifyNumberCheck() {
 		// 인증번호가 이메일로 등록된 레디스의 값에 해당한다면
 		console.log(verifyNumber);
-		axios
+		await api
 			.post('/member/signup/verify', { emailAddress: email, authCode: verifyNumber })
 			.then((response) => {
 				console.log(response);
@@ -64,7 +64,7 @@ function SignUp({ setCondition }: SignUpProps) {
 				alert('인증번호가 유효하지 않습니다. 다시 확인해 주세요.');
 			});
 	}
-	function signupClick() {
+	async function signupClick() {
 		console.log(email, password, confirmPassword, school);
 		if (emailPass === false) {
 			alert('이메일 인증을 완료해 주세요.');
@@ -86,7 +86,7 @@ function SignUp({ setCondition }: SignUpProps) {
 		}
 		// 가입하기 버튼 눌렀을 때 백으로 회원가입 api 쏘고 그 결과에 맞는 처리 함수
 
-		axios
+		await api
 			.post('/member/signup', {
 				memberEmail: email,
 				memberPassword: password,
