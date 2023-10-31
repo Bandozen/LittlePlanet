@@ -33,7 +33,9 @@ public class SecurityConfig {
     private static final String[] PERMIT_URL_ARRAY = {
             "/api/v1/member/login",
             "/api/v1/member/signup",
-            "/api/v1/member/signup/**",
+            "/api/v1/member/authCode",
+            "/api/v1/member/verify",
+            "/api/v1/member/changePassword",
             "/error"
     };
 
