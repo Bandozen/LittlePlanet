@@ -1,5 +1,11 @@
 import React, { useState, useEffect } from 'react';
-import { PencilSquareIcon, UserPlusIcon, XCircleIcon } from '@heroicons/react/24/outline';
+import {
+	PencilSquareIcon,
+	UserPlusIcon,
+	XCircleIcon,
+	CheckCircleIcon as OutlineCheckCircleIcon,
+} from '@heroicons/react/24/outline';
+import { CheckCircleIcon as SolidCheckCircleIcon } from '@heroicons/react/24/solid';
 import { Button, Dialog, Card, CardBody, CardFooter, Typography, Input, Alert } from '@material-tailwind/react';
 import { MemberInfoWrapper } from './style';
 import api from '../../api';
@@ -19,6 +25,7 @@ type StudentData = {
 function MemberInfo() {
 	const [member, setMember] = useState<MemberData | null>(null);
 	const [students, setStudents] = useState<StudentData[]>([]);
+	const [history, setHistory] = useState<number[]>([]);
 	const [open, setOpen] = React.useState(false);
 	const [confirmOpen, setConfirmOpen] = React.useState(false);
 	const handleOpen = () => setOpen((cur) => !cur);
@@ -69,6 +76,8 @@ function MemberInfo() {
 			setMember(memberResponse.data);
 			const studentResponse = await api.get('/student');
 			setStudents(studentResponse.data);
+			const historyResponse = await api.get('/simulationHistory?seq=1');
+			setHistory(historyResponse.data.map((item: { student: { studentSeq: number } }) => item.student.studentSeq));
 		} catch (error) {
 			console.log('api 요청 실패', error);
 		}
@@ -205,43 +214,16 @@ function MemberInfo() {
 							<p className="text-3xl mr-3">학생 정보</p>
 							<UserPlusIcon className="h-6 w-6" onClick={handleStudentOpen} />
 						</div>
-						<Dialog size="xs" open={studentOpen} handler={handleStudentOpen} className="bg-transparent shadow-none">
-							<Card className="mx-auto w-full max-w-[24rem]">
-								<CardBody className="flex flex-col gap-4">
-									<Typography variant="h4" color="blue-gray">
-										학생 정보 등록
-									</Typography>
-									<Typography className="mb-3 font-normal" variant="paragraph" color="gray">
-										학생 정보를 입력 후, 등록 버튼을 클릭하세요.
-									</Typography>
-									<Input label="이름" size="lg" value={newStudentName} onChange={handleNewStudentName} crossOrigin="" />
-									<Input
-										label="학년"
-										size="lg"
-										value={newStudentGrade}
-										onChange={handleNewStudentGrade}
-										crossOrigin=""
-									/>
-									<Input label="반" size="lg" value={newStudentClass} onChange={handleNewStudentClass} crossOrigin="" />
-									<Alert variant="outlined" color="red" open={confirmOpen} onClose={() => setConfirmOpen(false)}>
-										비밀번호가 일치하지 않습니다.
-									</Alert>
-								</CardBody>
-								<CardFooter className="flex justify-end">
-									<Button className="mr-5" variant="gradient" onClick={handleRegister}>
-										계속 등록
-									</Button>
-									<Button variant="gradient" onClick={handleRegisterEnd}>
-										등록 완료
-									</Button>
-								</CardFooter>
-							</Card>
-						</Dialog>
 						<ul>
 							{students.map((student) => (
 								<li key={student.studentSeq}>
 									<div className="flex flex-row items-center justify-around">
 										{student.studentName} {student.studentGrade} {student.studentClass}
+										{history.includes(student.studentSeq) ? (
+											<SolidCheckCircleIcon className="h-5 w-5" />
+										) : (
+											<OutlineCheckCircleIcon className="h-5 w-5" />
+										)}
 										<XCircleIcon className="h-5 w-5 ml-5" onClick={() => handleDelete(student.studentSeq)} />
 									</div>
 								</li>
@@ -249,6 +231,29 @@ function MemberInfo() {
 						</ul>
 					</>
 				)}
+				<Dialog size="xs" open={studentOpen} handler={handleStudentOpen} className="bg-transparent shadow-none">
+					<Card className="mx-auto w-full max-w-[24rem]">
+						<CardBody className="flex flex-col gap-4">
+							<Typography variant="h4" color="blue-gray">
+								학생 정보 등록
+							</Typography>
+							<Typography className="mb-3 font-normal" variant="paragraph" color="gray">
+								학생 정보를 입력 후, 등록 버튼을 클릭하세요.
+							</Typography>
+							<Input label="이름" size="lg" value={newStudentName} onChange={handleNewStudentName} crossOrigin="" />
+							<Input label="학년" size="lg" value={newStudentGrade} onChange={handleNewStudentGrade} crossOrigin="" />
+							<Input label="반" size="lg" value={newStudentClass} onChange={handleNewStudentClass} crossOrigin="" />
+						</CardBody>
+						<CardFooter className="flex justify-end">
+							<Button className="mr-5" variant="gradient" onClick={handleRegister}>
+								계속 등록
+							</Button>
+							<Button variant="gradient" onClick={handleRegisterEnd}>
+								등록 완료
+							</Button>
+						</CardFooter>
+					</Card>
+				</Dialog>
 			</div>
 		</MemberInfoWrapper>
 	);

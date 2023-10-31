@@ -6,10 +6,13 @@ import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.*;
 import project.c203.server.simulationHistory.dto.SimulationHistoryRequest;
 import project.c203.server.simulationHistory.dto.SimulationHistoryResponse;
+import project.c203.server.simulationHistory.entity.SimulationHistory;
 import project.c203.server.simulationHistory.repository.SimulationHistoryRepository;
 import project.c203.server.simulationHistory.service.SimulationHistoryService;
 
+import javax.persistence.EntityExistsException;
 import javax.persistence.EntityNotFoundException;
+import java.util.List;
 
 @RestController
 @RequestMapping("/api/v1/simulationHistory")
@@ -21,13 +24,8 @@ public class SimulationHistoryController {
     }
 
     @GetMapping
-    public ResponseEntity<SimulationHistoryResponse> getHistory (@RequestBody SimulationHistoryRequest simulationHistoryRequest) {
-        boolean isExisted = simulationHistoryService.getHistory(simulationHistoryRequest);
-        if (isExisted) {
-            return ResponseEntity.ok(new SimulationHistoryResponse(true, "해당 학생은 이 시뮬레이션에 이미 참여하였습니다."));
-        } else {
-            return ResponseEntity.ok(new SimulationHistoryResponse(false, "해당 학생은 이 시뮬레이션에 참여한 적이 없습니다."));
-        }
+    public List<SimulationHistory> getHistory (@RequestParam Integer seq, Authentication authentication) {
+        return simulationHistoryService.getHistory(seq, authentication);
     }
 
     @PostMapping
@@ -38,6 +36,9 @@ public class SimulationHistoryController {
         } catch (EntityNotFoundException ex) {
             return ResponseEntity.status(HttpStatus.BAD_REQUEST)
                     .body(new SimulationHistoryResponse(false, "학생 또는 시뮬레이션 seq 확인"));
+        } catch (EntityExistsException ex) {
+            return ResponseEntity.status(HttpStatus.CONFLICT)
+                    .body(new SimulationHistoryResponse(false, "해당 학생은 이미 이 시뮬레이션에 참여하였습니다."));
         }
     }
 
