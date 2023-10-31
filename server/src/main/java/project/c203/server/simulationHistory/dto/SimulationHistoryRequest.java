@@ -1,6 +1,7 @@
 package project.c203.server.simulationHistory.dto;
 
 import lombok.Data;
+import org.springframework.lang.Nullable;
 
 import javax.validation.constraints.NotNull;
 
