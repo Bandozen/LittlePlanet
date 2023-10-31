@@ -38,7 +38,7 @@ public class MemberController {
         String owner = "1000";
         String permissions = "775";
         try {
-            Process process_own = Runtime.getRuntime().exec("chown " + owner + " " + folderPath);
+            Process process_own = Runtime.getRuntime().exec("chown " + owner + ":" + owner + " " + folderPath);
             process_own.waitFor();
         } catch (IOException | InterruptedException e) {
             e.printStackTrace();
