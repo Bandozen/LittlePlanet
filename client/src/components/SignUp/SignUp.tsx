@@ -4,7 +4,7 @@ import { SignUpWrapper } from './style';
 
 type SignUpProps = {
 	setCondition: React.Dispatch<React.SetStateAction<'login' | 'signup'>>;
-	};
+};
 
 function SignUp({ setCondition }: SignUpProps) {
 	// 각 입력이 발생함에 따라 상태 변수값을 바꿔주기 위해 설정
@@ -53,7 +53,10 @@ function SignUp({ setCondition }: SignUpProps) {
 		// 인증번호가 이메일로 등록된 레디스의 값에 해당한다면
 		console.log(verifyNumber);
 		axios
-			.post('https://k9c203.p.ssafy.io:8080/api/v1/member/signup/verify', { emailAddress: email, authCode: verifyNumber })
+			.post('https://k9c203.p.ssafy.io:8080/api/v1/member/signup/verify', {
+				emailAddress: email,
+				authCode: verifyNumber,
+			})
 			.then((response) => {
 				console.log(response);
 				setEmailPass(true);
