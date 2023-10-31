@@ -17,7 +17,7 @@ function NavBar() {
 		<NavBarWrapper>
 			<div className="nav-container">
 				<div className="main_logo">
-					<Link to="/">
+					<Link to="/main">
 						<img src={logo} alt="" />
 					</Link>
 				</div>
@@ -35,11 +35,6 @@ function NavBar() {
 					<li>
 						<NavBarLink to="/mypage" className={({ isActive }) => (isActive ? 'active' : '')}>
 							마이페이지
-						</NavBarLink>
-					</li>
-					<li>
-						<NavBarLink to="/login" className={({ isActive }) => (isActive ? 'active' : '')}>
-							(임시)로그인
 						</NavBarLink>
 					</li>
 					<li>
