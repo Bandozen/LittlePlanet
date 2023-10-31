@@ -34,7 +34,7 @@ public class MemberController {
         memberService.signup(memberSignupRequest);
 
         String email = memberSignupRequest.getMemberEmail();
-        String folderPath = "\\home\\ubuntu\\user\\mail"; // 이 부분을 실제 경로로 변경해야 합니다.
+        String folderPath = "/home/ubuntu/user/" + email; // 이 부분을 실제 경로로 변경해야 합니다.
 
         File folder = new File(folderPath);
         if (!folder.exists()) {
