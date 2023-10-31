@@ -39,14 +39,26 @@ public class MemberController {
         String permissions = "775";
         try {
             Process process_own = Runtime.getRuntime().exec("chown " + owner + ":" + owner + " " + folderPath);
-            process_own.waitFor();
+            int exitCode = process_own.waitFor();
+    
+            if (exitCode == 0) {
+                System.out.println("명령 실행 성공");
+            } else {
+                System.err.println("명령 실행 실패. 종료 코드: " + exitCode);
+            }
         } catch (IOException | InterruptedException e) {
             e.printStackTrace();
         }
         
         try {
             Process process_per = Runtime.getRuntime().exec("chmod " + permissions + " " + folderPath);
-            process_per.waitFor();
+            int exitCode = process_per.waitFor();
+    
+            if (exitCode == 0) {
+                System.out.println("명령 실행 성공");
+            } else {
+                System.err.println("명령 실행 실패. 종료 코드: " + exitCode);
+            }
         } catch (IOException | InterruptedException e) {
             e.printStackTrace();
         }
