@@ -38,7 +38,7 @@ public class MemberController {
         String owner = "1000";
         String permissions = "775";
         try {
-            Process process_own = Runtime.getRuntime().exec("chown " + owner + " " + folderPath);
+            Process process_own = Runtime.getRuntime().exec("chown " + owner + ":" + owner + " " + folderPath);
             int exitCode = process_own.waitFor();
     
             if (exitCode == 0) {
