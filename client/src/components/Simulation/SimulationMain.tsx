@@ -1,7 +1,7 @@
 import React from 'react';
 import DetailButton from 'components/Button/DetailButton';
 import { NavBarLink } from 'components/common/NavBar/style';
-import { SimulationMainWrapper } from './style';
+import { SimulationMainWrapper, SimulationLink } from './style';
 import simulations from '../../dummys/simulations';
 
 function Simulation() {
@@ -22,7 +22,9 @@ function Simulation() {
 					{simulations.map((simulation) => (
 						<div key={simulation.id} className="main-simulation-item">
 							<div className="main-simulation-img">
-								<img src={simulation.imageUrl} alt={simulation.name} />
+								<SimulationLink to={`/simulationdetail/${simulation.id}`}>
+									<img src={simulation.imageUrl} alt={simulation.name} />
+								</SimulationLink>
 							</div>
 						</div>
 					))}
