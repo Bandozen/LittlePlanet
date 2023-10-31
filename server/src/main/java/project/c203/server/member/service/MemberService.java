@@ -1,14 +1,13 @@
 package project.c203.server.member.service;
 
 import io.micrometer.core.instrument.util.StringUtils;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.redis.core.StringRedisTemplate;
 import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import project.c203.server.config.security.jwt.JwtUtils;
-import project.c203.server.member.dto.MemberAuthCodeRequest;
+import project.c203.server.member.dto.MemberAuthRequest;
 import project.c203.server.member.dto.MemberEditRequest;
 import project.c203.server.member.dto.MemberLoginRequest;
 import project.c203.server.member.dto.MemberSignupRequest;
@@ -46,27 +45,43 @@ public class MemberService {
         memberRepository.save(member);
     }
 
-    public void createAuthCode(String emailAddress) throws Exception {
-        if (memberRepository.existsMemberByMemberEmail(emailAddress)) {
+    public void createAuthCode(String emailAddress, Integer status) {
+        boolean memberExists = memberRepository.existsMemberByMemberEmail(emailAddress);
+
+        // status == 1이면 회원가입을 위한 authCode 발급
+        // status == 2이면 비밀번호 수정을 위한 authCode 발급
+        if (status == 1 && memberExists) {
             throw new EntityExistsException();
-        } else {
-            String authCode = String.format("%06d", (int)(Math.random() * 1000000));
-            stringRedisTemplate.opsForValue().set(emailAddress, authCode, 180, TimeUnit.SECONDS);
-            System.out.println(authCode);
-            System.out.println(emailAddress);
-            mailService.sendMail(authCode, emailAddress);
+        } else if (status != 1 && !memberExists) {
+            throw new EntityNotFoundException();
         }
 
+        String authCode = String.format("%06d", (int) (Math.random() * 1000000));
+        stringRedisTemplate.opsForValue().set(emailAddress, authCode, 180, TimeUnit.SECONDS);
+        try {
+            mailService.sendMail(authCode, emailAddress);
+        } catch (IllegalAccessException e) {
+            e.printStackTrace();
+        }
     }
-    public boolean verifyAuthCode (MemberAuthCodeRequest memberAuthCodeRequest) {
-        String emailAddress = memberAuthCodeRequest.getEmailAddress();
-        String inputAuthCode = memberAuthCodeRequest.getAuthCode();
+
+    public boolean verifyAuthCode (MemberAuthRequest memberAuthRequest) {
+        String emailAddress = memberAuthRequest.getEmailAddress();
+        String inputAuthCode = memberAuthRequest.getAuthCode();
         String storedAuthCode = stringRedisTemplate.opsForValue().get(emailAddress);
         if(storedAuthCode == null) {
             return false;
         }
         return storedAuthCode.equals(inputAuthCode);
     }
+
+    public void changePassword (MemberAuthRequest memberAuthRequest) {
+        String memberEmail = memberAuthRequest.getEmailAddress();
+        Member member = memberRepository.findMemberByMemberEmail(memberEmail).get();
+        member.setMemberPassword(passwordEncoder.encode(memberAuthRequest.getMemberPassword()));
+        memberRepository.save(member);
+    }
+
     public String login(MemberLoginRequest memberLoginRequest) {
         Member member = memberRepository.findMemberByMemberEmail(memberLoginRequest.getMemberEmail())
                 .orElseThrow(() -> new EntityNotFoundException());
