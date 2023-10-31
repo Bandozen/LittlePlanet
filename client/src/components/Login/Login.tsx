@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { Input, Button } from '@material-tailwind/react';
+import { Input, Button, Dialog, Card, CardBody, Typography, Alert } from '@material-tailwind/react';
 import { useNavigate } from 'react-router-dom';
 import api from '../../api';
 
@@ -8,6 +8,79 @@ function Login() {
 	const [password, setPassword] = useState('');
 	const [emailError, setEmailError] = useState('');
 	const [passwordError, setPasswordError] = useState('');
+
+	// 비밀번호 재설정 모달
+	const [open, setOpen] = useState(false);
+	const handleOpen = () => setOpen((cur) => !cur);
+
+	// 이메일 입력
+	const [emailResetPW, setEmailResetPW] = useState('');
+	const [codeOpen, setCodeOpen] = useState(false);
+	const handleEmailResetPWChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+		const { value } = e.target; // Object destructuring
+		setEmailResetPW(value);
+	};
+	const [notFound, setNotFound] = useState(false);
+	const handleCodeOpen = async () => {
+		try {
+			await api.post('/member/authCode', { emailAddress: emailResetPW, status: 2 });
+			setCodeOpen(true);
+		} catch (e) {
+			setNotFound(true);
+		}
+	};
+
+	// 인증번호 입력
+	const [authCode, setAuthCode] = useState('');
+	const handleAuthCodeChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+		const { value } = e.target;
+		setAuthCode(value);
+	};
+	const [pwOpen, setPWOpen] = useState(false);
+	const [notVerified, setNotVerified] = useState(false);
+	const handlePWOpen = async () => {
+		try {
+			await api.post('/member/verify', { emailAddress: emailResetPW, authCode });
+			setPWOpen(true);
+			setCodeOpen(false);
+		} catch (e) {
+			setNotVerified(true);
+		}
+	};
+
+	// 새로운 비밀번호 입력
+	const [newPassword, setNewPassword] = useState('');
+	const [passwordConfirm, setPasswordConfirm] = useState('');
+	const [isEqual, setIsEqual] = useState(true);
+	const handleNewPasswordChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+		const { value } = e.target;
+		setNewPassword(value);
+	};
+	const handlePasswordConfirmChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+		const { value } = e.target;
+		setPasswordConfirm(value);
+	};
+	const changePassword = async () => {
+		if (newPassword === passwordConfirm) {
+			try {
+				await api.post('/member/changePassword', {
+					emailAddress: emailResetPW,
+					memberPassword: newPassword,
+				});
+				setEmailResetPW('');
+				setAuthCode('');
+				setNewPassword('');
+				setPasswordConfirm('');
+				setOpen(false);
+				setPWOpen(false);
+			} catch (e) {
+				console.log(e);
+			}
+		} else {
+			setIsEqual(false);
+		}
+	};
+
 	const navigate = useNavigate();
 
 	const isEmailValid = (inputEmail: string) => {
@@ -81,10 +154,84 @@ function Login() {
 				crossOrigin=""
 			/>
 			{passwordError && <p className="text-red-500 text-xs ml-2">{passwordError}</p>}
-
-			<Button className="m-3" disabled={!isFormValid()} onClick={handleLogin}>
+			<Button className="p-3 m-3" disabled={!isFormValid()} onClick={handleLogin}>
 				로그인
 			</Button>
+			<Button className="p-3 m-3" onClick={handleOpen}>
+				비밀번호 찾기
+			</Button>
+			<Dialog size="xs" open={open} handler={handleOpen} className="bg-transparent shadow-none">
+				<Card className="mx-auto w-full max-w-[24rem]">
+					<CardBody className="flex flex-col gap-4">
+						<Typography variant="h4" color="blue-gray">
+							비밀번호 재설정
+						</Typography>
+						<Typography className="mb-3 font-normal" variant="paragraph" color="gray">
+							메일 인증 완료 후, 비밀번호를 재설정하세요.
+						</Typography>
+
+						<div className="flex flex-row">
+							<Input
+								type="text"
+								size="lg"
+								label="이메일"
+								crossOrigin=""
+								value={emailResetPW}
+								onChange={handleEmailResetPWChange}
+							/>
+							<Button className="w-3/12 ml-2" onClick={handleCodeOpen}>
+								발송
+							</Button>
+						</div>
+
+						<Alert variant="outlined" color="red" open={notFound} onClose={() => setNotFound(false)}>
+							가입된 메일이 아닙니다.
+						</Alert>
+						{codeOpen && (
+							<div className="flex flex-row">
+								<Input
+									type="text"
+									size="lg"
+									label="인증번호"
+									value={authCode}
+									onChange={handleAuthCodeChange}
+									crossOrigin=""
+								/>
+								<Button className="w-3/12 ml-2" onClick={handlePWOpen}>
+									인증
+								</Button>
+							</div>
+						)}
+						<Alert variant="outlined" color="red" open={notVerified} onClose={() => setNotVerified(false)}>
+							인증번호를 다시 입력해주세요.
+						</Alert>
+						{pwOpen && (
+							<>
+								<Input
+									type="password"
+									size="lg"
+									label="비밀번호"
+									value={newPassword}
+									onChange={handleNewPasswordChange}
+									crossOrigin=""
+								/>
+								<Input
+									type="password"
+									size="lg"
+									label="비밀번호 확인"
+									value={passwordConfirm}
+									onChange={handlePasswordConfirmChange}
+									crossOrigin=""
+								/>
+								<Button onClick={changePassword}>비밀번호 수정</Button>
+							</>
+						)}
+						<Alert variant="outlined" color="red" open={!isEqual} onClose={() => setIsEqual(true)}>
+							비밀번호가 일치하지 않습니다.
+						</Alert>
+					</CardBody>
+				</Card>
+			</Dialog>
 		</div>
 	);
 }

@@ -12,6 +12,9 @@ public class MemberAuthRequest {
     private String emailAddress;
 
     @Nullable
+    private Integer status;
+
+    @Nullable
     private String authCode;
 
     @Nullable
