@@ -36,8 +36,11 @@ function SignUp({ setCondition }: SignUpProps) {
 			// 그 메일과 숫자를 redis에 저장
 			// 또한 인증번호 입력칸을 나타내기 위해 verifying 상태 변화
 			setEmailPass(false);
-			await api
-				.post(`/member/signup/authCode?emailAddress=${email}`)
+			api
+				.post('/member/authCode', {
+					emailAddress: email,
+					status: 1,
+				})
 				.then((response) => {
 					console.log(response);
 					setVerifying(true);
@@ -52,8 +55,8 @@ function SignUp({ setCondition }: SignUpProps) {
 	async function verifyNumberCheck() {
 		// 인증번호가 이메일로 등록된 레디스의 값에 해당한다면
 		console.log(verifyNumber);
-		await api
-			.post('/member/signup/verify', { emailAddress: email, authCode: verifyNumber })
+		api
+			.post('/member/verify', { emailAddress: email, authCode: verifyNumber })
 			.then((response) => {
 				console.log(response);
 				setEmailPass(true);
@@ -86,7 +89,7 @@ function SignUp({ setCondition }: SignUpProps) {
 		}
 		// 가입하기 버튼 눌렀을 때 백으로 회원가입 api 쏘고 그 결과에 맞는 처리 함수
 
-		await api
+		api
 			.post('/member/signup', {
 				memberEmail: email,
 				memberPassword: password,
