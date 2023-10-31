@@ -4,7 +4,7 @@ import { SignUpWrapper } from './style';
 
 type SignUpProps = {
 	setCondition: React.Dispatch<React.SetStateAction<'login' | 'signup'>>;
-  };
+	};
 
 function SignUp({ setCondition }: SignUpProps) {
 	// 각 입력이 발생함에 따라 상태 변수값을 바꿔주기 위해 설정
