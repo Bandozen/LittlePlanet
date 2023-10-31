@@ -9,7 +9,7 @@ export const convertSpeechToText = async (audioUri: string) => {
     config: {
       encoding: 'MP3',
       sampleRateHertz: 16000,
-      languageCode: 'en-US',
+      languageCode: 'ko-KR',
     },
   };
   try {
