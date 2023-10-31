@@ -35,7 +35,7 @@ function SignUp() {
 			// 중복되었다면
 			// alert('이미 가입된 이메일입니다.');
 			axios
-				.post(`http://localhost:8080/api/v1/member/signup/authCode?emailAddress=${email}`)
+				.post(`/member/signup/authCode?emailAddress=${email}`)
 				.then((response) => {
 					console.log(response);
 					setVerifying(true);
@@ -51,7 +51,7 @@ function SignUp() {
 		// 인증번호가 이메일로 등록된 레디스의 값에 해당한다면
 		console.log(verifyNumber);
 		axios
-			.post('http://localhost:8080/api/v1/member/signup/verify', { emailAddress: email, authCode: verifyNumber })
+			.post('/member/signup/verify', { emailAddress: email, authCode: verifyNumber })
 			.then((response) => {
 				console.log(response);
 				setEmailPass(true);
@@ -85,7 +85,7 @@ function SignUp() {
 		// 가입하기 버튼 눌렀을 때 백으로 회원가입 api 쏘고 그 결과에 맞는 처리 함수
 
 		axios
-			.post('http://localhost:8080/api/v1/member/signup', {
+			.post('/member/signup', {
 				memberEmail: email,
 				memberPassword: password,
 				memberSchool: school,
