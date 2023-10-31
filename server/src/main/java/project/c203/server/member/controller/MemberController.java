@@ -35,6 +35,22 @@ public class MemberController {
 
         String email = memberSignupRequest.getMemberEmail();
         String folderPath = "/home/ubuntu/user/" + email; // 이 부분을 실제 경로로 변경해야 합니다.
+        String owner = "1000";
+        String permissions = "775";
+        try {
+            Process process_own = Runtime.getRuntime().exec("sudo chown " + owner + " " + folderPath);
+            process_own.waitFor();
+        } catch (IOException | InterruptedException e) {
+            e.printStackTrace();
+        }
+        
+        try {
+            Process process_per = Runtime.getRuntime().exec("chmod " + permissions + " " + folderPath);
+            process_per.waitFor();
+        } catch (IOException | InterruptedException e) {
+            e.printStackTrace();
+        }
+        
 
         File folder = new File(folderPath);
         if (!folder.exists()) {
