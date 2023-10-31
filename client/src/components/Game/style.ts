@@ -76,3 +76,37 @@ export const GameMainWrapper = styled.div`
 		margin: 10px;
 	}
 `;
+export const GameDetailWrapper = styled.div`
+	.container {
+		margin: 40px 0px 40px 0px;
+	}
+	.info {
+		display: flex;
+		justify-content: space-between;
+		align-items: center;
+	}
+	.game-item {
+		display: flex;
+		flex-direction: column;
+		padding: 20px 20px;
+	}
+	.main-games {
+		display: flex;
+	}
+	.game-img img {
+		width: 300px;
+		height: auto;
+		padding: 0px 20px 0px 20px;
+	}
+	h2 {
+		margin-top: 0px;
+	}
+	.info p {
+		font-size: 2rem;
+		font-weight: bold;
+		padding: 0px 0px 0px 30px;
+	}
+	.btn-div-detail {
+		margin: 10px;
+	}
+`;

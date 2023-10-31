@@ -2,7 +2,7 @@ import React from 'react';
 import DetailButton from 'components/Button/DetailButton';
 import { NavBarLink } from 'components/common/NavBar/style';
 
-import { GameMainWrapper } from './style';
+import { GameMainWrapper, GameLink } from './style';
 import games from '../../dummys/games';
 
 function Game() {
@@ -25,7 +25,9 @@ function Game() {
 					{games.map((game) => (
 						<div key={game.id} className="game-item">
 							<div className="game-img">
-								<img src={game.imageUrl} alt={game.name} />
+								<GameLink to={`/gamedetail/${game.id}`}>
+									<img src={game.imageUrl} alt={game.name} />
+								</GameLink>
 							</div>
 						</div>
 					))}
