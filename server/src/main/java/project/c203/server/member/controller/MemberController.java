@@ -34,8 +34,9 @@ public class MemberController {
     }
 
     @PostMapping("/authCode")
-    public ResponseEntity<MemberResponse> createAuthCode(@RequestBody MemberAuthRequest memberAuthRequest, @RequestParam Integer status) {
+    public ResponseEntity<MemberResponse> createAuthCode(@RequestBody MemberAuthRequest memberAuthRequest) {
         String email = memberAuthRequest.getEmailAddress();
+        Integer status = memberAuthRequest.getStatus();
 
         try {
             memberService.createAuthCode(email, status);
