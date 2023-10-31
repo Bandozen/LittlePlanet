@@ -3,12 +3,13 @@ package project.c203.server.member.dto;
 import lombok.Data;
 import org.springframework.lang.Nullable;
 
+import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
 
 @Data
 public class MemberEditRequest {
 
-    @NotNull
+    @NotBlank
     private String memberPassword;
 
     @Nullable

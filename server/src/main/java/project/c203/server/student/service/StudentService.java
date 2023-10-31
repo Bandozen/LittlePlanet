@@ -9,6 +9,7 @@ import project.c203.server.student.dto.StudentRegisterRequest;
 import project.c203.server.student.entity.Student;
 import project.c203.server.student.repository.StudentRepository;
 
+import javax.persistence.EntityNotFoundException;
 import java.util.List;
 
 @Service
@@ -42,6 +43,11 @@ public class StudentService {
     @Transactional
     public void deleteStudent(Authentication authentication, Integer studentSeq) {
         String memberEmail = authentication.getName();
-        studentRepository.deleteStudentByStudentSeqAndMember_MemberEmail(studentSeq, memberEmail);
+        boolean isExisted = studentRepository.existsStudentByStudentSeqAndAndMember_MemberEmail(studentSeq, memberEmail);
+        if (isExisted) {
+            studentRepository.deleteStudentByStudentSeqAndMember_MemberEmail(studentSeq, memberEmail);
+        } else {
+            throw new EntityNotFoundException();
+        }
     }
 }
