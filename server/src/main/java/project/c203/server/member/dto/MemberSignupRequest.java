@@ -14,7 +14,7 @@ public class MemberSignupRequest {
     private String memberEmail;
 
     @NotBlank
-    @Pattern(regexp = "^(?=.*?[a-zA-Z])(?=.*\\d)[A-Za-z\\d@$!%*?&#]{8,20}$", message = "올바른 비밀번호 형식이 아닙니다.")
+    @Pattern(regexp = "^(?=.*?[a-zxA-Z])(?=.*\\d)[A-Za-z\\d@$!%*?&#]{8,20}$", message = "올바른 비밀번호 형식이 아닙니다.")
     private String memberPassword;
 
     @NotBlank
