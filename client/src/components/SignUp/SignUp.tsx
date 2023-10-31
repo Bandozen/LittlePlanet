@@ -2,7 +2,11 @@ import React, { useState } from 'react';
 import axios from 'axios';
 import { SignUpWrapper } from './style';
 
-function SignUp() {
+type SignUpProps = {
+	setCondition: React.Dispatch<React.SetStateAction<'login' | 'signup'>>;
+};
+
+function SignUp({ setCondition }: SignUpProps) {
 	// 각 입력이 발생함에 따라 상태 변수값을 바꿔주기 위해 설정
 	const [email, setEmail] = useState('');
 	const [password, setPassword] = useState('');
@@ -32,10 +36,8 @@ function SignUp() {
 			// 그 메일과 숫자를 redis에 저장
 			// 또한 인증번호 입력칸을 나타내기 위해 verifying 상태 변화
 			setEmailPass(false);
-			// 중복되었다면
-			// alert('이미 가입된 이메일입니다.');
 			axios
-				.post(`http://localhost:8080/api/v1/member/signup/authCode?emailAddress=${email}`)
+				.post(`https://k9c203.p.ssafy.io:8080/api/v1/member/signup/authCode?emailAddress=${email}`)
 				.then((response) => {
 					console.log(response);
 					setVerifying(true);
@@ -51,7 +53,10 @@ function SignUp() {
 		// 인증번호가 이메일로 등록된 레디스의 값에 해당한다면
 		console.log(verifyNumber);
 		axios
-			.post('http://localhost:8080/api/v1/member/signup/verify', { emailAddress: email, authCode: verifyNumber })
+			.post('https://k9c203.p.ssafy.io:8080/api/v1/member/signup/verify', {
+				emailAddress: email,
+				authCode: verifyNumber,
+			})
 			.then((response) => {
 				console.log(response);
 				setEmailPass(true);
@@ -85,7 +90,7 @@ function SignUp() {
 		// 가입하기 버튼 눌렀을 때 백으로 회원가입 api 쏘고 그 결과에 맞는 처리 함수
 
 		axios
-			.post('http://localhost:8080/api/v1/member/signup', {
+			.post('https://k9c203.p.ssafy.io:8080/api/v1/member/signup', {
 				memberEmail: email,
 				memberPassword: password,
 				memberSchool: school,
@@ -93,6 +98,7 @@ function SignUp() {
 			.then((response) => {
 				console.log(response);
 				alert('회원가입에 성공하였습니다. 로그인 페이지로 이동합니다.');
+				setCondition('login');
 			})
 			.catch((error) => {
 				alert('회원가입 실패');

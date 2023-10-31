@@ -28,22 +28,22 @@ const LoginBg = styled.div`
 `;
 
 function LoginPage() {
-	const [condition, setCondition] = useState('login');
+	const [condition, setCondition] = useState<'login' | 'signup'>('login');
 
 	return (
 		<LoginBg>
 			<div className="bgimage">
 				<div className="page-box">
 					<div className="change-bar">
-						<button type="submit" onClick={() => setCondition('login')}>
+						<button type="button" onClick={() => setCondition('login')}>
 							로그인
 						</button>
-						<button type="submit" onClick={() => setCondition('signup')}>
+						<button type="button" onClick={() => setCondition('signup')}>
 							회원가입
 						</button>
 					</div>
 					{condition === 'login' && <Login />}
-					{condition === 'signup' && <SignUp />}
+					{condition === 'signup' && <SignUp setCondition={setCondition} />}
 				</div>
 			</div>
 		</LoginBg>
