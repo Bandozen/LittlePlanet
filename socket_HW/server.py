@@ -1,5 +1,4 @@
 import socket
-# import cv2
 import numpy as np
 import time
 import asyncio
@@ -15,6 +14,7 @@ def recvall(sock, count):
 
 server_ip = '0.0.0.0'
 server_port = 12345
+image_path = '/home/ubuntu/websocket/cam.jpg'
 
 while True:
     socket_server = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
@@ -25,17 +25,15 @@ while True:
 
     try:
         while True:
+            
             length = recvall(conn, 16)
             if length is not None:
                 stringData = recvall(conn, int(length))
                 data = np.frombuffer(stringData, dtype = 'uint8')
-                # frame = cv2.imdecode(data, cv2.IMREAD_COLOR)
-                # cv2.namedWindow('cam', cv2.WINDOW_NORMAL)
-                # cv2.imshow('cam', frame)
-                # cv2.waitKey(1)
+                with open(image_path, 'wb') as image_file:
+                    image_file.write(data)
 
             else:
-                # cv2.destroyAllWindows()
                 break
 
     except KeyboardInterrupt:

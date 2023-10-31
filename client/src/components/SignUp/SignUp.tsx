@@ -1,8 +1,12 @@
 import React, { useState } from 'react';
-import axios from 'axios';
 import { SignUpWrapper } from './style';
+import api from '../../api';
 
-function SignUp() {
+type SignUpProps = {
+	setCondition: React.Dispatch<React.SetStateAction<'login' | 'signup'>>;
+};
+
+function SignUp({ setCondition }: SignUpProps) {
 	// 각 입력이 발생함에 따라 상태 변수값을 바꿔주기 위해 설정
 	const [email, setEmail] = useState('');
 	const [password, setPassword] = useState('');
@@ -19,7 +23,7 @@ function SignUp() {
 		return emailPattern.test(tt);
 	}
 	// 입력된 이메일을 통해 이메일 인증 요청을 보내는 함수
-	function verifyEmail() {
+	async function verifyEmail() {
 		console.log(email);
 		// 이메일 형식에 위배된 경우
 		if (isValidEmail(email) === false) {
@@ -32,10 +36,11 @@ function SignUp() {
 			// 그 메일과 숫자를 redis에 저장
 			// 또한 인증번호 입력칸을 나타내기 위해 verifying 상태 변화
 			setEmailPass(false);
-			// 중복되었다면
-			// alert('이미 가입된 이메일입니다.');
-			axios
-				.post(`http://localhost:8080/api/v1/member/signup/authCode?emailAddress=${email}`)
+			await api
+				.post('/member/authCode', {
+					emailAddress: email,
+					status: 1,
+				})
 				.then((response) => {
 					console.log(response);
 					setVerifying(true);
@@ -47,11 +52,11 @@ function SignUp() {
 		}
 	}
 	// 인증번호가 유효한지 검사하는 함수
-	function verifyNumberCheck() {
+	async function verifyNumberCheck() {
 		// 인증번호가 이메일로 등록된 레디스의 값에 해당한다면
 		console.log(verifyNumber);
-		axios
-			.post('http://localhost:8080/api/v1/member/signup/verify', { emailAddress: email, authCode: verifyNumber })
+		await api
+			.post('/member/verify', { emailAddress: email, authCode: verifyNumber })
 			.then((response) => {
 				console.log(response);
 				setEmailPass(true);
@@ -62,7 +67,7 @@ function SignUp() {
 				alert('인증번호가 유효하지 않습니다. 다시 확인해 주세요.');
 			});
 	}
-	function signupClick() {
+	async function signupClick() {
 		console.log(email, password, confirmPassword, school);
 		if (emailPass === false) {
 			alert('이메일 인증을 완료해 주세요.');
@@ -84,8 +89,8 @@ function SignUp() {
 		}
 		// 가입하기 버튼 눌렀을 때 백으로 회원가입 api 쏘고 그 결과에 맞는 처리 함수
 
-		axios
-			.post('http://localhost:8080/api/v1/member/signup', {
+		await api
+			.post('/member/signup', {
 				memberEmail: email,
 				memberPassword: password,
 				memberSchool: school,
@@ -93,6 +98,7 @@ function SignUp() {
 			.then((response) => {
 				console.log(response);
 				alert('회원가입에 성공하였습니다. 로그인 페이지로 이동합니다.');
+				setCondition('login');
 			})
 			.catch((error) => {
 				alert('회원가입 실패');
