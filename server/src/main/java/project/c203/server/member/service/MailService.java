@@ -27,14 +27,15 @@ public class MailService {
         return  message;
     }
 
-    public void sendMail(String code, String email) throws Exception{
-        try{
+    public void sendMail(String code, String email) throws IllegalAccessException {
+        try {
             MimeMessage mimeMessage = createMessage(code, email);
             javaMailSender.send(mimeMessage);
-            System.out.println(mimeMessage);
-        }catch (MailException mailException){
-            mailException.printStackTrace();
-            throw   new IllegalAccessException();
+        } catch (Exception e) {
+            e.printStackTrace();
+            if (e instanceof MailException) {
+                throw new IllegalAccessException();
+            }
         }
     }
 

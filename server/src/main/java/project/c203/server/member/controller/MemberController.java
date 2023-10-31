@@ -33,30 +33,37 @@ public class MemberController {
                 .body(new MemberResponse(true, "회원가입에 성공했습니다."));
     }
 
-    @PostMapping("/signup/authCode")
-    public ResponseEntity<MemberResponse> createAuthCode(@RequestParam String emailAddress) {
+    @PostMapping("/authCode")
+    public ResponseEntity<MemberResponse> createAuthCode(@RequestBody MemberAuthRequest memberAuthRequest, @RequestParam Integer status) {
+        String email = memberAuthRequest.getEmailAddress();
+
         try {
-            memberService.createAuthCode(emailAddress);
+            memberService.createAuthCode(email, status);
             return ResponseEntity.ok(new MemberResponse(true, "인증번호가 메일로 발송되었습니다."));
         } catch (EntityExistsException ex) {
             return ResponseEntity.status(HttpStatus.CONFLICT)
                     .body(new MemberResponse(false, "이미 가입된 메일입니다."));
-        } catch (Exception e) {
-            throw new RuntimeException(e);
+        } catch (EntityNotFoundException e) {
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST)
+                    .body(new MemberResponse(false, "가입된 메일이 아닙니다."));
         }
     }
 
-    @PostMapping("/signup/verify")
-    public ResponseEntity<MemberResponse> verifyAuthCode(@RequestBody MemberAuthCodeRequest memberAuthCodeRequest) {
-            System.out.println(memberAuthCodeRequest);
-            boolean isVerified = memberService.verifyAuthCode(memberAuthCodeRequest);
-            if (isVerified) {
-                return ResponseEntity.ok(new MemberResponse(true, "인증 성공"));
-            }
-            else {
-                return ResponseEntity.status(HttpStatus.BAD_REQUEST)
-                        .body(new MemberResponse(false, "인증 실패"));
-            }
+    @PostMapping("/verify")
+    public ResponseEntity<MemberResponse> verifyAuthCode(@RequestBody MemberAuthRequest memberAuthRequest) {
+        boolean isVerified = memberService.verifyAuthCode(memberAuthRequest);
+        if (isVerified) {
+            return ResponseEntity.ok(new MemberResponse(true, "인증 성공"));
+        } else {
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST)
+                    .body(new MemberResponse(false, "인증 실패"));
+        }
+    }
+
+    @PostMapping("/changePassword")
+    public ResponseEntity<MemberResponse> changePassword(@RequestBody MemberAuthRequest memberAuthRequest) {
+        memberService.changePassword(memberAuthRequest);
+        return ResponseEntity.ok(new MemberResponse(true, "비밀번호가 수정되었습니다."));
     }
 
     @PostMapping("/login")
