@@ -39,8 +39,13 @@ public class StudentController {
 
     @DeleteMapping("/delete")
     public ResponseEntity<StudentResponse> deleteStudent(@RequestParam Integer studentSeq, Authentication authentication) {
-        studentService.deleteStudent(authentication, studentSeq);
-        return ResponseEntity.ok(new StudentResponse(true, "학생 정보가 삭제되었습니다."));
+        try {
+            studentService.deleteStudent(authentication, studentSeq);
+            return ResponseEntity.ok(new StudentResponse(true, "학생 정보가 삭제되었습니다."));
+        } catch (EntityNotFoundException ex) {
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST)
+                    .body(new StudentResponse(false, "해당하는 학생이 없습니다."));
+        }
     }
 
 }
