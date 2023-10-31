@@ -17,6 +17,9 @@ import javax.persistence.EntityNotFoundException;
 import javax.servlet.http.HttpServletResponse;
 import javax.validation.Valid;
 
+import java.io.File;
+import java.io.IOException;
+
 @RestController
 @RequestMapping("/api/v1/member")
 public class MemberController {
@@ -29,8 +32,24 @@ public class MemberController {
     @PostMapping("/signup")
     public ResponseEntity<MemberResponse> signup(@Valid @RequestBody MemberSignupRequest memberSignupRequest) {
         memberService.signup(memberSignupRequest);
-        return ResponseEntity.status(HttpStatus.CREATED)
-                .body(new MemberResponse(true, "회원가입에 성공했습니다."));
+
+        String email = memberSignupRequest.getMemberEmail();
+        String folderPath = "/home/ubuntu/user/" + email; // 이 부분을 실제 경로로 변경해야 합니다.
+
+        File folder = new File(folderPath);
+        if (!folder.exists()) {
+            boolean created = folder.mkdirs();
+            if (created) {
+                return ResponseEntity.status(HttpStatus.CREATED)
+                        .body(new MemberResponse(true, "회원가입에 성공했으며 메일 폴더가 생성되었습니다."));
+            } else {
+                return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
+                        .body(new MemberResponse(false, "회원가입에 성공했지만 메일 폴더 생성에 실패했습니다."));
+            }
+        } else {
+            return ResponseEntity.status(HttpStatus.CREATED)
+                    .body(new MemberResponse(true, "회원가입에 성공했습니다. 메일 폴더는 이미 존재합니다."));
+        }
     }
 
     @PostMapping("/authCode")
