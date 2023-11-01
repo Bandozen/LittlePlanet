@@ -2,7 +2,13 @@ import socket
 import numpy as np
 import time
 import asyncio
+from dotenv import load_dotenv
 import os
+
+load_dotenv()
+
+server_ip = os.getenv('SERVER_IP')
+server_port = os.getenv('SERVER_PORT')
 
 def recvall(sock, count):
     buf = b''
@@ -12,9 +18,6 @@ def recvall(sock, count):
         buf += newbuf
         count -= len(newbuf)
     return buf
-
-server_ip = os.environ.get['SERVER_IP']
-server_port = int(os.environ.get['SERVER_PORT'])
 
 while True:
     socket_server = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
