@@ -32,7 +32,7 @@ public class SimulationHistory {
     private Member member;
 
     @ManyToOne
-    @JsonIgnore
+//    @JsonIgnore
     @JoinColumn(name="student_seq")
     private Student student;
 }
