@@ -8,7 +8,7 @@ import os
 load_dotenv()
 
 server_ip = os.getenv('SERVER_IP')
-server_port = os.getenv('SERVER_PORT')
+server_port = int(os.getenv('SERVER_PORT'))
 
 def recvall(sock, count):
     buf = b''
