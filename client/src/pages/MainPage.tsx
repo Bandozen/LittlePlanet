@@ -1,6 +1,8 @@
 import React from 'react';
 import styled from 'styled-components';
+import { useRecoilValue } from 'recoil';
 import DownloadModal from 'components/simualtionapplication/DownloadModal/DownloadModal';
+import { userEmail } from '../store/RecoilState';
 import NavBar from '../components/common/NavBar/NavBar';
 import Footer from '../components/Footer/Footer';
 import Main from '../components/Main/Main';
@@ -16,6 +18,9 @@ const MainContents = styled.div`
 `;
 
 function MainPage() {
+	const userMail = useRecoilValue(userEmail);
+	console.log(userMail);
+
 	return (
 		<div>
 			<NavBar />
