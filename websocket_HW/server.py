@@ -45,4 +45,4 @@ def disconnect(sid):
     print(f'Client {sid} disconnected')
 
 if __name__ == '__main__':
-    eventlet.wsgi.server(eventlet.listen((server_port, server_port)), app)
+    eventlet.wsgi.server(eventlet.listen((server_ip, server_port)), app)
