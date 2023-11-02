@@ -15,8 +15,8 @@ import MachineConfirmPage from 'pages/MachineConfirmPage/MachineConfirmPage';
 import ApplicationLayout from 'layouts/common/ApplicationLayout';
 import ScrollToTop from 'components/common/ScrollToTop';
 import SocketTestPage from 'pages/SocketTestPage';
-import Scene5page from '../components/Scene5page';
-import SimulationPlayPage from 'pages/SimulationPlayPage';
+// import Scene5page from '../components/Scene5page';
+// import SimulationPlayPage from 'pages/SimulationPlayPage';
 
 function AppRouter() {
 	return (
