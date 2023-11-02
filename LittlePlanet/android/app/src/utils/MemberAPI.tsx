@@ -1,4 +1,4 @@
-const BASE_URL = 'http://10.0.2.2:8080/api/v1/member';
+const BASE_URL = 'https://k9c203.p.ssafy.io/api/v1/member';
 
 export const MemberAPI = {
   login: async (email: string, password: string) => {
