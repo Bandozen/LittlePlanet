@@ -1,18 +1,40 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
+import api from 'api';
+import useMovePage from 'hooks/useMovePage';
 import loadingImage from 'assets/images/livecam_loading.jpg';
 import CheckStep from '../atoms/CheckStep';
 import { Wrapper } from './style';
 
 function Step() {
 	const [activeStep, setActiveStep] = useState(1);
+	const [movepage] = useMovePage();
+	const [studentInfo, setStudentInfo] = useState([]);
+
+	async function getStudentInfo() {
+		await api
+			.get('/student')
+			.then((res) => {
+				console.log(res.data);
+				setStudentInfo(res.data[0]);
+			})
+			.catch((e) => {
+				console.log(e);
+			});
+	}
 
 	const testClick = () => {
 		if (activeStep === 5) {
-			setActiveStep(1);
+			movepage('/simulationplay');
 		} else {
 			setActiveStep(activeStep + 1);
 		}
 	};
+
+	useEffect(() => {
+		getStudentInfo();
+	}, [activeStep]);
+
+	console.log(studentInfo);
 
 	return (
 		<Wrapper>
@@ -25,7 +47,7 @@ function Step() {
 			</div>
 			<div>
 				<div className="image-wrapper">
-					<img className="loading" src={loadingImage} alt="이미지 없음." />
+					{activeStep === 1 ? <p>안녕하세요</p> : <img className="loading" src={loadingImage} alt="이미지 없음." />}
 				</div>
 			</div>
 			<button type="button" onClick={testClick}>
