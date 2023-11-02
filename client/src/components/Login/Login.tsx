@@ -1,6 +1,8 @@
 import React, { useState } from 'react';
 import { Input, Button, Dialog, Card, CardBody, Typography, Alert } from '@material-tailwind/react';
 import { useNavigate } from 'react-router-dom';
+import { useSetRecoilState } from 'recoil';
+import { userEmail } from '../../store/RecoilState';
 import api from '../../api';
 
 function Login() {
@@ -12,6 +14,8 @@ function Login() {
 	const [emailError, setEmailError] = useState('');
 	const [passwordError, setPasswordError] = useState('');
 	const [loginFailed, setLoginFailed] = useState(false);
+
+	const setUserMail = useSetRecoilState(userEmail);
 
 	const isEmailValid = (inputEmail: string) => {
 		const regex = /^[a-zA-Z0-9._-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,6}$/;
@@ -54,6 +58,8 @@ function Login() {
 			});
 			console.log(loginResponse);
 			setLoginFailed(false);
+			console.log(email);
+			setUserMail(email);
 			navigate('/main');
 		} catch (error) {
 			console.log('api 요청 실패', error);

@@ -37,37 +37,36 @@ public class MemberController {
         String folderPath = "/home/ubuntu/user/" + email; // 이 부분을 실제 경로로 변경해야 합니다.
         String owner = "1000";
         String permissions = "775";
-        try {
-            Process process_own = Runtime.getRuntime().exec("chown " + owner + ":" + owner + " " + folderPath);
-            int exitCode = process_own.waitFor();
-    
-            if (exitCode == 0) {
-                System.out.println("명령 실행 성공");
-            } else {
-                System.err.println("명령 실행 실패. 종료 코드: " + exitCode);
-            }
-        } catch (IOException | InterruptedException e) {
-            e.printStackTrace();
-        }
-        
-        try {
-            Process process_per = Runtime.getRuntime().exec("chmod " + permissions + " " + folderPath);
-            int exitCode = process_per.waitFor();
-    
-            if (exitCode == 0) {
-                System.out.println("명령 실행 성공");
-            } else {
-                System.err.println("명령 실행 실패. 종료 코드: " + exitCode);
-            }
-        } catch (IOException | InterruptedException e) {
-            e.printStackTrace();
-        }
-        
 
         File folder = new File(folderPath);
         if (!folder.exists()) {
             boolean created = folder.mkdirs();
             if (created) {
+                try {
+                    Process process_own = Runtime.getRuntime().exec("chown " + owner + ":" + owner + " " + folderPath);
+                    int exitCode = process_own.waitFor();
+    
+                    if (exitCode == 0) {
+                        System.out.println("명령 실행 성공");
+                    } else {
+                        System.err.println("명령 실행 실패. 종료 코드: " + exitCode);
+                    }
+                } catch (IOException | InterruptedException e) {
+                    e.printStackTrace();
+                }
+        
+                try {
+                    Process process_per = Runtime.getRuntime().exec("chmod " + permissions + " " + folderPath);
+                    int exitCode = process_per.waitFor();
+    
+                    if (exitCode == 0) {
+                        System.out.println("명령 실행 성공");
+                    } else {
+                        System.err.println("명령 실행 실패. 종료 코드: " + exitCode);
+                    }
+                } catch (IOException | InterruptedException e) {
+                    e.printStackTrace();
+                }
                 return ResponseEntity.status(HttpStatus.CREATED)
                         .body(new MemberResponse(true, "회원가입에 성공했으며 메일 폴더가 생성되었습니다."));
             } else {
