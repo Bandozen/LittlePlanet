@@ -118,7 +118,7 @@ public class MemberController {
         try {
             String token = memberService.login(memberLoginRequest);
             String domain = "littleplanet.kids";
-            response.setHeader("Set-Cookie", "JWT=" + token + "; Path=/; Max-Age=86400; Secure; SameSite=None; Domain=localhost;");
+            response.setHeader("Set-Cookie", "JWT=" + token + "; Path=/; Max-Age=86400; Secure; SameSite=None; Domain=.littleplanet.kids;");
             return ResponseEntity.ok(new MemberResponse(true, "로그인에 성공했습니다."));
         } catch (EntityNotFoundException | BadCredentialsException ex) {
             return ResponseEntity.status(HttpStatus.BAD_REQUEST)
