@@ -34,6 +34,8 @@ function MemberInfo() {
 	const [school, setSchool] = useState('');
 	const [newPassword, setNewPassword] = useState('');
 	const [passwordConfirm, setPasswordConfirm] = useState('');
+	const [isWrong, setIsWrong] = useState(false);
+	const [isValid, setIsValid] = useState(true);
 
 	const [studentOpen, setStudentOpen] = useState(false);
 	const handleStudentOpen = () => setStudentOpen((cur) => !cur);
@@ -41,6 +43,7 @@ function MemberInfo() {
 	const [newStudentName, setNewStudentName] = useState('');
 	const [newStudentGrade, setNewStudentGrade] = useState('');
 	const [newStudentClass, setNewStudentClass] = useState('');
+	const [isStudentValid, setIsStudentValid] = useState(true);
 
 	const handlePassword = (e: React.ChangeEvent<HTMLInputElement>) => {
 		setPassword(e.target.value);
@@ -84,43 +87,68 @@ function MemberInfo() {
 	};
 
 	const handleEdit = async () => {
-		if (newPassword === passwordConfirm) {
-			console.log(newPassword, passwordConfirm);
+		const passwordRegex = /^(?=.*[A-Za-z])(?=.*\d)(?=.*[@$!%*#?&])[A-Za-z\d@$!%*#?&]{8,}$/;
+		if (newPassword) {
+			if (newPassword === passwordConfirm && newPassword.match(passwordRegex)) {
+				try {
+					const response = await api.put('member/edit', {
+						memberPassword: password,
+						memberSchool: school,
+						memberNewPassword: newPassword,
+					});
+					console.log(response);
+					setPassword('');
+					setSchool('');
+					setNewPassword('');
+					setPasswordConfirm('');
+					handleOpen();
+					fetchData();
+				} catch (e) {
+					console.log(e);
+					setIsWrong(true);
+				}
+			} else if (newPassword !== passwordConfirm) {
+				setConfirmOpen(true);
+			} else {
+				setIsValid(false);
+			}
+		} else {
 			try {
 				const response = await api.put('member/edit', {
 					memberPassword: password,
 					memberSchool: school,
-					memberNewPassword: newPassword,
 				});
 				console.log(response);
 				setPassword('');
 				setSchool('');
-				setNewPassword('');
-				setPasswordConfirm('');
 				handleOpen();
 				fetchData();
 			} catch (e) {
 				console.log(e);
+				setIsWrong(true);
 			}
-		} else {
-			setConfirmOpen(true);
 		}
 	};
 
 	const registerStudent = async () => {
-		try {
-			const response = await api.post('/student/register', {
-				studentName: newStudentName,
-				studentGrade: `${newStudentGrade}학년`,
-				studentClass: `${newStudentClass}반`,
-			});
-			setNewStudentName('');
-			setNewStudentGrade('');
-			setNewStudentClass('');
-			fetchData();
-			console.log(response);
-		} catch (e) {
-			console.log(e);
+		setIsStudentValid(true);
+		if (newStudentName && newStudentGrade && newStudentClass) {
+			try {
+				const response = await api.post('/student/register', {
+					studentName: newStudentName,
+					studentGrade: `${newStudentGrade}학년`,
+					studentClass: `${newStudentClass}반`,
+				});
+				setNewStudentName('');
+				setNewStudentGrade('');
+				setNewStudentClass('');
+				fetchData();
+				console.log(response);
+			} catch (e) {
+				console.log(e);
+			}
+		} else {
+			setIsStudentValid(false);
 		}
 	};
 
@@ -130,7 +158,9 @@ function MemberInfo() {
 
 	const handleRegisterEnd = async () => {
 		await registerStudent();
-		setStudentOpen(false);
+		if (!isStudentValid) {
+			setStudentOpen(false);
+		}
 	};
 
 	const handleDelete = async (studentSeq: number) => {
@@ -193,6 +223,12 @@ function MemberInfo() {
 									<Alert variant="outlined" color="red" open={confirmOpen} onClose={() => setConfirmOpen(false)}>
 										비밀번호가 일치하지 않습니다.
 									</Alert>
+									<Alert variant="outlined" color="red" open={isWrong} onClose={() => setIsWrong(false)}>
+										현재 비밀번호 입력이 바르지 않습니다.
+									</Alert>
+									<Alert variant="outlined" color="red" open={!isValid} onClose={() => setIsValid(true)}>
+										비밀번호는 8자 이상이면서 숫자와 영어와 특수문자를 모두 포함해야 합니다
+									</Alert>
 								</CardBody>
 								<CardFooter className="pt-0">
 									<Button variant="gradient" onClick={handleEdit} fullWidth>
@@ -241,8 +277,29 @@ function MemberInfo() {
 								학생 정보를 입력 후, 등록 버튼을 클릭하세요.
 							</Typography>
 							<Input label="이름" size="lg" value={newStudentName} onChange={handleNewStudentName} crossOrigin="" />
-							<Input label="학년" size="lg" value={newStudentGrade} onChange={handleNewStudentGrade} crossOrigin="" />
-							<Input label="반" size="lg" value={newStudentClass} onChange={handleNewStudentClass} crossOrigin="" />
+							<Input
+								label="학년"
+								size="lg"
+								type="number"
+								value={newStudentGrade}
+								onChange={handleNewStudentGrade}
+								crossOrigin=""
+								min={1}
+								max={6}
+							/>
+							<Input
+								label="반"
+								size="lg"
+								type="number"
+								value={newStudentClass}
+								onChange={handleNewStudentClass}
+								crossOrigin=""
+								min={1}
+								max={20}
+							/>
+							<Alert variant="outlined" color="red" open={!isStudentValid} onClose={() => setIsStudentValid(true)}>
+								모든 값을 입력해주세요.
+							</Alert>
 						</CardBody>
 						<CardFooter className="flex justify-end">
 							<Button className="mr-5" variant="gradient" onClick={handleRegister}>

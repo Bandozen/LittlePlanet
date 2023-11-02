@@ -125,6 +125,17 @@ public class MemberController {
         }
     }
 
+//    @PostMapping("/app/login")
+//    public ResponseEntity<MemberResponse> appLogin(@RequestBody MemberLoginRequest memberLoginRequest) {
+//        try {
+//            String dummy = memberService.login(memberLoginRequest);
+//            return ResponseEntity.ok(new MemberResponse(true, "로그인 성공"));
+//        } catch (EntityNotFoundException | BadCredentialsException ex) {
+//            return ResponseEntity.status(HttpStatus.BAD_REQUEST)
+//                    .body(new MemberResponse(false, "로그인에 실패"));
+//        }
+//    }
+
     @PostMapping("/logout")
     public ResponseEntity<MemberResponse> logout(HttpServletResponse response) {
         response.setHeader("Set-Cookie", "JWT=" + null + "; Path=/; Max-Age=0; Secure;");
