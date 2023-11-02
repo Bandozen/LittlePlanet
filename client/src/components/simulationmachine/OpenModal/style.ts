@@ -6,4 +6,8 @@ export const Wrapper = styled.div`
 		font-size: 2.5rem;
 		color: #188eb7;
 	}
+
+	.modal-content {
+		text-align: center;
+	}
 `;

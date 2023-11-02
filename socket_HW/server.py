@@ -2,6 +2,13 @@ import socket
 import numpy as np
 import time
 import asyncio
+from dotenv import load_dotenv
+import os
+
+load_dotenv()
+
+server_ip = os.getenv('SERVER_IP')
+server_port = int(os.getenv('SERVER_PORT'))
 
 def recvall(sock, count):
     buf = b''
@@ -12,10 +19,6 @@ def recvall(sock, count):
         count -= len(newbuf)
     return buf
 
-server_ip = '0.0.0.0'
-server_port = 12345
-image_path = '/home/ubuntu/websocket/cam.jpg'
-
 while True:
     socket_server = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
     socket_server.bind((server_ip, server_port))
@@ -24,17 +27,21 @@ while True:
     conn, addr = socket_server.accept()
 
     try:
-        while True:
-            
-            length = recvall(conn, 16)
-            if length is not None:
-                stringData = recvall(conn, int(length))
-                data = np.frombuffer(stringData, dtype = 'uint8')
-                with open(image_path, 'wb') as image_file:
-                    image_file.write(data)
+        email_length = recvall(conn, 16)
+        if email_length is not None:
+            email_data = recvall(conn, int(email_length))
+            email = email_data.decode()
+            image_path = f'/home/ubuntu/user/{email}/cam.png'
+            while True:
+                length = recvall(conn, 16)
+                if length is not None:
+                    stringData = recvall(conn, int(length))
+                    data = np.frombuffer(stringData, dtype = 'uint8')
+                    with open(image_path, 'wb') as image_file:
+                        image_file.write(data)
 
-            else:
-                break
+                else:
+                    break
 
     except KeyboardInterrupt:
         conn.close()
