@@ -30,7 +30,7 @@ function Login() {
 		const { value } = e.target; // Object destructuring
 		setEmail(value);
 		if (!isEmailValid(value)) {
-			setEmailError('test@naver.com');
+			setEmailError('이메일 형식으로 입력해주세요');
 		} else {
 			setEmailError('');
 		}
@@ -115,6 +115,7 @@ function Login() {
 
 	// 새로운 비밀번호 입력
 	const [isEqual, setIsEqual] = useState(true);
+	const [isValid, setIsValid] = useState(true);
 	const handleNewPasswordChange = (e: React.ChangeEvent<HTMLInputElement>) => {
 		const { value } = e.target;
 		setNewPassword(value);
@@ -124,7 +125,10 @@ function Login() {
 		setPasswordConfirm(value);
 	};
 	const changePassword = async () => {
-		if (newPassword === passwordConfirm) {
+		setIsEqual(true);
+		setIsValid(true);
+		const passwordRegex = /^(?=.*[A-Za-z])(?=.*\d)(?=.*[@$!%*#?&])[A-Za-z\d@$!%*#?&]{8,}$/;
+		if (newPassword === passwordConfirm && newPassword.match(passwordRegex)) {
 			try {
 				await api.post('/member/changePassword', {
 					emailAddress: emailResetPW,
@@ -139,8 +143,10 @@ function Login() {
 			} catch (e) {
 				console.log(e);
 			}
-		} else {
+		} else if (newPassword !== passwordConfirm) {
 			setIsEqual(false);
+		} else {
+			setIsValid(false);
 		}
 	};
 
@@ -250,6 +256,9 @@ function Login() {
 						)}
 						<Alert variant="outlined" color="red" open={!isEqual} onClose={() => setIsEqual(true)}>
 							비밀번호가 일치하지 않습니다.
+						</Alert>
+						<Alert variant="outlined" color="red" open={!isValid} onClose={() => setIsValid(true)}>
+							비밀번호는 8자 이상이면서 숫자와 영어와 특수문자를 모두 포함해야 합니다
 						</Alert>
 					</CardBody>
 				</Card>
