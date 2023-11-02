@@ -127,6 +127,7 @@ function SignUp({ setCondition }: SignUpProps) {
 									verifyEmail();
 								}}
 								// width="w-full" // block 대신 width를 사용
+								hidden={emailPass}
 							>
 								인증 요청
 							</Button>
