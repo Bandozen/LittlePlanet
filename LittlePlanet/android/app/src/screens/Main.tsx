@@ -1,9 +1,16 @@
 import React from 'react';
-import {ImageBackground, View, StyleSheet, Button, Alert} from 'react-native';
+import {
+  ImageBackground,
+  View,
+  StyleSheet,
+  Button,
+  Alert,
+  Text,
+} from 'react-native';
 import {StackNavigationProp} from '@react-navigation/stack';
 import STTComponent from '../components/STTComponent';
 import {MemberAPI} from '../utils/MemberAPI';
-import { Text } from 'react-native-reanimated/lib/typescript/Animated';
+// import { Text } from 'react-native-reanimated/lib/typescript/Animated';
 
 type MainProps = {
   navigation: StackNavigationProp<any, 'Main'>;
@@ -24,9 +31,9 @@ export default function Main({navigation}: MainProps) {
       <ImageBackground
         source={require('../assets/images/login_img.jpg')}
         style={styles.backgroundImage}>
-
         <Button title="로그인" onPress={() => navigation.navigate('Login')} />
         <Button title="로그아웃" onPress={handleLogout} />
+        <Text style={{ color: 'white' }}>소행성에 오신 것을 환영합니다!</Text>
         <STTComponent />
       </ImageBackground>
     </View>
@@ -41,7 +48,9 @@ const styles = StyleSheet.create({
   },
   backgroundImage: {
     flex: 1,
-    resizeMode: 'contain',
+    width: '100%', // 전체 부모 너비를 차지하도록 설정
+    height: '100%', // 전체 부모 높이를 차지하도록 설정
+    resizeMode: 'cover', // 이미지가 부모 뷰를 완전히 커버하도록 설정
     justifyContent: 'center',
   },
 });
