@@ -21,7 +21,7 @@ image_update_interval = 0.1  # 예시: 5초마다 이미지 업데이트
 
 def send_updated_image():
     global email
-    image_path = f'/home/ubuntu/user/{email}/cam.jpg'  # 이미지 경로로 대체
+    image_path = f'/home/ubuntu/user/{email}/cam.png'  # 이미지 경로로 대체
     while True:
         try:
             with open(image_path, 'rb') as image_file:
