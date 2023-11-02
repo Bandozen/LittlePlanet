@@ -14,12 +14,15 @@ const LoginBg = styled.div`
 		background-repeat: no-repeat;
 		display: flex;
 		justify-content: center;
+		// justify-content: right;
+		// padding-right: 20%;
 	}
 	.page-box {
 		background-color: white;
 		height: 50%;
 		opacity: 0.9;
 		border-radius: 15px;
+		// margin-top: 20%;
 	}
 	.change-bar {
 		display: flex;

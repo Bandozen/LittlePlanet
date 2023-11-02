@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
-import { SignUpWrapper } from './style';
+// import { SignUpWrapper } from './style';
+import { Input, Button, Dialog, Card, CardBody, Typography, Alert } from '@material-tailwind/react';
 import api from '../../api';
 
 type SignUpProps = {
@@ -106,84 +107,171 @@ function SignUp({ setCondition }: SignUpProps) {
 			});
 	}
 	return (
-		<SignUpWrapper>
-			<div className="signup-div">회원가입 컴포넌트</div>
-			<div className="signup-box">
-				<div className="input-line">
-					<span className="input-title">이메일</span>
-					<div className="input-position">
-						<input
-							className="input-css"
-							onChange={(e) => {
-								setEmail(e.target.value);
-								console.log(email);
-							}}
-						/>
-						<button type="submit" onClick={verifyEmail} hidden={emailPass}>
-							인증 요청
-						</button>
-					</div>
-				</div>
-				{verifying === true && (
-					<div className="input-line">
-						<span className="input-title">인증번호</span>
-						<div className="input-position">
-							<input
-								className="input-css"
-								onChange={(e) => {
-									setVerifyNumber(e.target.value);
-									console.log(verifyNumber);
-								}}
-							/>
-							<button type="submit" onClick={verifyNumberCheck}>
-								인증
-							</button>
-						</div>
-					</div>
-				)}
-				{emailPass === true && <div className="pass-sentence">이메일 인증이 완료되었습니다.</div>}
-				<div className="input-line">
-					<span className="input-title">학교명</span>
-					<input
-						className="input-position input-css"
-						onChange={(e) => {
-							setSchool(e.target.value);
-							console.log(school);
-						}}
-					/>
-				</div>
-				<div className="input-line">
-					<span className="input-title">비밀번호</span>
-					<input
-						className="input-position input-css"
-						type="password"
-						onChange={(e) => {
-							setPassword(e.target.value);
-							console.log(password);
-						}}
-					/>
-				</div>
-				<h1 className="password-inform">
-					비밀번호는 영문(대,소문자 구분), 숫자, 특수문자을 조합 8~20자 이내로 설정해 주세요.
-				</h1>
-				<div className="input-line">
-					<span className="input-title">비밀번호 확인</span>
-					<input
-						className="input-position input-css"
-						type="password"
-						onChange={(e) => {
-							setConfirmPassword(e.target.value);
-							console.log(confirmPassword);
-						}}
-					/>
-				</div>
+		// <div>
+		// 	<div className="signup-div">회원가입 컴포넌트</div>
+		// 	<div className="signup-box">
+		// 		<div className="input-line">
+		// 			<span className="input-title">이메일</span>
+		// 			<div className="input-position">
+		// 				<input
+		// 					className="input-css"
+		// 					onChange={(e) => {
+		// 						setEmail(e.target.value);
+		// 						console.log(email);
+		// 					}}
+		// 				/>
+		// 				<button type="submit" onClick={verifyEmail} hidden={emailPass}>
+		// 					인증 요청
+		// 				</button>
+		// 			</div>
+		// 		</div>
+		// 		{verifying === true && (
+		// 			<div className="input-line">
+		// 				<span className="input-title">인증번호</span>
+		// 				<div className="input-position">
+		// 					<input
+		// 						className="input-css"
+		// 						onChange={(e) => {
+		// 							setVerifyNumber(e.target.value);
+		// 							console.log(verifyNumber);
+		// 						}}
+		// 					/>
+		// 					<button type="submit" onClick={verifyNumberCheck}>
+		// 						인증
+		// 					</button>
+		// 				</div>
+		// 			</div>
+		// 		)}
+		// 		{emailPass === true && <div className="pass-sentence">이메일 인증이 완료되었습니다.</div>}
+		// 		<div className="input-line">
+		// 			<span className="input-title">학교명</span>
+		// 			<input
+		// 				className="input-position input-css"
+		// 				onChange={(e) => {
+		// 					setSchool(e.target.value);
+		// 					console.log(school);
+		// 				}}
+		// 			/>
+		// 		</div>
+		// 		<div className="input-line">
+		// 			<span className="input-title">비밀번호</span>
+		// 			<input
+		// 				className="input-position input-css"
+		// 				type="password"
+		// 				onChange={(e) => {
+		// 					setPassword(e.target.value);
+		// 					console.log(password);
+		// 				}}
+		// 			/>
+		// 		</div>
+		// 		<h1 className="password-inform">
+		// 			비밀번호는 영문(대,소문자 구분), 숫자, 특수문자을 조합 8~20자 이내로 설정해 주세요.
+		// 		</h1>
+		// 		<div className="input-line">
+		// 			<span className="input-title">비밀번호 확인</span>
+		// 			<input
+		// 				className="input-position input-css"
+		// 				type="password"
+		// 				onChange={(e) => {
+		// 					setConfirmPassword(e.target.value);
+		// 					console.log(confirmPassword);
+		// 				}}
+		// 			/>
+		// 		</div>
+		// 		<div>
+		// 			<button type="submit" onClick={signupClick}>
+		// 				가입하기
+		// 			</button>
+		// 		</div>
+		// 	</div>
+		// </div>
+
+		<Card>
+			<CardBody>
 				<div>
-					<button type="submit" onClick={signupClick}>
-						가입하기
-					</button>
+					<div className="space-y-5">
+						<div className="flex items-center space-x-5">
+							<Input
+								type="email"
+								value={email}
+								placeholder="이메일"
+								onChange={(e) => setEmail(e.target.value)}
+								color="blue" // 추가
+								crossOrigin=""
+							/>
+							<Button
+								size="sm"
+								color="blue"
+								onClick={verifyEmail}
+								// width="w-full" // block 대신 width를 사용
+							>
+								인증 요청
+							</Button>
+						</div>
+						{verifying && (
+							<div className="flex items-center space-x-5">
+								<Input
+									type="text"
+									value={verifyNumber}
+									placeholder="인증번호"
+									onChange={(e) => setVerifyNumber(e.target.value)}
+									color="blue" // 추가
+									crossOrigin=""
+								/>
+								<Button
+									color="blue"
+									onClick={verifyNumberCheck}
+									// width="w-full" // block 대신 width를 사용
+								>
+									인증
+								</Button>
+							</div>
+						)}
+						{emailPass && <Typography color="green">이메일 인증이 완료되었습니다.</Typography>}
+						<div className="flex items-center space-x-5">
+							<Input
+								type="text"
+								value={school}
+								placeholder="학교명"
+								onChange={(e) => setSchool(e.target.value)}
+								color="blue" // 추가
+								crossOrigin=""
+							/>
+						</div>
+						<div className="flex items-center space-x-5">
+							<Input
+								type="password"
+								value={password}
+								placeholder="비밀번호"
+								onChange={(e) => setPassword(e.target.value)}
+								color="blue" // 추가
+								crossOrigin=""
+							/>
+						</div>
+						<Typography color="gray">
+							비밀번호는 영문(대,소문자 구분), 숫자, 특수문자을 조합 8~20자 이내로 설정해 주세요.
+						</Typography>
+						<div className="flex items-center space-x-5">
+							<Input
+								type="password"
+								value={confirmPassword}
+								placeholder="비밀번호 확인"
+								onChange={(e) => setConfirmPassword(e.target.value)}
+								color="blue" // 추가
+								crossOrigin=""
+							/>
+						</div>
+						<Button
+							color="blue"
+							onClick={signupClick}
+							// width="w-full" // block 대신 width를 사용
+						>
+							가입하기
+						</Button>
+					</div>
 				</div>
-			</div>
-		</SignUpWrapper>
+			</CardBody>
+		</Card>
 	);
 }
 
