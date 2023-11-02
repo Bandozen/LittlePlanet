@@ -87,6 +87,9 @@ function MemberInfo() {
 	};
 
 	const handleEdit = async () => {
+		setConfirmOpen(false);
+		setIsWrong(false);
+		setIsValid(true);
 		const passwordRegex = /^(?=.*[A-Za-z])(?=.*\d)(?=.*[@$!%*#?&])[A-Za-z\d@$!%*#?&]{8,}$/;
 		if (newPassword) {
 			if (newPassword === passwordConfirm && newPassword.match(passwordRegex)) {
@@ -147,9 +150,11 @@ function MemberInfo() {
 			} catch (e) {
 				console.log(e);
 			}
-		} else {
-			setIsStudentValid(false);
+			return true;
 		}
+		setIsStudentValid(false);
+		console.log('여기', isStudentValid);
+		return false;
 	};
 
 	const handleRegister = async () => {
@@ -157,9 +162,10 @@ function MemberInfo() {
 	};
 
 	const handleRegisterEnd = async () => {
-		await registerStudent();
-		if (!isStudentValid) {
-			setStudentOpen(false);
+		const res = await registerStudent();
+		console.log('저기', isStudentValid);
+		if (res === true) {
+			await setStudentOpen(false);
 		}
 	};
 
