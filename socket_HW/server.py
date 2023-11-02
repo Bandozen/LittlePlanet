@@ -31,7 +31,7 @@ while True:
         if email_length is not None:
             email_data = recvall(conn, int(email_length))
             email = email_data.decode()
-            image_path = f'/home/ubuntu/user/{email}/cam.jpg'
+            image_path = f'/home/ubuntu/user/{email}/cam.png'
             while True:
                 length = recvall(conn, 16)
                 if length is not None:
