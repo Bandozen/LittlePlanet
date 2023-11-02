@@ -11,17 +11,17 @@ load_dotenv()
 server_ip = os.getenv('SERVER_IP')
 server_port = int(os.getenv('SERVER_PORT'))
 
-sio = socketio.Server(cors_allowed_origins=["http://localhost:3000", "http://k9c203.p.ssafy.io:3000", "https://k9c203.p.ssafy.io"])
+sio = socketio.Server(cors_allowed_origins=["http://localhost:3000", "http://k9c203.p.ssafy.io:3000", "https://k9c203.p.ssafy.io", "http://littleplanet.kids:3000", "https://littleplant.kids"])
 app = socketio.WSGIApp(sio)
 global email
 email = None
 
 # 이미지 업데이트 주기 (초)
-image_update_interval = 0.1  # 예시: 5초마다 이미지 업데이트
+image_update_interval = 0.2  # 예시: 5초마다 이미지 업데이트
 
 def send_updated_image():
     global email
-    image_path = f'/home/ubuntu/user/{email}/cam.png'  # 이미지 경로로 대체
+    image_path = f'/home/ubuntu/user/{email}/character.png'  # 이미지 경로로 대체
     while True:
         try:
             with open(image_path, 'rb') as image_file:
