@@ -24,7 +24,7 @@ function ImageDisplay() {
 		return () => {
 			socket.disconnect();
 		};
-	});
+	}, [userMail]);
 
 	return <div>{image && <img src={image} alt="character" />}</div>;
 }
