@@ -17,7 +17,7 @@ global email
 email = None
 
 # 이미지 업데이트 주기 (초)
-image_update_interval = 0.5  # 예시: 5초마다 이미지 업데이트
+image_update_interval = 0.1  # 예시: 5초마다 이미지 업데이트
 
 def send_updated_image():
     global email
