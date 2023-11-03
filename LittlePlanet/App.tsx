@@ -5,8 +5,6 @@ import { createStackNavigator } from "@react-navigation/stack";
 
 import Main from "./android/app/src/screens/Main";
 import Login from "./android/app/src/screens/Login";
-import PhoneKeyComponent from './android/app/src/components/PhoneKeyComponent';
-import CallingComponent from './android/app/src/components/CallingComponent';
 import Call from './android/app/src/screens/Call';
 
 
