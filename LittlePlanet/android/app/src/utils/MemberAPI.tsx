@@ -1,3 +1,6 @@
+import AsyncStorage from '@react-native-async-storage/async-storage';
+
+
 const BASE_URL = 'https://littleplanet.kids/api/v1/member';
 
 export const MemberAPI = {
@@ -50,6 +53,24 @@ export const MemberAPI = {
       return response.json();
     } catch (error) {
       console.error('Error:', error);
+      throw error;
+    }
+  },
+  // 로그인 상태 설정
+  setJwtToken: async (jwtToken:string) => {
+    if (jwtToken) {
+      await AsyncStorage.setItem('jwtToken', jwtToken);
+    } else {
+      await AsyncStorage.removeItem('jwtToken');
+    }
+  },
+
+  // 로그인 상태 확인
+  getJwtToken: async () => {
+    try {
+      return await AsyncStorage.getItem('jwtToken');
+    } catch (error) {
+      console.error('토큰 로딩 실패', error);
       throw error;
     }
   },
