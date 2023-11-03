@@ -15,7 +15,7 @@ import MachineConfirmPage from 'pages/MachineConfirmPage/MachineConfirmPage';
 import ApplicationLayout from 'layouts/common/ApplicationLayout';
 import ScrollToTop from 'components/common/ScrollToTop';
 import SocketTestPage from 'pages/SocketTestPage';
-// import Scene5page from '../components/Scene5page';
+import Scene5page from 'components/simsulationplay/Scene5page';
 // import SimulationPlayPage from 'pages/SimulationPlayPage';
 
 function AppRouter() {
@@ -37,6 +37,7 @@ function AppRouter() {
 						<Route path="/simulationmachine" element={<SimulationMachinePage />} />
 						<Route path="/machineconfirm" element={<MachineConfirmPage />} />
 						<Route path="/sockettest" element={<SocketTestPage />} />
+						<Route path="/simulation/test" element={<Scene5page />} />
 					</Routes>
 				</BrowserRouter>
 			</ApplicationLayout>
