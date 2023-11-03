@@ -33,7 +33,8 @@ export default function Main({navigation}: MainProps) {
         style={styles.backgroundImage}>
         <Button title="로그인" onPress={() => navigation.navigate('Login')} />
         <Button title="로그아웃" onPress={handleLogout} />
-        <Text style={{ color: 'white' }}>소행성에 오신 것을 환영합니다!</Text>
+        <Button title="전화 걸기" onPress={() => navigation.navigate('Call')} />
+        <Text style={ styles.textStyle }>소행성에 오신 것을 환영합니다!</Text>
         <STTComponent />
       </ImageBackground>
     </View>
@@ -53,4 +54,8 @@ const styles = StyleSheet.create({
     resizeMode: 'cover', // 이미지가 부모 뷰를 완전히 커버하도록 설정
     justifyContent: 'center',
   },
+  textStyle: {
+    fontSize: 20,
+    color: 'white'
+  }
 });

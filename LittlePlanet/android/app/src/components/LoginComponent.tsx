@@ -7,6 +7,7 @@ import {
   Alert,
   Modal,
   TouchableOpacity,
+  StyleSheet
 } from 'react-native';
 import {MemberAPI} from '../utils/MemberAPI';
 import {StackNavigationProp} from '@react-navigation/stack';
@@ -44,7 +45,6 @@ export default function LoginComponent({
     }
   };
 
- 
   return (
     <View style={{padding: 20}}>
       <TextInput
@@ -64,10 +64,11 @@ export default function LoginComponent({
       />
       {passwordError && <Text style={{color: 'red'}}>{passwordError}</Text>}
 
-      <Button title="로그인" onPress={handleLogin} />
-
-
-
+      <TouchableOpacity
+        style={styles.buttonStyle}
+        onPress={handleLogin}>
+        <Text style={styles.buttonText}>로그인</Text>
+      </TouchableOpacity>
 
       <TouchableOpacity onPress={() => setModalVisible(true)}>
         <Text style={{color: 'blue', marginTop: 10}}>비밀번호 찾기</Text>
@@ -90,3 +91,22 @@ export default function LoginComponent({
     </View>
   );
 }
+
+const styles = StyleSheet.create({
+  container: {
+    flex: 1,
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
+  buttonStyle: {
+    backgroundColor: 'yellow',
+    padding: 10,
+    borderRadius: 5,
+    marginTop: 10,
+  },
+  buttonText: {
+    color: 'black',
+    fontSize: 16,
+    textAlign: 'center', 
+  },
+});
