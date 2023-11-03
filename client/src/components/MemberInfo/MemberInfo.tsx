@@ -195,9 +195,12 @@ function MemberInfo() {
 						<Dialog size="xs" open={open} handler={handleOpen} className="bg-transparent shadow-none">
 							<Card className="mx-auto w-full max-w-[24rem]">
 								<CardBody className="flex flex-col gap-4">
-									<Typography variant="h4" color="blue-gray">
-										회원정보 수정
-									</Typography>
+									<div className="flex flex-row items-center justify-between">
+										<Typography variant="h4" color="blue-gray">
+											회원정보 수정
+										</Typography>
+										<XCircleIcon onClick={handleOpen} className="h-5 w-5" />
+									</div>
 									<Typography className="mb-3 font-normal" variant="paragraph" color="gray">
 										현재 비밀번호 입력 후, 수정할 정보를 입력하세요
 									</Typography>
@@ -276,9 +279,12 @@ function MemberInfo() {
 				<Dialog size="xs" open={studentOpen} handler={handleStudentOpen} className="bg-transparent shadow-none">
 					<Card className="mx-auto w-full max-w-[24rem]">
 						<CardBody className="flex flex-col gap-4">
-							<Typography variant="h4" color="blue-gray">
-								학생 정보 등록
-							</Typography>
+							<div className="flex flex-row items-center justify-between">
+								<Typography variant="h4" color="blue-gray">
+									학생 정보 등록
+								</Typography>
+								<XCircleIcon onClick={handleStudentOpen} className="h-5 w-5" />
+							</div>
 							<Typography className="mb-3 font-normal" variant="paragraph" color="gray">
 								학생 정보를 입력 후, 등록 버튼을 클릭하세요.
 							</Typography>
@@ -307,7 +313,7 @@ function MemberInfo() {
 								모든 값을 입력해주세요.
 							</Alert>
 						</CardBody>
-						<CardFooter className="flex justify-end">
+						<CardFooter className="flex justify-center">
 							<Button className="mr-5" variant="gradient" onClick={handleRegister}>
 								계속 등록
 							</Button>
