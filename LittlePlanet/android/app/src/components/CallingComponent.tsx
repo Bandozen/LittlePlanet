@@ -1,5 +1,7 @@
 import React from 'react';
 import {View, Text, TouchableOpacity, StyleSheet} from 'react-native';
+import STTComponent from '../components/STTComponent';
+
 
 interface CallingProps {
   phoneNumber: string;
@@ -10,6 +12,7 @@ const CallingComponent: React.FC<CallingProps> = ({phoneNumber, onEndCall}) => {
   return (
     <View style={styles.container}>
       <Text style={styles.text}>{phoneNumber}와 통화를 하고 있어요!</Text>
+      <STTComponent />
       <TouchableOpacity style={styles.endCallButton} onPress={onEndCall}>
         <Text style={styles.endCallText}>통화 종료</Text>
       </TouchableOpacity>
