@@ -54,6 +54,7 @@ export default function Main({navigation}: MainProps) {
           // 로그인 상태일 때 보이는 버튼
           <React.Fragment>
             <Text style={styles.textStyle}>소행성에 오신 것을 환영합니다!</Text>
+            <Text style={styles.textStyle}>시뮬레이션 상황에 맞게 어플이 재구성되니 잠시 기다려주세요.</Text>
             <Button title="로그아웃" onPress={handleLogout} />
           </React.Fragment>
         ) : (
@@ -63,7 +64,6 @@ export default function Main({navigation}: MainProps) {
               title="로그인"
               onPress={() => navigation.navigate('Login')}
             />
-            <Text style={styles.textStyle}>로그인해주세요.</Text>
           </React.Fragment>
         )}
 
@@ -81,9 +81,9 @@ const styles = StyleSheet.create({
   },
   backgroundImage: {
     flex: 1,
-    width: '100%', // 전체 부모 너비를 차지하도록 설정
-    height: '100%', // 전체 부모 높이를 차지하도록 설정
-    resizeMode: 'cover', // 이미지가 부모 뷰를 완전히 커버하도록 설정
+    width: '100%',
+    height: '100%',
+    resizeMode: 'cover',
     justifyContent: 'center',
   },
   textStyle: {

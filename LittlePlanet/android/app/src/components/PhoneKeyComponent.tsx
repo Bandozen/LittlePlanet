@@ -15,7 +15,7 @@ interface PhoneKeyProps {
 }
 
 const buttonPressSound = new Sound(
-  'music/buttonPress.mp3',
+  'button_press.mp3',
   Sound.MAIN_BUNDLE,
   error => {
     if (error) {
@@ -24,7 +24,7 @@ const buttonPressSound = new Sound(
   },
 );
 
-const signalSound = new Sound('music/signal.mp3', Sound.MAIN_BUNDLE, error => {
+const signalSound = new Sound('signal.mp3', Sound.MAIN_BUNDLE, error => {
   if (error) {
     console.log('신호음 파일을 로드할 수 없습니다.', error);
   }
