@@ -32,9 +32,9 @@ export default function LoginComponent({
 
   const handleLogin = async () => {
     try {
-      // 로그인 API를 호출하고 응답을 받습니다.
+      // 로그인 API를 호출하고 응답을 받음
       const { jwt } = await MemberAPI.login(email, password);
-      // 받은 JWT를 저장합니다.
+      // 받은 JWT를 저장
       await MemberAPI.setJwtToken(jwt);
   
       Alert.alert('로그인 성공', '환영합니다!');
