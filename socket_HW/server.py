@@ -1,7 +1,7 @@
 import socket
-import numpy as np
-import time
-import asyncio
+from _thread import *
+import subprocess
+
 from dotenv import load_dotenv
 import os
 
@@ -9,6 +9,12 @@ load_dotenv()
 
 server_ip = os.getenv('SERVER_IP')
 server_port = int(os.getenv('SERVER_PORT'))
+
+print('start')
+server_socket = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+server_socket.setsockopt(socket.SOL_SOCKET, socket.SO_REUSEADDR, 1)
+server_socket.bind((server_ip, server_port))
+server_socket.listen()
 
 def recvall(sock, count):
     buf = b''
@@ -19,34 +25,23 @@ def recvall(sock, count):
         count -= len(newbuf)
     return buf
 
-while True:
-    socket_server = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
-    socket_server.bind((server_ip, server_port))
-    socket_server.listen(10)
+def threaded(client_socket, addr):
+    email_length = recvall(client_socket, 16)
+    if email_length is not None:
+        email_data = recvall(client_socket, int(email_length))
+        email = email_data.decode()
+        subprocess.Popen(["python3", "/home/ubuntu/character/trans.py", email])
 
-    conn, addr = socket_server.accept()
+    
+    client_socket.close()
 
-    try:
-        email_length = recvall(conn, 16)
-        if email_length is not None:
-            email_data = recvall(conn, int(email_length))
-            email = email_data.decode()
-            image_path = f'/home/ubuntu/user/{email}/cam.png'
-            while True:
-                length = recvall(conn, 16)
-                if length is not None:
-                    stringData = recvall(conn, int(length))
-                    data = np.frombuffer(stringData, dtype = 'uint8')
-                    with open(image_path, 'wb') as image_file:
-                        image_file.write(data)
+try:
+    while True:
+        client_socket, addr = server_socket.accept()
+        start_new_thread(threaded, (client_socket, addr))
 
-                else:
-                    break
+except Exception as e:
+    print(e)
 
-    except KeyboardInterrupt:
-        conn.close()
-        socket_server.close()
-
-    conn.close()
-    socket_server.close()
-    time.sleep(5)
+finally:
+    server_socket.close()
