@@ -37,8 +37,7 @@ public class SimulationHistoryController {
             return ResponseEntity.status(HttpStatus.BAD_REQUEST)
                     .body(new SimulationHistoryResponse(false, "학생 또는 시뮬레이션 seq 확인"));
         } catch (EntityExistsException ex) {
-            return ResponseEntity.status(HttpStatus.CONFLICT)
-                    .body(new SimulationHistoryResponse(false, "해당 학생은 이미 이 시뮬레이션에 참여하였습니다."));
+            return ResponseEntity.ok(new SimulationHistoryResponse(true, "해당 학생은 이미 이 시뮬레이션에 참여하였습니다."));
         }
     }
 

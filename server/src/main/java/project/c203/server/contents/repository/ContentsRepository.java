@@ -8,7 +8,7 @@ import java.util.List;
 
 @Repository
 public interface ContentsRepository extends JpaRepository<Contents, Integer> {
-
     List<Contents> findContentsByContentsUrlTypeAndContentsUrlNum(Integer type, Integer num);
+    List<Contents> findContentsByContentsUrlType(Integer type);
 
 }
