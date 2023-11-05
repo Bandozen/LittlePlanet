@@ -1,4 +1,4 @@
-import React, {useState} from 'react';
+import React, {useState, useEffect} from 'react';
 import {
   View,
   Text,
@@ -36,7 +36,11 @@ const PhoneKeyComponent: React.FC<PhoneKeyProps> = ({onCallInitiated}) => {
   const handleKeypadPress = (pressedKey: string | number) => {
     const updatedNumber = `${number}${pressedKey}`;
     setNumber(updatedNumber);
-    buttonPressSound.play();
+
+    // 사운드를 정지하고 시작점으로 리셋 후 다시 재생(react-native sound는 한번에 하나만 처리함 -> 콜백함수로 누를때마다 소리재생 가능)
+    buttonPressSound.stop(() => {
+      buttonPressSound.play();
+    });
   };
   // 번호 지우기
   const handleBackspacePress = () => {
@@ -46,11 +50,40 @@ const PhoneKeyComponent: React.FC<PhoneKeyProps> = ({onCallInitiated}) => {
     // '119'라면 신호음을 재생하고 onCallInitiated를 호출
     if (number === '119') {
       signalSound.play(() => {
+        handleSendMessage();
         onCallInitiated(number);
       });
     } else {
       // 다른 번호일때
       Alert.alert('통화 실패', '119를 다시 입력해볼까요?');
+    }
+  };
+
+  const message = 'go Next';
+
+  const [socket, setSocket] = useState<WebSocket | null>(null);
+
+  useEffect(() => {
+    const newSocket = new WebSocket('ws://172.30.1.84:7777');
+
+    newSocket.onopen = () => {
+      console.log('WebSocket connection established.');
+      setSocket(newSocket);
+    };
+
+    // newSocket.onclose = () => {
+    //   console.log('WebSocket connection closed.');
+    // };
+
+    return () => {
+      // newSocket.close();
+      console.log("콜링으로 넘어간다")
+    };
+  }, []);
+
+  const handleSendMessage = () => {
+    if (socket && message) {
+      socket.send(message);
     }
   };
 
@@ -66,7 +99,9 @@ const PhoneKeyComponent: React.FC<PhoneKeyProps> = ({onCallInitiated}) => {
         <TouchableOpacity style={styles.callButton} onPress={handleCall}>
           <Icon name="phone" size={30} color="white" />
         </TouchableOpacity>
-        <TouchableOpacity style={styles.backspaceButton} onPress={handleBackspacePress}>
+        <TouchableOpacity
+          style={styles.backspaceButton}
+          onPress={handleBackspacePress}>
           <Icon name="backspace" size={24} color="black" />
         </TouchableOpacity>
       </View>
@@ -79,7 +114,9 @@ const KeypadButton: React.FC<{
   onPress: (key: string | number) => void;
 }> = ({number, onPress}) => {
   return (
-    <TouchableOpacity style={styles.keypadButton} onPress={() => onPress(number)}>
+    <TouchableOpacity
+      style={styles.keypadButton}
+      onPress={() => onPress(number)}>
       <Text style={styles.buttonText}>{number}</Text>
     </TouchableOpacity>
   );
@@ -102,7 +139,6 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     flexWrap: 'wrap',
     justifyContent: 'flex-start',
-    
   },
   keypadButton: {
     width: 100,
@@ -130,7 +166,6 @@ const styles = StyleSheet.create({
     borderColor: 'black',
     borderRadius: 35,
     margin: 20,
-
   },
   callButton: {
     width: 70,
@@ -140,7 +175,6 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     alignItems: 'center',
     margin: 20,
-
   },
 });
 
