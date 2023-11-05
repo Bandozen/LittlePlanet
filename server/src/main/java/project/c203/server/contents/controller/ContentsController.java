@@ -1,12 +1,9 @@
 package project.c203.server.contents.controller;
 
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.*;
 import project.c203.server.contents.entity.Contents;
 import project.c203.server.contents.service.ContentsService;
-import project.c203.server.member.dto.ContentsRequest;
-import project.c203.server.member.dto.ContentsResponse;
 
 import java.util.List;
 
@@ -21,7 +18,13 @@ public class ContentsController {
 
     @GetMapping
     public ResponseEntity<List<Contents>> getContents(@RequestParam Integer type, Integer num) {
-        List Contents = contentsService.getContents(type, num);
-        return ResponseEntity.ok(Contents);
+        List contents = contentsService.getContents(type, num);
+        return ResponseEntity.ok(contents);
+    }
+
+    @GetMapping("/byType")
+    public ResponseEntity<List<Contents>> getContentsByType(@RequestParam Integer type) {
+        List contents = contentsService.getContentsByType(type);
+        return ResponseEntity.ok(contents);
     }
 }
