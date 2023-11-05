@@ -60,12 +60,12 @@ const STTComponent: React.FC<STTComponentProps> = ({ onSTTResult }) => {
   };
 
   return (
-    <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center', backgroundColor: 'black' }}>
+    <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}>
       <Button
         title={isRecording ? '녹음 중지' : '녹음 시작'}
         onPress={isRecording ? stopRecording : startRecording}
       />
-      <Text style={{ color: 'white', padding: 10 }}>{text}</Text>
+      <Text style={{ color: 'red', padding: 10 }}>{text}</Text>
     </View>
   );
 };
