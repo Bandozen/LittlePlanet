@@ -60,7 +60,7 @@ export default function Main({navigation}: MainProps) {
   }, [checkLoginStatus]);
 
   useEffect(() => {
-    const newSocket = new WebSocket('ws://172.30.1.84:7777');
+    const newSocket = new WebSocket('wss://k9c203.p.ssafy.io:7777');
 
     newSocket.onopen = () => {
       console.log('웹소켓 연결');
