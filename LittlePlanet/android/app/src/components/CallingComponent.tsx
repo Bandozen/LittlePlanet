@@ -20,7 +20,7 @@ const narrationFiles = [
 
 const CallingComponent: React.FC<CallingProps> = ({phoneNumber, onEndCall}) => {
   const [currentFileIndex, setCurrentFileIndex] = useState(0);
-  const [isSTTActive, setIsSTTActive] = useState(false);
+  const [isSTTActive, setIsSTTActive] = useState(true);
   const [transcript, setTranscript] = useState('');
   const [socket, setSocket] = useState<any>(null);
 
@@ -58,7 +58,7 @@ const CallingComponent: React.FC<CallingProps> = ({phoneNumber, onEndCall}) => {
       try {
         const jwtToken = await MemberAPI.getJwtToken();
         if (jwtToken) {
-          newSocket = new WebSocket('ws://172.30.1.84:7777');
+          newSocket = new WebSocket('wss://k9c203.p.ssafy.io:17777');
   
           newSocket.onopen = () => {
             console.log('웹소켓 연결');
