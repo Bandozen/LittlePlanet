@@ -159,10 +159,8 @@ public class MemberController {
 
     @PostMapping("/otp/verify")
     public ResponseEntity<MemberResponse> verifyOtp(@RequestParam String otp) {
-        //try {
             String memberEmail = memberService.verifyOtp(otp);
             return ResponseEntity.ok(new MemberResponse(true, memberEmail));
-        //}
     }
 
     @PostMapping("/otp/connected")

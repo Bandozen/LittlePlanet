@@ -17,8 +17,13 @@ public class ContentsService {
     }
 
     public List<Contents> getContents (Integer type, Integer num) {
-        List Contents = contentsRepository.findContentsByContentsUrlTypeAndContentsUrlNum(type, num);
-        return Contents;
+        List contents = contentsRepository.findContentsByContentsUrlTypeAndContentsUrlNum(type, num);
+        return contents;
+    }
+
+    public List<Contents> getContentsByType (Integer type) {
+        List contents= contentsRepository.findContentsByContentsUrlType(type);
+        return  contents;
     }
 
 }

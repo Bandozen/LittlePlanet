@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { Alert, Typography, Button } from '@material-tailwind/react';
 import { PhoneArrowUpRightIcon, SparklesIcon } from '@heroicons/react/24/outline';
 import api from '../../api';
+// import { Content } from '../../types/content';
 
 type Content = {
 	contentsUrlName: string;
@@ -11,7 +12,7 @@ type Content = {
 };
 
 // function Scene5page({ onNextScene }: { onNextScene: () => void }) {
-function Scene5page() {
+function Scene2page() {
 	const [contentsData, setContentsData] = useState<Content[]>([]);
 	const [isWrong, setIsWrong] = useState(true);
 
@@ -22,7 +23,7 @@ function Scene5page() {
 
 	const fetchData = async () => {
 		try {
-			const contentsResponse = await api.get('/contents?type=11&num=4');
+			const contentsResponse = await api.get('/contents?type=11&num=2');
 			setContentsData(contentsResponse.data);
 			console.log(contentsResponse.data);
 		} catch (e) {
@@ -31,7 +32,7 @@ function Scene5page() {
 	};
 
 	const [socket, setSocket] = useState<WebSocket | null>(null);
-	const [message, setMessage] = useState(`${touched}`);
+	const [message, setMessage] = useState('correct-answer');
 
 	useEffect(() => {
 		fetchData();
@@ -66,7 +67,7 @@ function Scene5page() {
 	}, []);
 
 	const handleSendMessage = () => {
-		setMessage(`${touched}`);
+		setMessage('correct-answer');
 		if (socket && message) {
 			socket.send(message);
 			setMessage('');
@@ -109,4 +110,4 @@ function Scene5page() {
 	);
 }
 
-export default Scene5page;
+export default Scene2page;
