@@ -1,6 +1,8 @@
 import React, {useState, useEffect} from 'react';
 import {
+  ViewStyle,
   View,
+  TextStyle,
   Text,
   TouchableOpacity,
   StyleSheet,
@@ -24,11 +26,11 @@ const buttonPressSound = new Sound(
   },
 );
 
-const signalSound = new Sound('signal.mp3', Sound.MAIN_BUNDLE, error => {
-  if (error) {
-    console.log('신호음 파일을 로드할 수 없습니다.', error);
-  }
-});
+// const signalSound = new Sound('signal.mp3', Sound.MAIN_BUNDLE, error => {
+//   if (error) {
+//     console.log('신호음 파일을 로드할 수 없습니다.', error);
+//   }
+// });
 
 const PhoneKeyComponent: React.FC<PhoneKeyProps> = ({onCallInitiated}) => {
   const [number, setNumber] = useState<string>('');
@@ -47,12 +49,12 @@ const PhoneKeyComponent: React.FC<PhoneKeyProps> = ({onCallInitiated}) => {
     setNumber(number.slice(0, -1)); // 현재 번호에서 마지막 자리를 제거
   };
   const handleCall = () => {
-    // '119'라면 신호음을 재생하고 onCallInitiated를 호출
+    // '119'라면 onCallInitiated를 호출(콜링컴포넌트로 넘어감)
     if (number === '119') {
-      signalSound.play(() => {
+      // signalSound.play(() => {
         handleSendMessage();
         onCallInitiated(number);
-      });
+      // });
     } else {
       // 다른 번호일때
       Alert.alert('통화 실패', '119를 다시 입력해볼까요?');
@@ -64,19 +66,21 @@ const PhoneKeyComponent: React.FC<PhoneKeyProps> = ({onCallInitiated}) => {
   const [socket, setSocket] = useState<WebSocket | null>(null);
 
   useEffect(() => {
-    const newSocket = new WebSocket('wss://k9c203.p.ssafy.io:7777');
+
+
+    const newSocket = new WebSocket('wss://k9c203.p.ssafy.io:17777');
 
     newSocket.onopen = () => {
       console.log('WebSocket connection established.');
       setSocket(newSocket);
     };
 
-    // newSocket.onclose = () => {
-    //   console.log('WebSocket connection closed.');
-    // };
+    newSocket.onclose = () => {
+      console.log('WebSocket connection closed.');
+    };
 
     return () => {
-      // newSocket.close();
+      newSocket.close();
       console.log("콜링으로 넘어간다")
     };
   }, []);
@@ -113,11 +117,31 @@ const KeypadButton: React.FC<{
   number: string | number;
   onPress: (key: string | number) => void;
 }> = ({number, onPress}) => {
+  // 화면 너비를 기반으로 버튼 크기 계산을 여기에서 수행
+  const screenWidth = Dimensions.get('window').width;
+  const numColumns = 3;
+  const size = screenWidth / numColumns;
+  
+  const buttonStyle: ViewStyle = {
+    width: size - 40,
+    height: size - 40,
+    margin: 5,
+    justifyContent: 'center',
+    alignItems: 'center',
+    backgroundColor: '#e0e0e0',
+    borderRadius: size / 2,
+  };
+
+  const textStyle: TextStyle = {
+    fontSize: 28,
+    fontWeight: 'bold',
+    textAlign: 'center', // 버튼 내의 텍스트를 중앙 정렬
+    lineHeight: size - 40, // 버튼 높이에 맞춰 lineHeight 설정
+  };
+
   return (
-    <TouchableOpacity
-      style={styles.keypadButton}
-      onPress={() => onPress(number)}>
-      <Text style={styles.buttonText}>{number}</Text>
+    <TouchableOpacity style={buttonStyle} onPress={() => onPress(number)}>
+      <Text style={textStyle}>{number}</Text>
     </TouchableOpacity>
   );
 };
