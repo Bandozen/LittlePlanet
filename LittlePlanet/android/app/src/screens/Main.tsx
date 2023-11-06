@@ -60,7 +60,7 @@ export default function Main({navigation}: MainProps) {
   }, [checkLoginStatus]);
 
   useEffect(() => {
-    const newSocket = new WebSocket('wss://k9c203.p.ssafy.io:7777');
+    const newSocket = new WebSocket('wss://k9c203.p.ssafy.io:17777');
 
     newSocket.onopen = () => {
       console.log('웹소켓 연결');
@@ -97,11 +97,13 @@ export default function Main({navigation}: MainProps) {
       console.log(error);
     }
   }, []);
-  // STT 결과를 처리하는 함수
-  const handleSTTResult = (text: string) => {
-    setTranscript(text);
-      console.log('텍스트넘어간다', text);
-  };
+  // // STT 결과를 처리하는 함수
+  // const handleSTTResult = (text: string) => {
+  //   setTranscript(text);
+  //     console.log('텍스트넘어간다', text);
+  // };
+
+
   return (
     <View style={styles.container}>
       <ImageBackground
@@ -128,7 +130,7 @@ export default function Main({navigation}: MainProps) {
         )}
 
         <Button title="전화 걸기" onPress={() => navigation.navigate('Call')} />
-        <STTComponent onSTTResult={handleSTTResult} />
+        {/* <STTComponent isSTTActive={isSTTActive} onSTTResult={handleSTTResult} /> */}
       </ImageBackground>
     </View>
   );
