@@ -1,6 +1,5 @@
 import AsyncStorage from '@react-native-async-storage/async-storage';
 
-
 const BASE_URL = 'https://littleplanet.kids/api/v1/member';
 
 export const MemberAPI = {
@@ -18,7 +17,9 @@ export const MemberAPI = {
           memberPassword: password,
         }),
       });
-
+      if (!response.ok) {
+        throw new Error(`HTTP error! status: ${response.status}`);
+      }
       // 응답 헤더에서 쿠키 추출
       const cookies = response.headers.get('Set-Cookie');
       console.log('Received cookies:', cookies);
@@ -40,6 +41,7 @@ export const MemberAPI = {
       console.error('Error:', error);
       throw error;
     }
+
   },
 
   logout: async () => {
@@ -57,20 +59,28 @@ export const MemberAPI = {
     }
   },
   // 로그인 상태 설정
-  setJwtToken: async (jwtToken:string) => {
-    if (jwtToken) {
+  setJwtToken: async (jwtToken:string|null) => {
+    // 토큰을 안전한 저장소에 저장합니다. 예: AsyncStorage, SecureStore 등
+    if (jwtToken === null) {
+      AsyncStorage.removeItem('jwtToken');
+      return;
+    }
+    try {
       await AsyncStorage.setItem('jwtToken', jwtToken);
-    } else {
-      await AsyncStorage.removeItem('jwtToken');
+    } catch (error) {
+      console.error('Setting JWT token failed', error);
+      throw error;
     }
   },
 
   // 로그인 상태 확인
   getJwtToken: async () => {
+    // 저장된 토큰을 검색합니다.
     try {
-      return await AsyncStorage.getItem('jwtToken');
+      const jwtToken = await AsyncStorage.getItem('jwtToken');
+      return jwtToken;
     } catch (error) {
-      console.error('토큰 로딩 실패', error);
+      console.error('Getting JWT token failed', error);
       throw error;
     }
   },

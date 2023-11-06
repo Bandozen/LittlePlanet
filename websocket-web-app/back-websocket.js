@@ -33,7 +33,7 @@ wss.on('connection', (ws, req) => {
     console.log(wss.clients)
     // 메시지를 다시 클라이언트로 보내기
     clients.forEach((client) => {
-      client.send(`do you sent? ${message}`)
+      client.send(`${message}`)
     })
     
   });

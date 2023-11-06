@@ -32,14 +32,15 @@ export default function LoginComponent({
 
   const handleLogin = async () => {
     try {
-      // 로그인 API를 호출하고 응답을 받음
       const { jwt } = await MemberAPI.login(email, password);
-      // 받은 JWT를 저장
-      await MemberAPI.setJwtToken(jwt);
-  
-      Alert.alert('로그인 성공', '환영합니다!');
-      setLoginFailed(false);
-      navigation.navigate('Main');
+      if (jwt) {
+        await MemberAPI.setJwtToken(jwt);
+        Alert.alert('로그인 성공', '환영합니다!');
+        setLoginFailed(false);
+        navigation.navigate('Main');
+      } else {
+        throw new Error('No JWT returned');
+      }
     } catch (error) {
       console.log('로그인 실패', error);
       Alert.alert('로그인 실패', '이메일 또는 비밀번호가 틀립니다.');
