@@ -11,5 +11,11 @@ export const Wrapper = styled.div`
 		border: solid 2px #188eb7;
 		border-radius: 10px;
 		margin: 20px;
+		width: 460px;
+		height: 450px;
+	}
+
+	.loading {
+		width: 90%;
 	}
 `;
