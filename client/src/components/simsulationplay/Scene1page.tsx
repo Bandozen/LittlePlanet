@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { Alert, Typography } from '@material-tailwind/react';
+import { Alert, Typography, Button } from '@material-tailwind/react';
 import { PhoneArrowUpRightIcon, SparklesIcon } from '@heroicons/react/24/outline';
 import api from '../../api';
 
@@ -10,18 +10,14 @@ type Content = {
 	contentsUrlNum: number;
 };
 
-interface Scene1pageProps {
-	socket: WebSocket | null;
-}
-
-function Scene1page({ socket: initialSocket }: Scene1pageProps) {
+// 친구가 다쳤어요.
+function Scene1page() {
 	const [contentsData, setContentsData] = useState<Content[]>([]);
 	const [text, setText] = useState('');
 	const [isWrong, setIsWrong] = useState(false);
 
-	const answer = '친구가 높은 곳에서 뛰어내려서 다리를 다쳤어요.';
-
-	const socket = initialSocket;
+	const [socket, setSocket] = useState<WebSocket | null>(null);
+	const answer = '친구가 높은 곳에서 뛰어내려서 많이 다쳤어요.';
 
 	const fetchData = async () => {
 		try {
@@ -34,23 +30,46 @@ function Scene1page({ socket: initialSocket }: Scene1pageProps) {
 
 	useEffect(() => {
 		fetchData();
+
+		const newSocket = new WebSocket('wss://k9c203.p.ssafy.io:17777');
+
+		newSocket.onopen = () => {
+			console.log('WebSocket connection established.');
+			setSocket(newSocket);
+		};
+
+		// 받을 메시지는 사용자 신고 내용 text
+		newSocket.onmessage = (event) => {
+			console.log(event.data);
+			// gpt에게 물어보기. 응답이 적절하다면
+			// newSocket?.send('play two');
+			// 적절하지 않다면
+			// setIsWrong(true);
+			// newSocket?.send('replay one');
+		};
+
+		newSocket.onclose = () => {
+			console.log('WebSocket connection closed.');
+		};
+
+		return () => {
+			newSocket.close();
+		};
 	}, []);
 
 	const handleSendMessage = () => {
-		if (socket) {
-			if (text === answer) {
-				// socket.send('Y');
-			} else {
-				// socket.send('N');
-			}
-		}
+		// gpt에게 물어보기. 응답이 적절하다면
+		socket?.send('go two');
+		// 적절하지 않다면
+		// setIsWrong(true);
+		// socket?.send('replay one');
 	};
 
 	if (socket) {
 		socket.onmessage = (event) => {
 			console.log(event.data);
 			setText(event.data);
-			handleSendMessage();
+			console.log(text);
 		};
 	}
 
@@ -61,7 +80,8 @@ function Scene1page({ socket: initialSocket }: Scene1pageProps) {
 			<Alert>
 				<Typography variant="h3">다친 친구가 있다는 사실을 소방관에게 알려줘!</Typography>
 			</Alert>
-			<Alert className="flex justify-center" variant="gradient" open={!isWrong} onClose={() => setIsWrong(false)}>
+			<Button onClick={handleSendMessage}>소켓</Button>
+			<Alert className="flex justify-center" variant="gradient" open={isWrong} onClose={() => setIsWrong(false)}>
 				<div className="flex flex-row m-3">
 					<SparklesIcon className="w-10 h-10 mr-2" color="yellow" />
 					<Typography variant="h3">이렇게 말해볼까?</Typography>
