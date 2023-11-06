@@ -6,7 +6,7 @@ COPY . /app
 
 RUN apt-get update && apt-get install -y python3-pip
 
-RUN pip install -r requirements.txt
+RUN pip3 install -r requirements.txt
 
 EXPOSE 18090
 
