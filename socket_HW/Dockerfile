@@ -6,7 +6,7 @@ COPY . /app
 
 RUN apt-get update && apt-get install -y python3-pip
 
-RUN apt-get install libgl1-mesa-glx
+RUN apt-get install -y libgl1-mesa-glx
 
 RUN pip3 install -r requirements.txt
 
