@@ -17,16 +17,19 @@ function ImageDisplay() {
 		});
 
 		socket.on('image', (data) => {
-			setImage(data.url);
-			console.log(data);
+			if (image !== data.url) {
+				setImage(data.url);
+				console.log(data);
+			}
 		});
 
 		return () => {
 			socket.disconnect();
 		};
+		// eslint-disable-next-line react-hooks/exhaustive-deps
 	}, [userMail]);
 
-	return <div>{image && <img src={image} alt="character" />}</div>;
+	return <div>{image && <img src={image} alt="" />}</div>;
 }
 
 export default ImageDisplay;
