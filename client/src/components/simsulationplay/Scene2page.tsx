@@ -11,10 +11,10 @@ type Content = {
 	contentsUrlNum: number;
 };
 
-// function Scene5page({ onNextScene }: { onNextScene: () => void }) {
+// 여기 위치는요.
 function Scene2page() {
 	const [contentsData, setContentsData] = useState<Content[]>([]);
-	const [isWrong, setIsWrong] = useState(true);
+	const [isWrong, setIsWrong] = useState(false);
 
 	// 구조물 만졌을 때 구조물 seq로 touched 바꾸고, setIsTouched(true)
 	// const [touched, setTouched] = useState('');
@@ -32,12 +32,12 @@ function Scene2page() {
 	};
 
 	const [socket, setSocket] = useState<WebSocket | null>(null);
-	const [message, setMessage] = useState('correct-answer');
+	const [message, setMessage] = useState('go three');
 
 	useEffect(() => {
 		fetchData();
 
-		const newSocket = new WebSocket('ws://localhost:7777');
+		const newSocket = new WebSocket('wss://k9c203.p.ssafy.io:17777');
 
 		newSocket.onopen = () => {
 			console.log('WebSocket connection established.');
@@ -47,14 +47,11 @@ function Scene2page() {
 		// 받아온 메시지는 사용자 답변의 정답 여부
 		newSocket.onmessage = (event) => {
 			console.log(event.data);
-			console.log(event.data === 'You sent: 1');
-			if (event.data === 'Y') {
-				// 부모 컴포넌트에 다음 씬으로 넘어가라는 신호 발송
-				// onNextScene();
-				setIsWrong(false);
-			} else {
-				setIsWrong(true);
-			}
+			// gpt에게 물어보기. 응답이 적절하다면
+			// newSocket?.send('go three');
+			// 적절하지 않다면
+			setIsWrong(true);
+			// newSocket?.send('replay one');
 		};
 
 		newSocket.onclose = () => {
@@ -67,7 +64,7 @@ function Scene2page() {
 	}, []);
 
 	const handleSendMessage = () => {
-		setMessage('correct-answer');
+		setMessage('go three');
 		if (socket && message) {
 			socket.send(message);
 			setMessage('');
@@ -97,7 +94,7 @@ function Scene2page() {
 				{touched === 1 ? (
 					<div className="flex flex-row items-center">
 						<PhoneArrowUpRightIcon className="w-5 h-5 mr-2" />
-						<Typography variant="h5">여기는 소행성로 203이에요.</Typography>
+						<Typography variant="h5">여기는 소행성로 203 근처에요.</Typography>
 					</div>
 				) : (
 					<div className="flex flex-row items-center m-3">
