@@ -31,7 +31,13 @@ wss.on('connection', (ws, req) => {
 
     const mes = JSON.parse(message)
     // 메세지 타입이 web이거나 app이라면 처음 이메일을 등록하는 메세지이니
-    if ((mes.type === 'web'|| mes.type === 'app') && mes.email) {
+    if (mes.type === 'web' && mes.email) {
+      // 이 클라이언트의 이메일은 방금 받은 이메일로 등록
+      ws.email= mes.email
+      ws.studentName = mes.studentName
+      ws.send(JSON.stringify(`hi ${ws.email} ${ws.studentName}`))
+    }
+    if (mes.type === 'app' && mes.email) {
       // 이 클라이언트의 이메일은 방금 받은 이메일로 등록
       ws.email= mes.email
       ws.send(JSON.stringify(`hi ${ws.email}`))
