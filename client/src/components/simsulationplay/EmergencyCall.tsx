@@ -2,7 +2,9 @@ import React, { useState, useEffect } from 'react';
 import { Button } from '@material-tailwind/react';
 import api from '../../api';
 import Scene1page from './Scene1page';
-// import Scene2page from './Scene2page';
+import Scene2page from './Scene2page';
+import Scene3page from './Scene3page';
+import Scene4page from './Scene4page';
 // import { Content } from '../../types/content';
 
 function EmergencyCall() {
@@ -26,7 +28,7 @@ function EmergencyCall() {
 
 	useEffect(() => {
 		fetchData();
-		const newSocket = new WebSocket('ws://localhost:7777');
+		const newSocket = new WebSocket('wss://k9c203.p.ssafy.io:17777');
 
 		newSocket.onopen = () => {
 			console.log('WebSocket connection established.');
@@ -35,8 +37,24 @@ function EmergencyCall() {
 
 		newSocket.onmessage = (event) => {
 			console.log(event.data);
-			if (event.data === 'do you sent? go Next') {
+			if (event.data === 'play Phonekey') {
 				setStatus(1);
+			}
+
+			if (event.data === 'play two') {
+				setStatus(2);
+			}
+
+			if (event.data === 'play three') {
+				setStatus(3);
+			}
+
+			if (event.data === 'play four') {
+				setStatus(4);
+			}
+
+			if (event.data === 'play five') {
+				setStatus(5);
 			}
 		};
 
@@ -51,7 +69,7 @@ function EmergencyCall() {
 
 	const handleSendMessage = () => {
 		if (socket && message) {
-			socket.send(message);
+			socket.send('go Phonekey');
 		}
 	};
 
@@ -59,7 +77,10 @@ function EmergencyCall() {
 		<>
 			<Button onClick={handleSendMessage}> 인트로 끝남 </Button>
 			{/* 1번부터 5번씬 차례대로 status에 따라 */}
-			{status === 1 && <Scene1page socket={socket} />}
+			{status === 1 && <Scene1page />}
+			{status === 2 && <Scene2page />}
+			{status === 3 && <Scene3page />}
+			{status === 4 && <Scene4page />}
 		</>
 	);
 }
