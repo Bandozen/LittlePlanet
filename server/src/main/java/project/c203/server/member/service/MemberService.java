@@ -126,7 +126,7 @@ public class MemberService {
 
     public String verifyOtp(String otp) {
         String memberEmail = stringRedisTemplate.opsForValue().get(otp);
-        stringRedisTemplate.opsForValue().set(otp, "true");
+        stringRedisTemplate.opsForValue().set(otp, "true", 180, TimeUnit.SECONDS);
         return memberEmail;
     }
 
