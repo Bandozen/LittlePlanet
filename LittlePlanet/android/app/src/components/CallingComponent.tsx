@@ -129,10 +129,6 @@ const CallingComponent: React.FC<CallingProps> = ({phoneNumber, onEndCall}) => {
     };
   }, []);
 
-  useEffect(() => {
-    playNextFile();
-  }, []);
-
   // STT 결과를 처리하는 함수
   const handleSTTResult = (text: string) => {
     setTranscript(text);
