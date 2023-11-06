@@ -23,6 +23,7 @@
       "import/no-extraneous-dependencies": 0,
       "prettier/prettier": ["error", { 
         "endOfLine": "auto" 
-      }]
+      }],
+      "react-hooks/exhaustive-deps": "off"
     }
   }
