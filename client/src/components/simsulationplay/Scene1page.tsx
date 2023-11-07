@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { Alert, Typography, Button } from '@material-tailwind/react';
 import { PhoneArrowUpRightIcon, SparklesIcon } from '@heroicons/react/24/outline';
 import api from '../../api';
+// import { CallGPT } from './gpt/gpt';
 
 type Content = {
 	contentsUrlName: string;
@@ -13,11 +14,13 @@ type Content = {
 // 친구가 다쳤어요.
 function Scene1page() {
 	const [contentsData, setContentsData] = useState<Content[]>([]);
-	const [text, setText] = useState('');
 	const [isWrong, setIsWrong] = useState(false);
 
 	const [socket, setSocket] = useState<WebSocket | null>(null);
 	const answer = '친구가 높은 곳에서 뛰어내려서 많이 다쳤어요.';
+
+	const apiKey = process.env.REACT_APP_GPT_API_KEY!;
+	console.log(apiKey);
 
 	const fetchData = async () => {
 		try {
@@ -57,21 +60,21 @@ function Scene1page() {
 		};
 	}, []);
 
-	const handleSendMessage = () => {
-		// gpt에게 물어보기. 응답이 적절하다면
-		socket?.send('go two');
-		// 적절하지 않다면
-		// setIsWrong(true);
-		// socket?.send('replay one');
-	};
-
 	if (socket) {
 		socket.onmessage = (event) => {
 			console.log(event.data);
-			setText(event.data);
-			console.log(text);
 		};
 	}
+
+	const handleClickCallAPI = async () => {
+		if (socket) {
+			const playNarrMessage = {
+				type: 'narr',
+				content: 1,
+			};
+			socket.send(JSON.stringify(playNarrMessage));
+		}
+	};
 
 	return (
 		<>
@@ -80,7 +83,7 @@ function Scene1page() {
 			<Alert>
 				<Typography variant="h3">다친 친구가 있다는 사실을 소방관에게 알려줘!</Typography>
 			</Alert>
-			<Button onClick={handleSendMessage}>소켓</Button>
+			<Button onClick={handleClickCallAPI}>소켓</Button>
 			<Alert className="flex justify-center" variant="gradient" open={isWrong} onClose={() => setIsWrong(false)}>
 				<div className="flex flex-row m-3">
 					<SparklesIcon className="w-10 h-10 mr-2" color="yellow" />
