@@ -66,7 +66,7 @@ function Scene2page() {
 	const handleSendMessage = () => {
 		setMessage('go three');
 		if (socket && message) {
-			socket.send(message);
+			socket.send(JSON.stringify(message));
 			setMessage('');
 		}
 	};
