@@ -7,7 +7,6 @@ import Scene2page from './Scene2page';
 import Scene3page from './Scene3page';
 import Scene4page from './Scene4page';
 import { userEmail, studentName } from '../../store/RecoilState';
-import { CallGPT } from './gpt/gpt';
 
 function EmergencyCall() {
 	// 시뮬레이션 씬 저장하기
@@ -39,15 +38,15 @@ function EmergencyCall() {
 			setSocket(newSocket);
 
 			// 소켓 열릴 때, 이메일과 학생 이름 보내기
-			// const handShake = {
-			// 	type: 'web',
-			// 	email: memberEmail,
-			// 	studentName: student,
-			// };
 			const handShake = {
-				type: 'page',
-				content: 1,
+				type: 'web',
+				email: memberEmail,
+				studentName: student,
 			};
+			// const handShake = {
+			// 	type: 'page',
+			// 	content: 1,
+			// };
 			newSocket.send(JSON.stringify(handShake));
 		};
 
@@ -77,7 +76,6 @@ function EmergencyCall() {
 	};
 
 	const sendKeypadMessage = () => {
-		CallGPT();
 		if (socket) {
 			socket.send(JSON.stringify(message));
 		}

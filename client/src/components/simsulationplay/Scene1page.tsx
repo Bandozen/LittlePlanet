@@ -74,6 +74,13 @@ function Scene1page() {
 			};
 			socket.send(JSON.stringify(playNarrMessage));
 		}
+
+		// const prompt = {
+		// 	role: 'user',
+		// 	content:
+		// 		"1. [GOAL] : Child must convey their current location (삼성스토어 소행성 지점 or 소행성로 203) to the firefighters. 2. [FIREFIGHTER'S QUESTION] : 친구가 있는 위치를 말해주세요. 3. [CHILD'S ANSWER] : 삼성스토어 소행성지점 근처에요. ## Use the output in the JSON format. ##",
+		// };
+		// CallGPT(prompt);
 	};
 
 	return (
