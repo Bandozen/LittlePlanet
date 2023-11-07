@@ -132,37 +132,38 @@ public class MemberController {
                 .body(new MemberResponse(true, "로그아웃에 성공했습니다."));
     }
 
+    
     @GetMapping
     public ResponseEntity<Member> memberInfo(Authentication authentication) {
         Member member = memberService.getMemberInfo(authentication);
         return ResponseEntity.status(HttpStatus.OK)
-                .body(member);
+        .body(member);
     }
-
+    
     @PutMapping("/edit")
     public ResponseEntity<MemberResponse> editMemberInfo(@RequestBody MemberEditRequest memberEditRequest, Authentication authentication ) {
         try {
             memberService.editMemberInfo(authentication, memberEditRequest);
             return ResponseEntity.status(HttpStatus.OK)
-                    .body(new MemberResponse(true, "정보 수정에 성공했습니다."));
+            .body(new MemberResponse(true, "정보 수정에 성공했습니다."));
         } catch (BadCredentialsException ex) {
             return ResponseEntity.status(HttpStatus.BAD_REQUEST)
-                    .body(new MemberResponse(false, "현재 비밀번호를 잘못 입력하였습니다."));
+            .body(new MemberResponse(false, "현재 비밀번호를 잘못 입력하였습니다."));
         }
     }
-
+    
     @PostMapping("/otp")
     public ResponseEntity<MemberResponse> createOtp(Authentication authentication) {
         String otp = memberService.createOtp(authentication);
         return ResponseEntity.ok(new MemberResponse(true, otp));
     }
-
+    
     @PostMapping("/otp/verify")
     public ResponseEntity<MemberResponse> verifyOtp(@RequestParam String otp) {
-            String memberEmail = memberService.verifyOtp(otp);
-            return ResponseEntity.ok(new MemberResponse(true, memberEmail));
+        String memberEmail = memberService.verifyOtp(otp);
+        return ResponseEntity.ok(new MemberResponse(true, memberEmail));
     }
-
+    
     @PostMapping("/otp/connected")
     public ResponseEntity<MemberResponse> connectedOtp(@RequestParam String otp) {
         boolean isConnected = memberService.connectedOtp(otp);
@@ -171,5 +172,11 @@ public class MemberController {
         }   else {
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(new MemberResponse(false, "기기연결에 실패했습니다."));
         }
+    }
+
+    @PostMapping("/command")
+    public ResponseEntity<MemberResponse> command(@RequestBody MemberCommandRequest MemberCommandRequest) {
+         String MemberEmail = memberService.command(MemberCommandRequest);
+         return ResponseEntity.ok(new MemberResponse(true, MemberEmail));
     }
 }
