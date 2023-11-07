@@ -1,63 +1,56 @@
-import React, {useState, useEffect, useCallback} from 'react';
+import React, {useState, useEffect} from 'react';
 import {
   ImageBackground,
+  Image,
   View,
   StyleSheet,
   Button,
   Alert,
   Text,
+  TextInput,
+  TouchableOpacity,
 } from 'react-native';
 import {StackNavigationProp} from '@react-navigation/stack';
 import {MemberAPI} from '../utils/MemberAPI';
-import LoginComponent from '../components/LoginComponent';
-import STTComponent from '../components/STTComponent';
 
 type MainProps = {
   navigation: StackNavigationProp<any, 'Main'>;
 };
 
 export default function Main({navigation}: MainProps) {
-  const [jwtToken, setJwtToken] = useState<string | null>(null);
+  const [IsLoggedin, setIsLoggedin] = useState(false);
   const [socket, setSocket] = useState<any>(null);
-  const [transcript, setTranscript] = useState('');
+  const [email, setEmail] = useState('');
+  const [password, setPassword] = useState('');
+  const [emailError, setEmailError] = useState('');
+  const [passwordError, setPasswordError] = useState('');
 
-
-  const onLoginSuccess = useCallback((jwt: string) => {
-    setJwtToken(jwt);
-  }, []);
-
-  useEffect(() => {
-    const initialize = async () => {
-      try {
-        const token = await MemberAPI.getJwtToken();
-        console.log('받아온 토큰:', token);
-        setJwtToken(token);
-      } catch (error) {
-        console.log('토큰 로딩 실패', error);
-      }
-    };
-
-    initialize();
-  }, []);
-
-  useEffect(() => {
-    console.log('JWT 토큰 상태:', jwtToken);
-  }, [jwtToken]);
-
-  // 로그인 상태 확인 및 설정
-  const checkLoginStatus = useCallback(async () => {
+  const handleLogin = async () => {
     try {
-      const token = await MemberAPI.getJwtToken();
-      setJwtToken(token); // 상태 업데이트
+      const {jwt} = await MemberAPI.login(email, password);
+      console.log('jwt', jwt);
+      if (jwt) {
+        await MemberAPI.setJwtToken(jwt);
+        await MemberAPI.setEmail(email);
+        Alert.alert('로그인 성공', '환영합니다!');
+        setIsLoggedin(true);
+        if (socket) {
+          const handShake = {
+            type: 'app',
+            email,
+          };
+          socket.send(JSON.stringify(handShake));
+        }
+        navigation.navigate('Main');
+      } else {
+        throw new Error('No JWT returned');
+      }
     } catch (error) {
-      console.error('JWT 토큰 상태 확인 실패:', error);
+      console.log('로그인 실패', error);
+      Alert.alert('로그인 실패', '이메일 또는 비밀번호가 틀립니다.');
+      setIsLoggedin(false);
     }
-  }, []);
-
-  useEffect(() => {
-    checkLoginStatus();
-    console.log('JWT 토큰 상태확인하기:', jwtToken);
-  }, [checkLoginStatus]);
+  };
 
   useEffect(() => {
     const newSocket = new WebSocket('wss://k9c203.p.ssafy.io:17777');
@@ -68,10 +61,9 @@ export default function Main({navigation}: MainProps) {
     };
 
     newSocket.onmessage = event => {
-      console.log(event.data);
-      if (event.data === 'do you sent? go Phonekey') {
+      const eventMessage = JSON.parse(event.data);
+      if (eventMessage.type === 'narr' && eventMessage.content === 0) {
         navigation.navigate('Call');
-        newSocket.close();
       }
     };
 
@@ -84,58 +76,76 @@ export default function Main({navigation}: MainProps) {
     };
   }, []);
 
-  const handleLogout = useCallback(async () => {
+  const handleLogout = async () => {
     try {
-      await MemberAPI.logout();
-      console.log('로그아웃 함수 호출 성공');
-      await MemberAPI.setJwtToken(null);
-      setJwtToken(null);
-      console.log('JWT 토큰 상태를 null로 설정');
       Alert.alert('로그아웃 성공', '다녀오세요!');
+      await MemberAPI.logout();
+      navigation.navigate('Main');
     } catch (error) {
       Alert.alert('로그아웃 실패', '다시 시도해주세요.');
       console.log(error);
     }
-  }, []);
-  // // STT 결과를 처리하는 함수
-  // const handleSTTResult = (text: string) => {
-  //   setTranscript(text);
-  //     console.log('텍스트넘어간다', text);
-  // };
-
+  };
 
   return (
     <View style={styles.container}>
       <ImageBackground
         source={require('../assets/images/login_img.jpg')}
         style={styles.backgroundImage}>
-        {jwtToken ? (
-          // 로그인 상태일 때 보이는 버튼
-          <React.Fragment>
-            <Text style={styles.textStyle}>소행성에 오신 것을 환영합니다!</Text>
-            <Text style={styles.textStyle}>
-              시뮬레이션 상황에 맞게 어플이 재구성되니 잠시 기다려주세요.
-            </Text>
-            <Button title="로그아웃" onPress={handleLogout} />
-          </React.Fragment>
-        ) : (
-          // 로그아웃 상태일 때 보이는 버튼
-          <React.Fragment>
-            <Text style={styles.textStyle}>소행성서비스는 로그인이 필요해요.</Text>
-            <Button
-              title="로그인"
-              onPress={() => navigation.navigate('Login')}
-            />
-          </React.Fragment>
-        )}
+        <View style={styles.contentContainer}>
+          <Image
+            source={require('../assets/images/logo.png')}
+            style={styles.logo}></Image>
+          {IsLoggedin ? (
+            // 로그인 상태일 때 보이는 버튼
+            <React.Fragment>
+              <Text style={styles.textStyle}>
+                소행성에 오신 것을 환영합니다!
+              </Text>
+              <Text style={styles.textStyle}>
+                시뮬레이션 상황에 맞게 어플이 재구성되니
+              </Text>
+              <Text style={styles.textStyle}>잠시 기다려주세요.</Text>
+              <Button title="로그아웃" onPress={handleLogout} />
+            </React.Fragment>
+          ) : (
+            // 로그아웃 상태일 때 보이는 버튼
+            <React.Fragment>
+              <View style={styles.textinputStyle}>
+                <TextInput
+                  style={styles.inputText}
+                  placeholder="이메일을 입력하세요."
+                  value={email}
+                  onChangeText={setEmail}
+                />
+                {emailError && <Text style={{color: 'red'}}>{emailError}</Text>}
+              </View>
+              <View style={styles.textinputStyle}>
+                <TextInput
+                  style={styles.inputText}
+                  placeholder="비밀번호를 입력하세요."
+                  secureTextEntry
+                  value={password}
+                  onChangeText={setPassword}
+                />
+                {passwordError && (
+                  <Text style={{color: 'red'}}>{passwordError}</Text>
+                )}
+              </View>
 
+              <TouchableOpacity
+                style={styles.buttonStyle}
+                onPress={handleLogin}>
+                <Text style={styles.buttonText}>로그인</Text>
+              </TouchableOpacity>
+            </React.Fragment>
+          )}
+        </View>
         <Button title="전화 걸기" onPress={() => navigation.navigate('Call')} />
-        {/* <STTComponent isSTTActive={isSTTActive} onSTTResult={handleSTTResult} /> */}
       </ImageBackground>
     </View>
   );
 }
-
 const styles = StyleSheet.create({
   container: {
     flex: 1,
@@ -147,10 +157,52 @@ const styles = StyleSheet.create({
     width: '100%',
     height: '100%',
     resizeMode: 'cover',
+  },
+  contentContainer: {
+    flex: 1,
     justifyContent: 'center',
+    alignItems: 'center',
+    padding: 20,
   },
   textStyle: {
+    fontFamily: 'GowunDodum-Regular',
     fontSize: 20,
     color: 'white',
+    marginBottom: 10,
+  },
+  buttonStyle: {
+    backgroundColor: 'yellow',
+    padding: 10,
+    borderRadius: 5,
+    marginTop: 10,
+  },
+  buttonText: {
+    color: 'black',
+    fontSize: 16,
+    textAlign: 'center',
+    fontFamily: 'GowunDodum-Regular',
+  },
+  inputText: {
+    borderWidth: 1,
+    padding: 10,
+    marginBottom: 10,
+    width: '80%',
+    backgroundColor: 'white',
+    borderColor: 'white',
+    color: 'black',
+    borderRadius: 10,
+  },
+  logo: {
+    width: 200,
+    height: 100,
+    resizeMode: 'contain',
+    alignSelf: 'center',
+    marginBottom: 20,
+  },
+  textinputStyle: {
+    flexDirection: 'row',
+    justifyContent: 'center',
+    alignItems: 'center',
+    marginBottom: 10,
   },
 });

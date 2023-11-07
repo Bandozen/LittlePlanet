@@ -84,4 +84,25 @@ export const MemberAPI = {
       throw error;
     }
   },
+  setEmail: async (email: string) => {
+    try {
+      await AsyncStorage.setItem('userEmail', email);
+    } catch (error) {
+      console.error('Error saving the email', error);
+      throw error;
+    }
+  },
+  
+  getEmail: async () => {
+    try {
+      const userEmail = await AsyncStorage.getItem('userEmail');
+      if (userEmail !== null) {
+        // We have the email.
+        return userEmail;
+      }
+    } catch (error) {
+      console.error('Error fetching the email', error);
+      throw error;
+    }
+  },
 };

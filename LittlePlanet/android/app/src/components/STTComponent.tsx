@@ -54,7 +54,7 @@ const STTComponent: React.FC<STTComponentProps> = ({
     };
     // isSTTActive, onSTTResult를 의존성 배열에 추가
     // CallingComponent에서 상태가 변경되면 STTComponent에도 반영되어 리스너 업데이트됨
-  }, [isSTTActive, onSTTResult]);
+  }, [isSTTActive, isRecording, onSTTResult]);
 
   const startRecording = async () => {
     try {
