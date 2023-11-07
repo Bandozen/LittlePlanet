@@ -9,9 +9,12 @@ import {
   Text,
   TextInput,
   TouchableOpacity,
+  ScrollView,
+  RefreshControl,
 } from 'react-native';
 import {StackNavigationProp} from '@react-navigation/stack';
 import {MemberAPI} from '../utils/MemberAPI';
+import TestSTT from '../components/TestSTT';
 
 type MainProps = {
   navigation: StackNavigationProp<any, 'Main'>;
@@ -24,6 +27,10 @@ export default function Main({navigation}: MainProps) {
   const [password, setPassword] = useState('');
   const [emailError, setEmailError] = useState('');
   const [passwordError, setPasswordError] = useState('');
+  const [refreshing, setRefreshing] = useState(false);
+  const [isSTTActive, setIsSTTActive] = useState(false);
+  const [transcript, setTranscript] = useState('');
+  const [status, setstatus] = useState('');
 
   const handleLogin = async () => {
     try {
@@ -34,13 +41,36 @@ export default function Main({navigation}: MainProps) {
         await MemberAPI.setEmail(email);
         Alert.alert('로그인 성공', '환영합니다!');
         setIsLoggedin(true);
-        if (socket) {
+        // 로그인 성공 후 WebSocket 연결 초기화
+        const newSocket = new WebSocket('ws://192.168.100.38:7777');
+
+        newSocket.onopen = () => {
+          console.log('웹소켓 연결');
+
+          // 소켓이 열린 후에 핸드셰이크를 수행
           const handShake = {
             type: 'app',
             email,
           };
-          socket.send(JSON.stringify(handShake));
-        }
+          newSocket.send(JSON.stringify(handShake));
+          console.log('핸드셰이크 전송 성공');
+        };
+
+        newSocket.onmessage = event => {
+          const eventMessage = JSON.parse(event.data);
+          if (eventMessage.type === 'narr' && eventMessage.content === 0) {
+            navigation.navigate('Call');
+          }
+        };
+
+        newSocket.onclose = () => {
+          console.log('웹소켓 연결 종료');
+        };
+
+        // WebSocket 인스턴스를 상태에 저장
+        setSocket(newSocket);
+
+        // Main 화면으로 네비게이션
         navigation.navigate('Main');
       } else {
         throw new Error('No JWT returned');
@@ -52,34 +82,11 @@ export default function Main({navigation}: MainProps) {
     }
   };
 
-  useEffect(() => {
-    const newSocket = new WebSocket('wss://k9c203.p.ssafy.io:17777');
-
-    newSocket.onopen = () => {
-      console.log('웹소켓 연결');
-      setSocket(newSocket);
-    };
-
-    newSocket.onmessage = event => {
-      const eventMessage = JSON.parse(event.data);
-      if (eventMessage.type === 'narr' && eventMessage.content === 0) {
-        navigation.navigate('Call');
-      }
-    };
-
-    newSocket.onclose = () => {
-      console.log('웹소켓 연결 종료');
-    };
-
-    return () => {
-      newSocket.close();
-    };
-  }, []);
-
   const handleLogout = async () => {
     try {
       Alert.alert('로그아웃 성공', '다녀오세요!');
       await MemberAPI.logout();
+      setIsLoggedin(false);
       navigation.navigate('Main');
     } catch (error) {
       Alert.alert('로그아웃 실패', '다시 시도해주세요.');
@@ -87,6 +94,22 @@ export default function Main({navigation}: MainProps) {
     }
   };
 
+  const handleSTTResult = (text: string) => {
+    setTranscript(text);
+    if (socket && text) {
+      const textMessage = {
+        type: `text${status}`,
+        content: text,
+      };
+      socket.send(JSON.stringify(textMessage));
+    } else {
+      console.log("텍스트 안넘어감")
+    }
+    setIsSTTActive(false);
+  };
+  const toggleSTT = () => {
+    setIsSTTActive(!isSTTActive);
+  };
   return (
     <View style={styles.container}>
       <ImageBackground
@@ -140,8 +163,10 @@ export default function Main({navigation}: MainProps) {
               </TouchableOpacity>
             </React.Fragment>
           )}
-        </View>
         <Button title="전화 걸기" onPress={() => navigation.navigate('Call')} />
+        <Button title={isSTTActive ? "Stop STT" : "Start STT"} onPress={toggleSTT} />
+        </View>
+        <TestSTT isSTTActive={isSTTActive} onSTTResult={handleSTTResult} />
       </ImageBackground>
     </View>
   );
@@ -199,7 +224,7 @@ const styles = StyleSheet.create({
     alignSelf: 'center',
     marginBottom: 20,
   },
-  textinputStyle: {
+  textinputStyle: { 
     flexDirection: 'row',
     justifyContent: 'center',
     alignItems: 'center',

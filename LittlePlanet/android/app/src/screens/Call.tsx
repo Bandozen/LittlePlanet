@@ -2,11 +2,15 @@ import React, {useState, useEffect} from 'react';
 import {View, StyleSheet} from 'react-native';
 import CallingComponent from '../components/CallingComponent';
 import PhoneKeyComponent from '../components/PhoneKeyComponent';
+import {MemberAPI} from '../utils/MemberAPI';
 
 const Call = () => {
   // 상태 추가: 현재 전화를 거는 중인지 통화 중인지 결정
   const [inCall, setInCall] = useState(false);
   const [phoneNumber, setPhoneNumber] = useState('');
+  const [socket, setSocket] = useState<WebSocket | null>(null);
+  // const email = MemberAPI.getEmail();
+  // console.log('이메일 받아왔니?', email);
 
   // 전화를 걸면 이 함수를 호출하여 상태를 업데이트
   const handleCallInitiation = (number: string) => {
@@ -14,33 +18,82 @@ const Call = () => {
     setInCall(true); // 통화 상태를 true로 변경
   };
 
-  const [socket, setSocket] = useState<WebSocket | null>(null);
+  useEffect(() => {
+    const fetchEmailAndConnect = async () => {
+      try {
+        const storedEmail = await MemberAPI.getEmail();
+        console.log('이메일 받아왔니?', storedEmail);
 
-  if (inCall && socket) {
-    const goOneMessage = {
-      type: 'page',
-      content: 1,
+        const newSocket = new WebSocket('ws://192.168.100.38:7777');
+
+        newSocket.onopen = () => {
+          console.log('WebSocket connection established.');
+
+          // 소켓이 열린 후에 핸드셰이크를 수행
+          const handShake = {
+            type: 'app',
+            email: storedEmail,
+          };
+          newSocket.send(JSON.stringify(handShake));
+          console.log('핸드셰이크 전송 성공');
+
+          setSocket(newSocket);
+        };
+
+        newSocket.onclose = () => {
+          console.log('WebSocket connection closed.');
+        };
+
+        // 컴포넌트가 언마운트될 때 소켓을 닫습니다.
+        return () => {
+          newSocket.close();
+          console.log('콜링으로 넘어간다');
+        };
+      } catch (error) {
+        console.error('이메일을 가져오는 중 오류가 발생했습니다', error);
+      }
     };
-    socket.send(JSON.stringify(goOneMessage));
-  }
+
+    
+    // 정의한 비동기 함수를 호출합니다.
+    fetchEmailAndConnect();
+  }, []);
+
+  // useEffect(() => {
+  //   const newSocket = new WebSocket('ws://192.168.100.38:7777');
+
+  //   newSocket.onopen = () => {
+  //     console.log('WebSocket connection established.');
+  //     // 소켓이 열린 후에 핸드셰이크를 수행
+  //     const handShake = {
+  //       type: 'app',
+  //       email,
+  //     };
+  //     newSocket.send(JSON.stringify(handShake));
+  //     console.log('핸드셰이크 전송 성공');
+
+  //     setSocket(newSocket);
+  //   };
+
+  //   newSocket.onclose = () => {
+  //     console.log('WebSocket connection closed.');
+  //   };
+
+  //   return () => {
+  //     newSocket.close();
+  //     console.log('콜링으로 넘어간다');
+  //   };
+  // }, []);
 
   useEffect(() => {
-    const newSocket = new WebSocket('wss://k9c203.p.ssafy.io:17777');
-
-    newSocket.onopen = () => {
-      console.log('WebSocket connection established.');
-      setSocket(newSocket);
-    };
-
-    newSocket.onclose = () => {
-      console.log('WebSocket connection closed.');
-    };
-
-    return () => {
-      newSocket.close();
-      console.log('콜링으로 넘어간다');
-    };
-  }, []);
+    if (inCall && socket) {
+      const goOneMessage = {
+        type: 'page',
+        content: 1,
+      };
+      socket.send(JSON.stringify(goOneMessage));
+    }
+  }, [inCall]);
 
   return (
     <View style={styles.container}>

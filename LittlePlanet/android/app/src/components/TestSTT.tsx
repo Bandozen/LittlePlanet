@@ -2,13 +2,13 @@ import React, {useState, useEffect} from 'react';
 import {View, Text, Button} from 'react-native';
 import Voice from '@react-native-community/voice';
 
-interface STTComponentProps {
+interface TestSTTProps {
   isSTTActive: boolean;
   onSTTResult: (text: string) => void;
 }
 
 // 부모 컴포넌트(CallingComponent)로부터 onSTTResult 콜백을 받아 음성 인식 결과를 전달
-const STTComponent: React.FC<STTComponentProps> = ({
+const TestSTT: React.FC<TestSTTProps> = ({
   isSTTActive,
   onSTTResult,
 }) => {
@@ -54,7 +54,7 @@ const STTComponent: React.FC<STTComponentProps> = ({
     };
     // isSTTActive, onSTTResult를 의존성 배열에 추가
     // CallingComponent에서 상태가 변경되면 STTComponent에도 반영되어 리스너 업데이트됨
-  }, [isSTTActive, isRecording, onSTTResult]);
+  }, [isSTTActive]);
 
   const startRecording = async () => {
     try {
@@ -83,4 +83,4 @@ const STTComponent: React.FC<STTComponentProps> = ({
   );
 };
 
-export default STTComponent;
+export default TestSTT;

@@ -6,10 +6,11 @@ import {
   StyleSheet,
   ActivityIndicator,
 } from 'react-native';
-import { globalStyles } from '../../../../src/styles/globalStyles'
+import {globalStyles} from '../../../../src/styles/globalStyles';
 import Icon from 'react-native-vector-icons/MaterialIcons';
 import Sound from 'react-native-sound';
 import STTComponent from '../components/STTComponent';
+import {MemberAPI} from '../utils/MemberAPI';
 
 interface CallingProps {
   phoneNumber: string;
@@ -19,6 +20,7 @@ interface CallingProps {
 const CallingComponent: React.FC<CallingProps> = ({phoneNumber, onEndCall}) => {
   const [isSTTActive, setIsSTTActive] = useState(true);
   const [transcript, setTranscript] = useState('');
+  const [status, setstatus] = useState('');
   const [socket, setSocket] = useState<WebSocket | null>(null);
 
   // 사운드 인스턴스 생성
@@ -35,69 +37,92 @@ const CallingComponent: React.FC<CallingProps> = ({phoneNumber, onEndCall}) => {
     });
   };
 
-  const useSound = (filename: string) => {
-    const soundRef = useRef<Sound | null>(null);
-
-    useEffect(() => {
-      async function loadAndPlaySound() {
-        const signalSound = await createSoundInstance('signal.mp3');
-        signalSound.play(success => {
-          if (success) {
-            console.log('신호음 재생 성공');
-          } else {
-            console.log('신호음 재생 실패');
-          }
-          signalSound.release();
-        });
-      }
-
-      loadAndPlaySound();
-
-      const newSocket = new WebSocket('wss://k9c203.p.ssafy.io:17777');
-      newSocket.onopen = () => {
-        console.log('콜링컴포넌트 웹소켓연결됨');
-        setSocket(newSocket);
-      };
-      newSocket.onmessage = event => {
-        const eventMessage = JSON.parse(event.data);
-        if (eventMessage.type === 'narr') {
-          const narrFilename = `narr_${eventMessage.content}.mp3`;
-          playSoundFile(narrFilename, () =>
-            console.log(`${narrFilename} 재생됨`),
-          );
-        } else if (eventMessage.type === 'end') {
-          console.log('엔드메세지 받고 웹소켓 종료됨');
-          newSocket.close();
-        }
-      };
-      newSocket.onclose = () => {
-        console.log('웹소켓 종료');
-      };
-
-      return () => {
-        newSocket.close();
-      };
-    }, []);
-    
-    const playSoundFile = async (filename: string, callback: () => void) => {
-      const soundInstance = await createSoundInstance(filename);
-      soundInstance.play(success => {
+  useEffect(() => {
+    async function loadAndPlaySound() {
+      const signalSound = await createSoundInstance('signal.mp3');
+      signalSound.play(success => {
         if (success) {
-          console.log('나레이션 파일재생 성공');
+          console.log('신호음 재생 성공');
         } else {
-          console.log('Playback failed due to audio decoding errors');
+          console.log('신호음 재생 실패');
         }
-        soundInstance.release();
-        callback();
+        signalSound.release();
       });
+    }
+
+    loadAndPlaySound();
+
+    const fetchEmailAndConnect = async () => {
+      try {
+        const storedEmail = await MemberAPI.getEmail();
+        console.log('이메일 받아왔니?', storedEmail);
+
+        const newSocket = new WebSocket('ws://192.168.100.38:7777');
+
+        newSocket.onopen = () => {
+          console.log('WebSocket connection established.');
+
+          // 소켓이 열린 후에 핸드셰이크를 수행
+          const handShake = {
+            type: 'app',
+            email: storedEmail,
+          };
+          newSocket.send(JSON.stringify(handShake));
+          console.log('콜링컴포넌트 핸드셰이크 전송 성공');
+
+          setSocket(newSocket);
+        };
+
+        newSocket.onmessage = event => {
+          const eventMessage = JSON.parse(event.data);
+          console.log('이벤트데이터', event.data);
+          if (eventMessage.type === 'narr') {
+            const narrFilename = `narr_${eventMessage.content}.mp3`;
+            playSoundFile(narrFilename, () =>
+              console.log(`${narrFilename} 재생됨`),
+            );
+            setstatus(eventMessage.content);
+          } else if (eventMessage.type === 'end') {
+            console.log('엔드메세지 받고 웹소켓 종료됨');
+            newSocket.close();
+          }
+        };
+        newSocket.onclose = () => {
+          console.log('웹소켓 종료');
+        };
+
+        // 컴포넌트가 언마운트될 때 소켓을 닫습니다.
+        return () => {
+          newSocket.close();
+          console.log('통화종료됨');
+        };
+      } catch (error) {
+        console.error('이메일을 가져오는 중 오류가 발생했습니다', error);
+      }
     };
+
+    // 정의한 비동기 함수를 호출합니다.
+    fetchEmailAndConnect();
+  }, []);
+
+  const playSoundFile = async (filename: string, callback: () => void) => {
+    const soundInstance = await createSoundInstance(filename);
+    soundInstance.play(success => {
+      if (success) {
+        console.log('나레이션 파일재생 성공');
+      } else {
+        console.log('Playback failed due to audio decoding errors');
+      }
+      soundInstance.release();
+      callback();
+    });
   };
 
   const handleSTTResult = (text: string) => {
     setTranscript(text);
     if (socket && text) {
       const textMessage = {
-        type: 'text',
+        type: `text${status}`,
         content: text,
       };
       socket.send(JSON.stringify(textMessage));
@@ -215,7 +240,7 @@ const styles = StyleSheet.create({
   },
   transcriptText: {
     fontSize: 18,
-    color: '#333',
+    color: 'red',
   },
   activityIndicatorContainer: {
     marginVertical: 20,
