@@ -4,7 +4,6 @@ import {NavigationContainer} from '@react-navigation/native';
 import { createStackNavigator } from "@react-navigation/stack";
 
 import Main from "./android/app/src/screens/Main";
-import Login from "./android/app/src/screens/Login";
 import Call from './android/app/src/screens/Call';
 
 
@@ -19,7 +18,6 @@ export default function App() {
         screenOptions={{ headerShown: false }}
       >
         <Stack.Screen name="Main" component={Main} />
-        <Stack.Screen name="Login" component={Login} />
         <Stack.Screen name="Call" component={Call} />
 
       </Stack.Navigator>
