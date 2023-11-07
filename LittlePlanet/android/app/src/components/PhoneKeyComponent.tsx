@@ -52,7 +52,6 @@ const PhoneKeyComponent: React.FC<PhoneKeyProps> = ({onCallInitiated}) => {
     // '119'라면 onCallInitiated를 호출(콜링컴포넌트로 넘어감)
     if (number === '119') {
       // signalSound.play(() => {
-        handleSendMessage();
         onCallInitiated(number);
       // });
     } else {
@@ -61,35 +60,8 @@ const PhoneKeyComponent: React.FC<PhoneKeyProps> = ({onCallInitiated}) => {
     }
   };
 
-  const message = 'go Next';
-
-  const [socket, setSocket] = useState<WebSocket | null>(null);
-
-  useEffect(() => {
 
 
-    const newSocket = new WebSocket('wss://k9c203.p.ssafy.io:17777');
-
-    newSocket.onopen = () => {
-      console.log('WebSocket connection established.');
-      setSocket(newSocket);
-    };
-
-    newSocket.onclose = () => {
-      console.log('WebSocket connection closed.');
-    };
-
-    return () => {
-      newSocket.close();
-      console.log("콜링으로 넘어간다")
-    };
-  }, []);
-
-  const handleSendMessage = () => {
-    if (socket && message) {
-      socket.send(message);
-    }
-  };
 
   return (
     <View style={styles.container}>
