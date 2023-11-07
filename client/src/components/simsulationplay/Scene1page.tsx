@@ -24,7 +24,7 @@ function Scene1page() {
 			const contentsResponse = await api.get('/contents?type=11&num=1');
 			setContentsData(contentsResponse.data);
 		} catch (e) {
-			console.log(e)
+			console.log(e);
 		}
 	};
 
