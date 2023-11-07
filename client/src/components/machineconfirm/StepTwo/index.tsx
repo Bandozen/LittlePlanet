@@ -1,9 +1,12 @@
 import React, { Dispatch, SetStateAction, useEffect, useState } from 'react';
+import api from 'api';
+import { useRecoilValue } from 'recoil';
 import manImage from 'assets/images/realman.png';
 import womanImage from 'assets/images/realwoman.png';
 import Button from 'components/common/Button';
 import CheckStep from '../atoms/CheckStep';
 import { Wrapper } from './style';
+import { userEmail } from '../../../store/RecoilState';
 
 interface IStepTwoProps {
 	setStep: Dispatch<SetStateAction<number>>;
@@ -15,6 +18,7 @@ function StepTwo(props: IStepTwoProps) {
 	const [num, setNum] = useState(0);
 	const [picChange, setPicChange] = useState(false);
 	const [isDone, setIsDone] = useState(false);
+	const userMail = useRecoilValue(userEmail);
 
 	const changeClick = () => {
 		if (!picChange) {
@@ -26,10 +30,14 @@ function StepTwo(props: IStepTwoProps) {
 		}
 	};
 
-	const testClick = () => {
+	const testClick = async () => {
 		if (!isDone) {
 			setStep(2);
 			setActiveStep(3);
+			await api.post('/member/command', {
+				memberEmail: userMail,
+				memberCommand: 'cam',
+			});
 		}
 	};
 
