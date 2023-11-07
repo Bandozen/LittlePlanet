@@ -1,9 +1,12 @@
 import React, { Dispatch, SetStateAction, useEffect, useState } from 'react';
+import api from 'api';
+import { useRecoilValue } from 'recoil';
 import loadingImage from 'assets/images/livecam_loading.jpg';
 import useMovePage from 'hooks/useMovePage';
 import Button from 'components/common/Button';
 import CheckStep from '../atoms/CheckStep';
 import { Wrapper } from './style';
+import { userEmail } from '../../../store/RecoilState';
 
 interface IStepFiveProps {
 	setStep: Dispatch<SetStateAction<number>>;
@@ -14,11 +17,16 @@ function StepFive(props: IStepFiveProps) {
 	const [activeStep, setActiveStep] = useState(5);
 	const [isDone, setIsDone] = useState(false);
 	const [movePage] = useMovePage();
+	const userMail = useRecoilValue(userEmail);
 
-	const testClick = () => {
+	const testClick = async () => {
 		if (!isDone) {
 			setStep(5);
 			setActiveStep(6);
+			await api.post('/member/command', {
+				memberEmail: userMail,
+				memberCommand: 'ready',
+			});
 			movePage('/simulationplay');
 		}
 	};

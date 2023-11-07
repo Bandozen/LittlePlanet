@@ -1,6 +1,7 @@
 import socket
 from _thread import *
 import subprocess
+import redis
 
 from dotenv import load_dotenv
 import os
@@ -9,6 +10,12 @@ load_dotenv()
 
 server_ip = os.getenv('SERVER_IP')
 server_port = int(os.getenv('SERVER_PORT'))
+
+redis_host = os.getenv('REDIS_HOST')
+redis_port = os.getenv('REDIS_PORT')
+redis_password = os.getenv('REDIS_PASSWORD')
+
+redis_client = redis.Redis(host=redis_host, port=redis_port, password=redis_password, charset="utf-8", decode_responses=True, db=1)
 
 print('start')
 server_socket = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
@@ -26,14 +33,31 @@ def recvall(sock, count):
     return buf
 
 def threaded(client_socket, addr):
-    email_length = recvall(client_socket, 16)
-    if email_length is not None:
-        email_data = recvall(client_socket, int(email_length))
-        email = email_data.decode()
-        subprocess.Popen(["python3", "/home/ubuntu/character/trans.py", email])
+    while True:
+        email_length = recvall(client_socket, 16)
+        if email_length is not None:
+            email_data = recvall(client_socket, int(email_length))
+            email = email_data.decode()
+            value = redis_client.get(email)
+            if value == "start":
+                subprocess.Popen(["python3", "/home/ubuntu/character/trans.py", email])
+            elif value == "cam":
+                continue
+            else:
+                client_socket.close()
+                break
 
+    # email_length = recvall(client_socket, 16)
+    # if email_length is not None:
+    #     email_data = recvall(client_socket, int(email_length))
+    #     email = email_data.decode()
+    #     value = redis_client.get(email)
+    #     if value == "cam":
+
+    #     elif value == "start":
+    #         subprocess.Popen(["python3", "/home/ubuntu/character/trans.py", email])
     
-    client_socket.close()
+    # client_socket.close()
 
 try:
     while True:

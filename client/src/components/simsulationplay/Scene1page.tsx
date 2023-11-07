@@ -60,6 +60,14 @@ function Scene1page() {
 		};
 	}, []);
 
+	// const handleSendMessage = () => {
+	// 	// gpt에게 물어보기. 응답이 적절하다면
+	// 	socket?.send(JSON.stringify('go two'));
+	// 	// 적절하지 않다면
+	// 	// setIsWrong(true);
+	// 	// socket?.send('replay one');
+	// };
+
 	if (socket) {
 		socket.onmessage = (event) => {
 			console.log(event.data);
@@ -74,6 +82,13 @@ function Scene1page() {
 			};
 			socket.send(JSON.stringify(playNarrMessage));
 		}
+
+		// const prompt = {
+		// 	role: 'user',
+		// 	content:
+		// 		"1. [GOAL] : Child must convey their current location (삼성스토어 소행성 지점 or 소행성로 203) to the firefighters. 2. [FIREFIGHTER'S QUESTION] : 친구가 있는 위치를 말해주세요. 3. [CHILD'S ANSWER] : 삼성스토어 소행성지점 근처에요. ## Use the output in the JSON format. ##",
+		// };
+		// CallGPT(prompt);
 	};
 
 	return (

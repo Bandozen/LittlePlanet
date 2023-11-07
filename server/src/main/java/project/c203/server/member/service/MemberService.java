@@ -1,13 +1,20 @@
 package project.c203.server.member.service;
 
 import io.micrometer.core.instrument.util.StringUtils;
+
 import org.springframework.data.redis.core.StringRedisTemplate;
+import org.springframework.data.redis.connection.lettuce.LettuceConnectionFactory;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.data.redis.connection.RedisConnectionFactory;
+import org.springframework.data.redis.connection.RedisPassword;
+import org.springframework.data.redis.connection.RedisStandaloneConfiguration;
 import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import project.c203.server.config.security.jwt.JwtUtils;
 import project.c203.server.member.dto.MemberAuthRequest;
+import project.c203.server.member.dto.MemberCommandRequest;
 import project.c203.server.member.dto.MemberEditRequest;
 import project.c203.server.member.dto.MemberLoginRequest;
 import project.c203.server.member.dto.MemberSignupRequest;
@@ -17,6 +24,7 @@ import project.c203.server.member.repository.MemberRepository;
 import javax.persistence.EntityExistsException;
 import javax.persistence.EntityNotFoundException;
 import java.util.concurrent.TimeUnit;
+
 @Service
 public class MemberService {
 
@@ -24,15 +32,17 @@ public class MemberService {
     private final PasswordEncoder passwordEncoder;
     private final JwtUtils jwtUtils;
     private final MailService mailService;
-    private StringRedisTemplate stringRedisTemplate;
+
+    private final StringRedisTemplate stringRedisTemplate;
+    private final StringRedisTemplate stringRedisTemplateCommand;
 
 
-
-    public MemberService(MemberRepository memberRepository, PasswordEncoder passwordEncoder, JwtUtils jwtUtils, StringRedisTemplate stringRedisTemplate, MailService mailService) {
+    public MemberService(MemberRepository memberRepository, PasswordEncoder passwordEncoder, JwtUtils jwtUtils, StringRedisTemplate stringRedisTemplate, StringRedisTemplate stringRedisTemplateCommand, MailService mailService) {
         this.memberRepository = memberRepository;
         this.passwordEncoder = passwordEncoder;
         this.jwtUtils = jwtUtils;
-        this.stringRedisTemplate= stringRedisTemplate;
+        this.stringRedisTemplate = stringRedisTemplate; // 0번 인덱스 사용
+        this.stringRedisTemplateCommand = stringRedisTemplateCommand; // 1번 인덱스 사용
         this.mailService = mailService;
     }
 
@@ -137,5 +147,11 @@ public class MemberService {
         } else {
             return false;
         }
+    }
+
+    public void command(MemberCommandRequest MemberCommandRequest) {
+        String memberEmail = MemberCommandRequest.getMemberEmail();
+        String memberCommand = MemberCommandRequest.getMemberCommand();
+        stringRedisTemplateCommand.opsForValue().set(memberEmail, memberCommand);
     }
 }
