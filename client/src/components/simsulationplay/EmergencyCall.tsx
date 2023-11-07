@@ -67,6 +67,8 @@ function EmergencyCall() {
 		};
 	}, []);
 
+	
+
 	const handleSendMessage = () => {
 		if (socket && message) {
 			socket.send(JSON.stringify('go Phonekey'));
