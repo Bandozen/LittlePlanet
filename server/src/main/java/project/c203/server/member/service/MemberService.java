@@ -34,15 +34,15 @@ public class MemberService {
     private final MailService mailService;
 
     private final StringRedisTemplate stringRedisTemplate;
-    private final StringRedisTemplate secondaryRedisTemplate;
+    private final StringRedisTemplate stringRedisTemplateCommand;
 
 
-    public MemberService(MemberRepository memberRepository, PasswordEncoder passwordEncoder, JwtUtils jwtUtils, StringRedisTemplate stringRedisTemplate, StringRedisTemplate secondaryRedisTemplate, MailService mailService) {
+    public MemberService(MemberRepository memberRepository, PasswordEncoder passwordEncoder, JwtUtils jwtUtils, StringRedisTemplate stringRedisTemplate, StringRedisTemplate stringRedisTemplateCommand, MailService mailService) {
         this.memberRepository = memberRepository;
         this.passwordEncoder = passwordEncoder;
         this.jwtUtils = jwtUtils;
         this.stringRedisTemplate = stringRedisTemplate; // 0번 인덱스 사용
-        this.secondaryRedisTemplate = secondaryRedisTemplate; // 1번 인덱스 사용
+        this.stringRedisTemplateCommand = stringRedisTemplateCommand; // 1번 인덱스 사용
         this.mailService = mailService;
     }
 
@@ -130,18 +130,18 @@ public class MemberService {
     public String createOtp(Authentication authentication) {
         String memberEmail = authentication.getName();
         String otp = String.format("%06d", (int)(Math.random() * 1000000));
-        secondaryRedisTemplate.opsForValue().set(otp, memberEmail, 180, TimeUnit.SECONDS);
+        stringRedisTemplate.opsForValue().set(otp, memberEmail, 180, TimeUnit.SECONDS);
         return otp;
     }
 
     public String verifyOtp(String otp) {
-        String memberEmail = secondaryRedisTemplate.opsForValue().get(otp);
-        secondaryRedisTemplate.opsForValue().set(otp, "true", 180, TimeUnit.SECONDS);
+        String memberEmail = stringRedisTemplate.opsForValue().get(otp);
+        stringRedisTemplate.opsForValue().set(otp, "true", 180, TimeUnit.SECONDS);
         return memberEmail;
     }
 
     public boolean connectedOtp(String otp) {
-        String value = secondaryRedisTemplate.opsForValue().get(otp);
+        String value = stringRedisTemplate.opsForValue().get(otp);
         if (value.equals("true")) {
             return true;
         } else {
@@ -149,10 +149,9 @@ public class MemberService {
         }
     }
 
-    public String command(MemberCommandRequest MemberCommandRequest) {
+    public void command(MemberCommandRequest MemberCommandRequest) {
         String memberEmail = MemberCommandRequest.getMemberEmail();
         String memberCommand = MemberCommandRequest.getMemberCommand();
         stringRedisTemplateCommand.opsForValue().set(memberEmail, memberCommand);
-        return memberEmail;
     }
 }

@@ -23,11 +23,11 @@ function StepThree(props: IStepThreeProps) {
 		if (!isDone) {
 			setStep(3);
 			setActiveStep(4);
-			const response = await api.post('/member/command', {
+			console.log(userMail);
+			await api.post('/member/command', {
 				MemberEmail: userMail,
 				MemberCommand: 'logout',
 			});
-			console.log(response);
 		}
 	};
 

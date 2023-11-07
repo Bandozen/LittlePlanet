@@ -7,11 +7,9 @@ import javax.validation.constraints.NotNull;
 @Data
 public class MemberCommandRequest {
 
-  @NotBlank
   @NotNull
   private String memberEmail;
 
-  @NotBlank
   @NotNull
   private String memberCommand;
 }
