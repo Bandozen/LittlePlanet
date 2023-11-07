@@ -4,6 +4,8 @@ import WindModal from 'components/common/Modal/WindModal';
 import useMovePage from 'hooks/useMovePage';
 // import { Alert } from '@material-tailwind/react';
 import api from 'api';
+import { useRecoilValue } from 'recoil';
+import { userEmail } from '../../../store/RecoilState';
 import { Wrapper } from './style';
 
 export const Timer = memo(() => {
@@ -41,6 +43,7 @@ function OpenModal() {
 	const [isOpenModal, setIsOpenModal] = useState(false);
 	// const [confirmOpen, setConfirmOpen] = React.useState(false);
 	const [movepage] = useMovePage();
+	const userMail = useRecoilValue(userEmail);
 
 	async function getApiNumber() {
 		await api
@@ -56,9 +59,14 @@ function OpenModal() {
 	async function getApiConnected() {
 		await api
 			.post(`member/otp/connected?otp=${otpNum}`)
-			.then((res) => {
+			.then(async (res) => {
 				if (res.data.success === true) {
 					console.log(res.data);
+
+					await api.post('member/command', {
+						memberEmail: userMail,
+						memberCommand: 'ready',
+					});
 					movepage('/machineconfirm');
 				}
 			})
