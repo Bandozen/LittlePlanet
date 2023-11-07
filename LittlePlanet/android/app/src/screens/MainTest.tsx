@@ -35,6 +35,13 @@ export default function MainTest({navigation}: MainTestProps) {
         await MemberAPI.setJwtToken(jwt);
         Alert.alert('로그인 성공', '환영합니다!');
         setIsLoggedin(true);
+        if (socket) {
+          const handShake = {
+            type: 'app',
+            email,
+          };
+          socket.send(JSON.stringify(handShake));
+        }
         navigation.navigate('MainTest');
       } else {
         throw new Error('No JWT returned');
@@ -55,10 +62,9 @@ export default function MainTest({navigation}: MainTestProps) {
     };
 
     newSocket.onmessage = event => {
-      console.log(event.data);
-      if (event.data === 'do you sent? go Phonekey') {
+      const eventMessage = JSON.parse(event.data);
+      if (eventMessage.type === 'narr' && eventMessage.content === 0) {
         navigation.navigate('Call');
-        newSocket.close();
       }
     };
 
