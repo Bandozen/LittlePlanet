@@ -23,10 +23,9 @@ function StepThree(props: IStepThreeProps) {
 		if (!isDone) {
 			setStep(3);
 			setActiveStep(4);
-			console.log(userMail);
 			await api.post('/member/command', {
-				MemberEmail: userMail,
-				MemberCommand: 'logout',
+				memberEmail: userMail,
+				memberCommand: 'start',
 			});
 		}
 	};
