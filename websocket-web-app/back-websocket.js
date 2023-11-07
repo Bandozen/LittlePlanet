@@ -25,22 +25,24 @@ wss.on('connection', (ws, req) => {
   // }
   // 클라이언트들을 담는 배열에 추가
   clients.push(ws)
-
+  
   // 클라이언트로부터 메시지를 수신할 때 실행될 콜백
   ws.on('message', (message) => {
 
     const mes = JSON.parse(message)
+    console.log(mes)
     // 메세지 타입이 web이거나 app이라면 처음 이메일을 등록하는 메세지이니
     if (mes.type === 'web' && mes.email) {
       // 이 클라이언트의 이메일은 방금 받은 이메일로 등록
       ws.email= mes.email
-      ws.studentName = mes.studentName
-      ws.send(JSON.stringify(`hi ${ws.email} ${ws.studentName}`))
+      ws.send(JSON.stringify(`hi ${ws.email} web`))
+      ws.send(JSON.stringify('이메일 등록 성공'))
     }
     if (mes.type === 'app' && mes.email) {
       // 이 클라이언트의 이메일은 방금 받은 이메일로 등록
       ws.email= mes.email
-      ws.send(JSON.stringify(`hi ${ws.email}`))
+      ws.send(JSON.stringify(`hi ${ws.email} app`))
+      ws.send(JSON.stringify('app 이메일 등록 성공'))
     }
     // 메시지를 다시 클라이언트로 보내기
     // clients.forEach((client) => {
