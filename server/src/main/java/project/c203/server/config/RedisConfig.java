@@ -42,8 +42,8 @@ public class RedisConfig {
     }
 
     // 두 번째 Redis 데이터베이스 인덱스(1)에 대한 StringRedisTemplate 설정
-    @Bean(name = "secondaryRedisTemplate")
-    public StringRedisTemplate secondaryRedisTemplate() {
+    @Bean(name = "stringRedisTemplateCommand")
+    public StringRedisTemplate stringRedisTemplateCommand() {
         StringRedisTemplate template = new StringRedisTemplate();
         template.setConnectionFactory(createLettuceConnectionFactory(1));
         return template;

@@ -176,7 +176,7 @@ public class MemberController {
 
     @PostMapping("/command")
     public ResponseEntity<MemberResponse> command(@RequestBody MemberCommandRequest MemberCommandRequest) {
-         String MemberEmail = memberService.command(MemberCommandRequest);
-         return ResponseEntity.ok(new MemberResponse(true, MemberEmail));
+        memberService.command(MemberCommandRequest);
+        return ResponseEntity.ok(new MemberResponse(true, MemberCommandRequest.getMemberCommand()));
     }
 }
