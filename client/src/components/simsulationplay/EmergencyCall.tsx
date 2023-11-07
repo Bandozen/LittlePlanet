@@ -46,7 +46,7 @@ function EmergencyCall() {
 			// };
 			const handShake = {
 				type: 'page',
-				content: 1,
+				content: 0,
 			};
 			newSocket.send(JSON.stringify(handShake));
 		};
