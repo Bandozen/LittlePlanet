@@ -59,7 +59,7 @@ function Scene1page() {
 
 	const handleSendMessage = () => {
 		// gpt에게 물어보기. 응답이 적절하다면
-		socket?.send('go two');
+		socket?.send(JSON.stringify('go two'));
 		// 적절하지 않다면
 		// setIsWrong(true);
 		// socket?.send('replay one');
