@@ -1,13 +1,20 @@
 package project.c203.server.member.service;
 
 import io.micrometer.core.instrument.util.StringUtils;
+
 import org.springframework.data.redis.core.StringRedisTemplate;
+import org.springframework.data.redis.connection.lettuce.LettuceConnectionFactory;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.data.redis.connection.RedisConnectionFactory;
+import org.springframework.data.redis.connection.RedisPassword;
+import org.springframework.data.redis.connection.RedisStandaloneConfiguration;
 import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import project.c203.server.config.security.jwt.JwtUtils;
 import project.c203.server.member.dto.MemberAuthRequest;
+import project.c203.server.member.dto.MemberCommandRequest;
 import project.c203.server.member.dto.MemberEditRequest;
 import project.c203.server.member.dto.MemberLoginRequest;
 import project.c203.server.member.dto.MemberSignupRequest;
@@ -17,6 +24,7 @@ import project.c203.server.member.repository.MemberRepository;
 import javax.persistence.EntityExistsException;
 import javax.persistence.EntityNotFoundException;
 import java.util.concurrent.TimeUnit;
+
 @Service
 public class MemberService {
 
@@ -25,14 +33,44 @@ public class MemberService {
     private final JwtUtils jwtUtils;
     private final MailService mailService;
     private StringRedisTemplate stringRedisTemplate;
+    private StringRedisTemplate stringRedisTemplateCommand;
+
+    @Value("${spring.redis.host}")
+    private String host;
+
+    @Value("${spring.redis.port}")
+    private int port;
+    
+    @Value("${spring.redis.password}")
+    private String password;
+
+    public RedisConnectionFactory createLettuceConnectionFactory(int dbIndex) {
+        final RedisStandaloneConfiguration redisStandaloneConfiguration = new RedisStandaloneConfiguration();
+        redisStandaloneConfiguration.setHostName(host);
+        redisStandaloneConfiguration.setPort(port);
+        redisStandaloneConfiguration.setPassword(password);      
+        redisStandaloneConfiguration.setDatabase(dbIndex);
+        return new LettuceConnectionFactory(redisStandaloneConfiguration);
+    }
+
+    public RedisConnectionFactory createLettuceConnectionFactoryCommand(int dbIndex) {
+        final RedisStandaloneConfiguration redisStandaloneConfiguration = new RedisStandaloneConfiguration();
+        redisStandaloneConfiguration.setHostName(host);
+        redisStandaloneConfiguration.setPort(port);
+        redisStandaloneConfiguration.setPassword(password);      
+        redisStandaloneConfiguration.setDatabase(dbIndex);
+        return new LettuceConnectionFactory(redisStandaloneConfiguration);
+    }
 
 
-
-    public MemberService(MemberRepository memberRepository, PasswordEncoder passwordEncoder, JwtUtils jwtUtils, StringRedisTemplate stringRedisTemplate, MailService mailService) {
+    public MemberService(MemberRepository memberRepository, PasswordEncoder passwordEncoder, JwtUtils jwtUtils, StringRedisTemplate stringRedisTemplate, StringRedisTemplate stringRedisTemplateCommand, MailService mailService) {
         this.memberRepository = memberRepository;
         this.passwordEncoder = passwordEncoder;
         this.jwtUtils = jwtUtils;
-        this.stringRedisTemplate= stringRedisTemplate;
+        this.stringRedisTemplate= new StringRedisTemplate(createLettuceConnectionFactory(0));
+        stringRedisTemplate.afterPropertiesSet();
+        this.stringRedisTemplateCommand= new StringRedisTemplate(createLettuceConnectionFactoryCommand(1));
+        stringRedisTemplateCommand.afterPropertiesSet();
         this.mailService = mailService;
     }
 
@@ -137,5 +175,12 @@ public class MemberService {
         } else {
             return false;
         }
+    }
+
+    public String command(MemberCommandRequest MemberCommandRequest) {
+        String memberEmail = MemberCommandRequest.getMemberEmail();
+        String memberCommand = MemberCommandRequest.getMemberCommand();
+        stringRedisTemplateCommand.opsForValue().set(memberEmail, memberCommand);
+        return memberEmail;
     }
 }
