@@ -1,17 +1,23 @@
 import React, { useState, useEffect } from 'react';
 import { Button } from '@material-tailwind/react';
+import { useRecoilValue } from 'recoil';
 import api from '../../api';
 import Scene1page from './Scene1page';
 import Scene2page from './Scene2page';
 import Scene3page from './Scene3page';
 import Scene4page from './Scene4page';
-// import { Content } from '../../types/content';
+import { userEmail, studentName } from '../../store/RecoilState';
+import { CallGPT } from './gpt/gpt';
 
 function EmergencyCall() {
 	// 시뮬레이션 씬 저장하기
 	const [status, setStatus] = useState(0);
 
-	// const [contentsData, setContentsData] = useState<Content[]>([]);
+	// 멤버 이메일, 학생 이름 가져오기
+	const memberEmail = useRecoilValue(userEmail);
+	const student = useRecoilValue(studentName);
+	console.log(memberEmail, student);
+
 	// 인트로 불러오기.
 	const fetchData = async () => {
 		try {
@@ -22,8 +28,6 @@ function EmergencyCall() {
 		}
 	};
 
-	// 인트로 끝나면 소켓으로 앱에 키패드 신호 보내고, 119 걸렸다는 신호 받아서 1번 씬으로 넘기기
-	const message = 'go Phonekey';
 	const [socket, setSocket] = useState<WebSocket | null>(null);
 
 	useEffect(() => {
@@ -33,28 +37,27 @@ function EmergencyCall() {
 		newSocket.onopen = () => {
 			console.log('WebSocket connection established.');
 			setSocket(newSocket);
+
+			// 소켓 열릴 때, 이메일과 학생 이름 보내기
+			// const handShake = {
+			// 	type: 'web',
+			// 	email: memberEmail,
+			// 	studentName: student,
+			// };
+			const handShake = {
+				type: 'page',
+				content: 1,
+			};
+			newSocket.send(JSON.stringify(handShake));
 		};
 
+		// 소켓에서 이벤트 발생 시 event.data.type이 page라면 페이지 넘기라는 신호
 		newSocket.onmessage = (event) => {
-			console.log(event.data);
-			if (event.data === 'play Phonekey') {
-				setStatus(1);
-			}
+			const eventMessage = JSON.parse(event.data);
+			console.log(eventMessage);
 
-			if (event.data === 'play two') {
-				setStatus(2);
-			}
-
-			if (event.data === 'play three') {
-				setStatus(3);
-			}
-
-			if (event.data === 'play four') {
-				setStatus(4);
-			}
-
-			if (event.data === 'play five') {
-				setStatus(5);
+			if (eventMessage.type === 'page') {
+				setStatus(eventMessage.content);
 			}
 		};
 
@@ -67,15 +70,22 @@ function EmergencyCall() {
 		};
 	}, []);
 
-	const handleSendMessage = () => {
-		if (socket && message) {
-			socket.send(JSON.stringify('go Phonekey'));
+	// 인트로 끝나면 앱에 키패드 띄우라는 신호 보내기
+	const message = {
+		type: 'narr',
+		content: 0,
+	};
+
+	const sendKeypadMessage = () => {
+		CallGPT();
+		if (socket) {
+			socket.send(JSON.stringify(message));
 		}
 	};
 
 	return (
 		<>
-			<Button onClick={handleSendMessage}> 인트로 끝남 </Button>
+			<Button onClick={sendKeypadMessage}> 인트로 끝남 </Button>
 			{/* 1번부터 5번씬 차례대로 status에 따라 */}
 			{status === 1 && <Scene1page />}
 			{status === 2 && <Scene2page />}

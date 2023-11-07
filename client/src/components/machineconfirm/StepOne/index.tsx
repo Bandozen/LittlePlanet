@@ -4,8 +4,10 @@ import { CheckCircleIcon as OutlineCheckCircleIcon } from '@heroicons/react/24/o
 import { CheckCircleIcon as SolidCheckCircleIcon } from '@heroicons/react/24/solid';
 import loadingImage from 'assets/images/livecam_loading.jpg';
 import Button from 'components/common/Button';
+import { useSetRecoilState } from 'recoil';
 import CheckStep from '../atoms/CheckStep';
 import { Wrapper } from './style';
+import { studentName } from '../../../store/RecoilState';
 
 interface IStepOneProps {
 	setStep: Dispatch<SetStateAction<number>>;
@@ -26,8 +28,12 @@ function StepOne(props: IStepOneProps) {
 	const [history, setHistory] = useState<number[]>([]);
 	const [checkedItems, setCheckedItems] = useState<number>();
 
-	const handleCheckboxChange = (studentSeq: number) => {
-		setCheckedItems(studentSeq);
+	// 학생 이름 받아두기
+	const setStudentName = useSetRecoilState(studentName);
+
+	const handleCheckboxChange = (student: StudentData) => {
+		setCheckedItems(student.studentSeq);
+		setStudentName(student.studentName);
 	};
 
 	const fetchData = async () => {
@@ -102,7 +108,7 @@ function StepOne(props: IStepOneProps) {
 											id="vue-checkbox"
 											type="checkbox"
 											value={student.studentSeq}
-											onChange={() => handleCheckboxChange(student.studentSeq)}
+											onChange={() => handleCheckboxChange(student)}
 											className="w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 rounded focus:ring-blue-500 dark:focus:ring-blue-600 dark:ring-offset-gray-700 dark:focus:ring-offset-gray-700 focus:ring-2 dark:bg-gray-600 dark:border-gray-500"
 										/>
 										<label
