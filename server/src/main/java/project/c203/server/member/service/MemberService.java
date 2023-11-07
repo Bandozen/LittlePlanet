@@ -32,45 +32,17 @@ public class MemberService {
     private final PasswordEncoder passwordEncoder;
     private final JwtUtils jwtUtils;
     private final MailService mailService;
-    private StringRedisTemplate stringRedisTemplate;
-    private StringRedisTemplate stringRedisTemplateCommand;
 
-    @Value("${spring.redis.host}")
-    private String host;
-
-    @Value("${spring.redis.port}")
-    private int port;
-    
-    @Value("${spring.redis.password}")
-    private String password;
-
-    public RedisConnectionFactory createLettuceConnectionFactory(int dbIndex) {
-        final RedisStandaloneConfiguration redisStandaloneConfiguration = new RedisStandaloneConfiguration();
-        redisStandaloneConfiguration.setHostName(host);
-        redisStandaloneConfiguration.setPort(port);
-        redisStandaloneConfiguration.setPassword(password);      
-        redisStandaloneConfiguration.setDatabase(dbIndex);
-        return new LettuceConnectionFactory(redisStandaloneConfiguration);
-    }
-
-    public RedisConnectionFactory createLettuceConnectionFactoryCommand(int dbIndex) {
-        final RedisStandaloneConfiguration redisStandaloneConfiguration = new RedisStandaloneConfiguration();
-        redisStandaloneConfiguration.setHostName(host);
-        redisStandaloneConfiguration.setPort(port);
-        redisStandaloneConfiguration.setPassword(password);      
-        redisStandaloneConfiguration.setDatabase(dbIndex);
-        return new LettuceConnectionFactory(redisStandaloneConfiguration);
-    }
+    private final StringRedisTemplate stringRedisTemplate;
+    private final StringRedisTemplate secondaryRedisTemplate;
 
 
-    public MemberService(MemberRepository memberRepository, PasswordEncoder passwordEncoder, JwtUtils jwtUtils, StringRedisTemplate stringRedisTemplate, StringRedisTemplate stringRedisTemplateCommand, MailService mailService) {
+    public MemberService(MemberRepository memberRepository, PasswordEncoder passwordEncoder, JwtUtils jwtUtils, StringRedisTemplate stringRedisTemplate, StringRedisTemplate secondaryRedisTemplate, MailService mailService) {
         this.memberRepository = memberRepository;
         this.passwordEncoder = passwordEncoder;
         this.jwtUtils = jwtUtils;
-        this.stringRedisTemplate= new StringRedisTemplate(createLettuceConnectionFactory(0));
-        stringRedisTemplate.afterPropertiesSet();
-        this.stringRedisTemplateCommand= new StringRedisTemplate(createLettuceConnectionFactoryCommand(1));
-        stringRedisTemplateCommand.afterPropertiesSet();
+        this.stringRedisTemplate = stringRedisTemplate; // 0번 인덱스 사용
+        this.secondaryRedisTemplate = secondaryRedisTemplate; // 1번 인덱스 사용
         this.mailService = mailService;
     }
 
@@ -158,18 +130,18 @@ public class MemberService {
     public String createOtp(Authentication authentication) {
         String memberEmail = authentication.getName();
         String otp = String.format("%06d", (int)(Math.random() * 1000000));
-        stringRedisTemplate.opsForValue().set(otp, memberEmail, 180, TimeUnit.SECONDS);
+        secondaryRedisTemplate.opsForValue().set(otp, memberEmail, 180, TimeUnit.SECONDS);
         return otp;
     }
 
     public String verifyOtp(String otp) {
-        String memberEmail = stringRedisTemplate.opsForValue().get(otp);
-        stringRedisTemplate.opsForValue().set(otp, "true", 180, TimeUnit.SECONDS);
+        String memberEmail = secondaryRedisTemplate.opsForValue().get(otp);
+        secondaryRedisTemplate.opsForValue().set(otp, "true", 180, TimeUnit.SECONDS);
         return memberEmail;
     }
 
     public boolean connectedOtp(String otp) {
-        String value = stringRedisTemplate.opsForValue().get(otp);
+        String value = secondaryRedisTemplate.opsForValue().get(otp);
         if (value.equals("true")) {
             return true;
         } else {

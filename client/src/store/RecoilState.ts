@@ -8,3 +8,9 @@ export const userEmail = atom<string>({
 	default: '', // 초기값 설정
 	effects_UNSTABLE: [persistAtom],
 });
+
+export const studentName = atom<string>({
+	key: 'studentName',
+	default: '',
+	effects_UNSTABLE: [persistAtom],
+});
