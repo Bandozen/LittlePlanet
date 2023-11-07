@@ -17,6 +17,7 @@ function Scene3page() {
 	const [arrived, setArrived] = useState(false);
 	// const answer = '다리를 다쳐서 피가 많이 나요.';
 	const [direction, setDirection] = useState(0);
+	const [socket, setSocket] = useState<WebSocket | null>(null);
 	const fetchData = async () => {
 		try {
 			const contentsResponse = await api.get('/contents?type=11&num=3');
@@ -26,21 +27,92 @@ function Scene3page() {
 			console.log(e);
 		}
 	};
+	function getMessage(message: string) {
+		const mes = JSON.parse(message);
+		console.log(mes);
+		if (mes.type === 'web') {
+			console.log('web에서 접속한거임');
+		}
+		if (mes.type === 'camera_move' && mes.content === 'big') {
+			setArrived(true);
+		}
+		if (mes.type === 'camera_move' && mes.content === '1') {
+			setDirection(1);
+		}
+		if (mes.type === 'camera_move' && mes.content === '-1') {
+			setDirection(-1);
+		}
+		if (mes.type === 'camera_move' && mes.content === '0') {
+			setDirection(0);
+		}
+	}
 
 	useEffect(() => {
 		fetchData();
+
+		const newSocket = new WebSocket('wss://k9c203.p.ssafy.io:17777');
+
+		newSocket.onopen = () => {
+			console.log('WebSocket connection established.');
+			setSocket(newSocket);
+		};
+
+		// 받을 메시지는 사용자 신고 내용 text
+		newSocket.onmessage = (event) => {
+			console.log(event.data);
+			console.log(JSON.parse(event.data));
+			getMessage(event.data);
+			// gpt에게 물어보기. 응답이 적절하다면
+			// newSocket?.send('play two');
+			// 적절하지 않다면
+			// setIsWrong(true);
+			// newSocket?.send('replay one');
+		};
+
+		newSocket.onclose = () => {
+			console.log('WebSocket connection closed.');
+		};
+
+		return () => {
+			newSocket.close();
+		};
 	}, []);
+	useEffect(() => {
+		// 소켓이 있다면
+		if (socket) {
+			// 핸드세이크 메세지 설정 후 JSON 변환 후 보내기
+			const handshakemessage = {
+				type: 'web',
+				content: 'test@ssafy.com',
+			};
+
+			socket.send(JSON.stringify(handshakemessage));
+		}
+	}, [socket]); // socket가 변경될 때 : 즉 소켓에 설정한 링크로 변경 됐을 때 자동으로 실행
+
 	const arrive = () => {
-		setArrived(true);
+		if (socket) {
+			const message = { type: 'camera_move', content: 'big' };
+			socket.send(JSON.stringify(message));
+		}
 	};
 	const right = () => {
-		setDirection(1);
+		if (socket) {
+			const message = { type: 'camera_move', content: '1' };
+			socket.send(JSON.stringify(message));
+		}
 	};
 	const left = () => {
-		setDirection(-1);
+		if (socket) {
+			const message = { type: 'camera_move', content: '-1' };
+			socket.send(JSON.stringify(message));
+		}
 	};
 	const center = () => {
-		setDirection(0);
+		if (socket) {
+			const message = { type: 'camera_move', content: '0' };
+			socket.send(JSON.stringify(message));
+		}
 	};
 	return (
 		// <>
