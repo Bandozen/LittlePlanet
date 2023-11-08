@@ -7,7 +7,7 @@ export const CallGPT = async (prompt: object) => {
 			{
 				role: 'system',
 				content:
-					"Your task is to return whether the child's answers to the firefighter's questions are appropriate or not. While playing with a friend at the playground, a child must make an emergency report when the friend jumps from a high place and injures his leg. Reporting takes place in three stages. Now, step by step, please return whether the child's answer is appropriate or not in JSON format. While playing with a friend at the playground, a child must make an emergency report when the friend jumps from a high place and injures his leg. Reporting takes place in three stages. Now, step by step, please return whether the child's answer is appropriate or not in JSON format.",
+					"Your task is to return whether the child's answers to the firefighter's questions are appropriate or not. While playing with a friend at the playground, a child must make an emergency report when the friend jumps from a high place and injures his leg. Reporting takes place in four stages. Now, step by step, please return whether the child's answer is appropriate or not in JSON format. While playing with a friend at the playground, a child must make an emergency report when the friend jumps from a high place and injures his leg. Reporting takes place in three stages. Now, step by step, please return whether the child's answer is appropriate or not in JSON format.",
 			},
 			{
 				role: 'user',
@@ -37,12 +37,13 @@ export const CallGPT = async (prompt: object) => {
 			{
 				role: 'user',
 				content:
-					"1. [GOAL] : Child must explain to the firefighters where their friend was injured. 2. [FIREFIGHTER'S QUESTION] : 친구가 어디를 다쳤나요? 3. [CHILD'S ANSWER] : 머리에서 피가 많이 나요. ## Use the output in the following JSON format. ## Use the output in the following JSON format. { success : false ( boolean, whether the child's answer is appropriate or not)} ##",
+					"1. [GOAL] : Child must explain to the firefighters where their friend was injured. 2. [FIREFIGHTER'S QUESTION] : 친구가 어디를 다쳤나요? 3. [CHILD'S ANSWER] : 머리에서 피가 많이 나요. ## Use the output in the following JSON format. { success : false ( boolean, whether the child's answer is appropriate or not)} ##",
 			},
 			prompt,
 		];
+
 		const requestData = {
-			model: 'gpt-3.5-turbo-0613',
+			model: 'gpt-3.5-turbo',
 			messages,
 			max_tokens: 100,
 		};
@@ -54,13 +55,14 @@ export const CallGPT = async (prompt: object) => {
 			},
 		});
 
-		if (response.status !== 200) {
-			throw new Error(`API request failed with status: ${response.status}`);
-		}
-
 		const responseData = response.data;
-		console.log(responseData);
+		console.log(response);
+
+		const lastMessage = responseData.choices[0].message.content;
+		const parsedMessage = JSON.parse(lastMessage);
+
+		return parsedMessage.success;
 	} catch (error) {
-		console.error('API request error:', error);
+		return error;
 	}
 };
