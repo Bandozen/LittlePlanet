@@ -8,10 +8,7 @@ interface TestSTTProps {
 }
 
 // 부모 컴포넌트(CallingComponent)로부터 onSTTResult 콜백을 받아 음성 인식 결과를 전달
-const TestSTT: React.FC<TestSTTProps> = ({
-  isSTTActive,
-  onSTTResult,
-}) => {
+const TestSTT: React.FC<TestSTTProps> = ({isSTTActive, onSTTResult}) => {
   const [isRecording, setIsRecording] = useState<boolean>(false);
   const [text, setText] = useState<string>('');
 
@@ -21,24 +18,57 @@ const TestSTT: React.FC<TestSTTProps> = ({
   };
 
   const onSpeechEnd = () => {
+    onSTTResult(text);
+    console.log('최최종말끝남', 'text');
     setIsRecording(false);
   };
-
-  const onSpeechResults = (event: any) => {
-    const textResult = event.value[0];
-    setText(textResult);
-    onSTTResult(textResult);
-  };
-
+  // 음성 인식의 임시 결과를 처리하는 함수
   const onSpeechPartialResults = (event: any) => {
+    // event.value는 배열로 임시 결과를 포함하고 있음.
+    console.log('임시말들:', event.value);
     setText(event.value[0]);
   };
 
+  // 최종 결과를 처리하는 함수
+  const onSpeechResults = (event: any) => {
+    console.log('최종말들', event.value);
+    // 최종 결과를 setText로 설정하고 onSTTResult 콜백을 호출
+    let finalResult = event.value.join(' ');
+    setText(prevText => prevText + ' ' + finalResult);
+    console.log("최종말들 이어졌나요?", finalResult )
+    onSTTResult(finalResult);
+  };
+  // const onSpeechResults = (event: any) => {
+  //   const textResult = event.value[0];
+  //   setText(textResult);
+  //   onSTTResult(textResult);
+  // };
+
+  // const onSpeechPartialResults = (event: any) => {
+  //   setText(event.value[0]);
+  // };
+
   useEffect(() => {
+    // 리스너 추가
     Voice.onSpeechStart = onSpeechStart;
     Voice.onSpeechEnd = onSpeechEnd;
     Voice.onSpeechResults = onSpeechResults;
     Voice.onSpeechPartialResults = onSpeechPartialResults;
+
+    // let timerId: NodeJS.Timeout; // 타이머 ID 타입을 NodeJS.Timeout으로 설정
+    // STT 활성화/비활성화를 위한 useEffect(10초버전)
+    // if (isSTTActive) {
+    //   startRecording().catch(console.error);
+    //   timerId = setTimeout(() => {
+    //     if (isRecording) {
+    //       stopRecording().catch(console.error);
+    //     }
+    //   }, 10000);
+    // } else {
+    //   if (isRecording) {
+    //     stopRecording().catch(console.error);
+    //   }
+    // }
 
     // STT 활성화/비활성화를 위한 useEffect
     if (isSTTActive) {
@@ -48,17 +78,19 @@ const TestSTT: React.FC<TestSTTProps> = ({
         stopRecording();
       }
     }
-
+    // 컴포넌트가 언마운트될 때 리스너 제거 및 타이머 취소
     return () => {
+      // clearTimeout(timerId); // 타이머 취소
       Voice.destroy().then(Voice.removeAllListeners);
     };
-    // isSTTActive, onSTTResult를 의존성 배열에 추가
-    // CallingComponent에서 상태가 변경되면 STTComponent에도 반영되어 리스너 업데이트됨
   }, [isSTTActive]);
 
   const startRecording = async () => {
     try {
       await Voice.start('ko-KR');
+      if (isRecording) {
+        stopRecording();
+      }
     } catch (e) {
       console.error(e);
     }
@@ -74,11 +106,7 @@ const TestSTT: React.FC<TestSTTProps> = ({
 
   return (
     <View style={{flex: 1, justifyContent: 'center', alignItems: 'center'}}>
-      <Button
-        title={isRecording ? 'STT 중지' : 'STT 시작'}
-        onPress={isRecording ? stopRecording : startRecording}
-      />
-      <Text style={{color: 'red', padding: 10}}>{text}</Text>
+      <Text style={{color: 'red', padding: 10, flexShrink: 1}}>{text}</Text>
     </View>
   );
 };
