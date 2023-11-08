@@ -7,7 +7,7 @@ import {
   Alert,
   Modal,
   TouchableOpacity,
-  StyleSheet
+  StyleSheet,
 } from 'react-native';
 import {MemberAPI} from '../utils/MemberAPI';
 import {StackNavigationProp} from '@react-navigation/stack';
@@ -32,7 +32,7 @@ export default function LoginComponent({
 
   const handleLogin = async () => {
     try {
-      const { jwt } = await MemberAPI.login(email, password);
+      const {jwt} = await MemberAPI.login(email, password);
       if (jwt) {
         await MemberAPI.setJwtToken(jwt);
         Alert.alert('로그인 성공', '환영합니다!');
@@ -67,9 +67,7 @@ export default function LoginComponent({
       />
       {passwordError && <Text style={{color: 'red'}}>{passwordError}</Text>}
 
-      <TouchableOpacity
-        style={styles.buttonStyle}
-        onPress={handleLogin}>
+      <TouchableOpacity style={styles.buttonStyle} onPress={handleLogin}>
         <Text style={styles.buttonText}>로그인</Text>
       </TouchableOpacity>
 
@@ -110,6 +108,6 @@ const styles = StyleSheet.create({
   buttonText: {
     color: 'black',
     fontSize: 16,
-    textAlign: 'center', 
+    textAlign: 'center',
   },
 });
