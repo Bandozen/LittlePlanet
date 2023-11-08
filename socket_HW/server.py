@@ -35,10 +35,12 @@ def recvall(sock, count):
 def threaded(client_socket, addr):
     flag = ""
     while True:
-        email_length = recvall(client_socket, 16)
         if redis_client.get(flag) == "logout":
             client_socket.close()
+            print(flag)
+            print(redis_client.get(flag))
             break
+        email_length = recvall(client_socket, 16)
         if email_length is not None:
             email_data = recvall(client_socket, int(email_length))
             email = email_data.decode()
