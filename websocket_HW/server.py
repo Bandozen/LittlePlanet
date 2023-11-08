@@ -30,7 +30,7 @@ def send_updated_image():
                 sio.emit('image', {'url': f'data:image/jpeg;base64,{image_base64}'})
         except Exception as e:
             print(f'Error sending image: {str(e)}')
-    eventlet.sleep(image_update_interval)
+        eventlet.sleep(image_update_interval)
 
 @sio.event
 def connect(sid, environ):
