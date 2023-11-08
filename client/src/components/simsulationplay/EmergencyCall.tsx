@@ -10,7 +10,7 @@ import { userEmail, studentName } from '../../store/RecoilState';
 
 function EmergencyCall() {
 	// 시뮬레이션 씬 저장하기
-	const [status, setStatus] = useState(0);
+	const [status, setStatus] = useState(2);
 
 	// 멤버 이메일, 학생 이름 가져오기
 	const memberEmail = useRecoilValue(userEmail);
