@@ -6,17 +6,17 @@ import background2 from '../../../assets/images/background2.png';
 export const Scene3Wrapper = styled.div`
 	.background-image {
 		background-image: url(${background});
-		background-size: cover; 
-		background-position: center; 
-		background-repeat: no-repeat; 
+		background-size: cover;
+		background-position: center;
+		background-repeat: no-repeat;
 		width: 100%;
 		height: 100vh;
 	}
 	.background-image2 {
 		background-image: url(${background2});
-		background-size: cover; 
-		background-position: center; 
-		background-repeat: no-repeat; 
+		background-size: cover;
+		background-position: center;
+		background-repeat: no-repeat;
 		width: 100%;
 		height: 100vh;
 	}
