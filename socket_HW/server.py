@@ -33,20 +33,25 @@ def recvall(sock, count):
     return buf
 
 def threaded(client_socket, addr):
+    temp = ""
     flag = ""
     while True:
-        if redis_client.get(flag) == "logout":
+        if flag != "" and redis_client.get(flag) == "logout":
             client_socket.close()
-            print(flag)
-            print(redis_client.get(flag))
             break
-        else:
-            email_length = recvall(client_socket, 16)
+        
+        email_length = recvall(client_socket, 16)
         if email_length is not None:
             email_data = recvall(client_socket, int(email_length))
             email = email_data.decode()
-            flag = email
+            past = temp
             value = redis_client.get(email)
+            temp = value
+            flag = email
+            if past != "" and past != value:
+                client_socket.close()
+                break
+
             if value == "start":
                 subprocess.Popen(["python3", "/home/ubuntu/character/trans.py", email])
             elif value == "cam":
