@@ -5,14 +5,19 @@ import Voice from '@react-native-community/voice';
 interface TestSTTProps {
   isSTTActive: boolean;
   onSTTResult: (text: string) => void;
+  socketSend: (text: string) => void;
 }
 
 // 부모 컴포넌트(CallingComponent)로부터 onSTTResult 콜백을 받아 음성 인식 결과를 전달
-const TestSTT: React.FC<TestSTTProps> = ({isSTTActive, onSTTResult}) => {
+const TestSTT: React.FC<TestSTTProps> = ({
+  isSTTActive,
+  onSTTResult,
+  socketSend,
+}) => {
   const [isRecording, setIsRecording] = useState<boolean>(false);
   const [text, setText] = useState<string>('');
   const [timeoutId, setTimeoutId] = useState<NodeJS.Timeout | null>(null);
-
+  const [isFinal, setIsFinal] = useState<string>('');
   // 타임딜레이 주는 함수
   const stopRecordingWithDelay = async (delay: number) => {
     // 이미 설정된 타임아웃을 취소
@@ -48,7 +53,7 @@ const TestSTT: React.FC<TestSTTProps> = ({isSTTActive, onSTTResult}) => {
   const onSpeechPartialResults = (event: any) => {
     // event.value는 배열로 임시 결과를 포함하고 있음.
     console.log('임시말들:', event.value);
-    setText(event.value[0]);
+    // setText(event.value[0]);
   };
 
   // 최종 결과를 처리하는 함수
@@ -56,7 +61,7 @@ const TestSTT: React.FC<TestSTTProps> = ({isSTTActive, onSTTResult}) => {
     console.log('최종말들', event.value);
     // 최종 결과를 setText로 설정하고 onSTTResult 콜백을 호출
     let finalResult = event.value.join(' ');
-    setText(prevText => prevText + ' ' + finalResult);
+    setText(prevText => prevText + ' ' + event.value.join(' '));
     console.log('최종말들 이어졌나요?', finalResult);
     onSTTResult(finalResult);
   };
@@ -69,6 +74,9 @@ const TestSTT: React.FC<TestSTTProps> = ({isSTTActive, onSTTResult}) => {
   // const onSpeechPartialResults = (event: any) => {
   //   setText(event.value[0]);
   // };
+  useEffect(() => {
+    setIsFinal(text);
+  }, [text]);
 
   useEffect(() => {
     // 리스너 추가
@@ -92,6 +100,10 @@ const TestSTT: React.FC<TestSTTProps> = ({isSTTActive, onSTTResult}) => {
       Voice.destroy().then(Voice.removeAllListeners);
     };
   }, [isSTTActive, timeoutId]);
+
+  useEffect(() => {
+    socketSend(text);
+  }, [isFinal]);
 
   const startRecording = async () => {
     try {
