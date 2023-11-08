@@ -9,7 +9,7 @@ import Scene4page from './Scene4page';
 
 function EmergencyCall() {
 	// 시뮬레이션 씬 저장하기
-	const [status, setStatus] = useState(0);
+	const [status, setStatus] = useState(2);
 
 	// const [contentsData, setContentsData] = useState<Content[]>([]);
 	// 인트로 불러오기.
