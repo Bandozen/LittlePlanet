@@ -12,13 +12,13 @@ function NavBar() {
 
 	const handleLogout = async () => {
 		try {
-			const response = await api.post('/member/logout');
 			await api.post('/member/command', {
 				memberEmail: userMail,
 				memberCommand: 'logout',
 			});
-			console.log(response);
 			setUserMail('');
+			const response = await api.post('/member/logout');
+			console.log(response);
 		} catch (error) {
 			console.log(error);
 		}
