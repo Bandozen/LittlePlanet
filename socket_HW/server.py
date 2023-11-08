@@ -36,10 +36,8 @@ def threaded(client_socket, addr):
     temp = ""
     flag = ""
     while True:
-        print(flag)
         if flag != "" and redis_client.get(flag) == "logout":
             client_socket.close()
-            print(redis_client.get(flag))
             break
         
         email_length = recvall(client_socket, 16)
@@ -50,7 +48,6 @@ def threaded(client_socket, addr):
             value = redis_client.get(email)
             temp = value
             flag = email
-            print(past, value)
             if past != "" and past != value:
                 client_socket.close()
                 break
