@@ -13,9 +13,13 @@ export const Wrapper = styled.div`
 		margin: 20px;
 		width: 460px;
 		height: 450px;
+		display: flex;
 	}
 
 	.loading {
-		width: 90%;
+		/* width: 90%; */
+		margin: 0px;
+		/* justify-items: center; */
+		align-items: center;
 	}
 `;
