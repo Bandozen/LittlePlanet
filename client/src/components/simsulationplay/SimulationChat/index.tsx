@@ -1,29 +1,43 @@
 import React from 'react';
-// import InputField from 'components/InputField';
+import { useRecoilValue } from 'recoil';
 import { SimulationChatWrapper } from './style';
+import firefighter from '../../../assets/images/firefighter.png';
+import { studentName } from '../../../store/RecoilState';
 
-function SimulationChat() {
-	// const [socket, setSocket] = useState(null);
-	// const [message, setMessage] = useState('');
+// import realman from '../../../assets/images/realman.png';
+
+interface SimulationChatProps {
+	chatNumber: number;
+	text: string;
+}
+
+function SimulationChat({ chatNumber, text }: SimulationChatProps) {
+	const student = useRecoilValue(studentName);
+
+	// 글자를 분할하고 각 글자에 span을 적용하는 함수입니다.
+	const renderText = (textToRender: string) => {
+		return textToRender.split('').map((char, index) => (
+			// eslint-disable-next-line react/no-array-index-key
+			<span key={`letter-${char}-${index}`} className="letter" style={{ animationDelay: `${index * 0.05}s` }}>
+				{char}
+			</span>
+		));
+	};
 
 	return (
 		<SimulationChatWrapper>
-			<div className="wrap">
-				<div className="chat ch1">
-					<div className="icon">
-						<i className="fa-solid fa-user" />
-					</div>
-					<div className="textbox">119입니다. 무슨 일이시죠?</div>
+			{chatNumber === 1 && (
+				<div className="ch1">
+					<img className="icon" src={firefighter} alt="소방관" />
+					<div className="textbox">{renderText(text)}</div>
 				</div>
-
-				<div className="chat ch2">
-					<div className="icon">
-						<i className="fa-solid fa-user" />
-					</div>
-					<div className="textbox">놀이터에서 놀다가 친구가 뛰어내렸어요. 그래서 다리를 다쳤어요.</div>
+			)}
+			{chatNumber === 2 && (
+				<div className="ch2">
+					<div className="ch2-icon">{student}</div>
+					<div className="textbox">{renderText(text)}</div>
 				</div>
-			</div>
-			{/* <InputField message={message} setMessage={setMessage} /> */}
+			)}
 		</SimulationChatWrapper>
 	);
 }
