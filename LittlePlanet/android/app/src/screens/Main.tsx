@@ -103,7 +103,7 @@ export default function Main({navigation}: MainProps) {
       };
       socket.send(JSON.stringify(textMessage));
     } else {
-      console.log("텍스트 안넘어감")
+      console.log('텍스트 안넘어감');
     }
     setIsSTTActive(false);
   };
@@ -163,8 +163,14 @@ export default function Main({navigation}: MainProps) {
               </TouchableOpacity>
             </React.Fragment>
           )}
-        <Button title="전화 걸기" onPress={() => navigation.navigate('Call')} />
-        <Button title={isSTTActive ? "Stop STT" : "Start STT"} onPress={toggleSTT} />
+          <Button
+            title="전화 걸기"
+            onPress={() => navigation.navigate('Call')}
+          />
+          <Button
+            title={isSTTActive ? 'Stop STT' : 'Start STT'}
+            onPress={toggleSTT}
+          />
         </View>
         <TestSTT isSTTActive={isSTTActive} onSTTResult={handleSTTResult} />
       </ImageBackground>
@@ -224,7 +230,7 @@ const styles = StyleSheet.create({
     alignSelf: 'center',
     marginBottom: 20,
   },
-  textinputStyle: { 
+  textinputStyle: {
     flexDirection: 'row',
     justifyContent: 'center',
     alignItems: 'center',
