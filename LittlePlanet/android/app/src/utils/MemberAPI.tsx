@@ -41,7 +41,6 @@ export const MemberAPI = {
       console.error('Error:', error);
       throw error;
     }
-
   },
 
   logout: async () => {
@@ -59,8 +58,8 @@ export const MemberAPI = {
     }
   },
   // 로그인 상태 설정
-  setJwtToken: async (jwtToken:string|null) => {
-    // 토큰을 안전한 저장소에 저장합니다. 예: AsyncStorage, SecureStore 등
+  setJwtToken: async (jwtToken: string | null) => {
+    // 토큰을 안전한 저장소에 저장 예: AsyncStorage, SecureStore 등
     if (jwtToken === null) {
       AsyncStorage.removeItem('jwtToken');
       return;
@@ -75,12 +74,32 @@ export const MemberAPI = {
 
   // 로그인 상태 확인
   getJwtToken: async () => {
-    // 저장된 토큰을 검색합니다.
+    // 저장된 토큰을 검색
     try {
       const jwtToken = await AsyncStorage.getItem('jwtToken');
       return jwtToken;
     } catch (error) {
       console.error('Getting JWT token failed', error);
+      throw error;
+    }
+  },
+  setEmail: async (email: string) => {
+    try {
+      await AsyncStorage.setItem('userEmail', email);
+    } catch (error) {
+      console.error('Error saving the email', error);
+      throw error;
+    }
+  },
+
+  getEmail: async () => {
+    try {
+      const userEmail = await AsyncStorage.getItem('userEmail');
+      if (userEmail !== null) {
+        return userEmail;
+      }
+    } catch (error) {
+      console.error('Error fetching the email', error);
       throw error;
     }
   },
