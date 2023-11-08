@@ -24,11 +24,13 @@ def send_updated_image():
     image_path = f'/home/ubuntu/user/{email}/character.png'  # 이미지 경로로 대체
     while True:
         if os.path.exists(image_path):
+            print("go?")
             try:
                 with open(image_path, 'rb') as image_file:
                     image_data = image_file.read()
                     image_base64 = base64.b64encode(image_data).decode('utf-8')
                     sio.emit('image', {'url': f'data:image/jpeg;base64,{image_base64}'})
+                    print("real go?")
             except Exception as e:
                 print(f'Error sending image: {str(e)}')
         eventlet.sleep(image_update_interval)
