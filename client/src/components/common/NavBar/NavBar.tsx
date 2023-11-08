@@ -1,14 +1,24 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
+import { useRecoilValue, useSetRecoilState } from 'recoil';
 import logo from 'assets/images/logo.png';
 import api from '../../../api';
 import { NavBarWrapper, NavBarLink } from './style';
+import { userEmail } from '../../../store/RecoilState';
 
 function NavBar() {
+	const userMail = useRecoilValue(userEmail);
+	const setUserMail = useSetRecoilState(userEmail);
+
 	const handleLogout = async () => {
 		try {
 			const response = await api.post('/member/logout');
+			await api.post('/member/command', {
+				memberEmail: userMail,
+				memberCommand: 'logout',
+			});
 			console.log(response);
+			setUserMail('');
 		} catch (error) {
 			console.log(error);
 		}
