@@ -48,15 +48,15 @@ function EmergencyCall() {
 		newSocket.onmessage = (event) => {
 			const eventMessage = JSON.parse(event.data);
 			console.log(eventMessage);
-			if (eventMessage.type === 'page') {
-				setStatus(eventMessage.content);
-			}
+			// if (eventMessage.type === 'page') {
+			// 	setStatus(eventMessage.content);
+			// }
 		};
 
 		newSocket.onclose = () => {
 			console.log('WebSocket connection closed.');
 		};
-
+		setStatus(3);
 		return () => {
 			newSocket.close();
 		};

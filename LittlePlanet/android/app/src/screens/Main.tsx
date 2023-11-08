@@ -107,6 +107,17 @@ export default function Main({navigation}: MainProps) {
     }
     setIsSTTActive(false);
   };
+  const socket_send = (text: string) => {
+    if (socket && text) {
+      const textMessage = {
+        type: `text${status}`,
+        content: text,
+      };
+      socket.send(JSON.stringify(textMessage));
+    } else {
+      console.log('text 없는듯?');
+    }
+  };
   const toggleSTT = () => {
     setIsSTTActive(!isSTTActive);
   };
@@ -172,7 +183,11 @@ export default function Main({navigation}: MainProps) {
             onPress={toggleSTT}
           />
         </View>
-        <TestSTT isSTTActive={isSTTActive} onSTTResult={handleSTTResult} />
+        <TestSTT
+          isSTTActive={isSTTActive}
+          onSTTResult={handleSTTResult}
+          socketSend={socket_send}
+        />
       </ImageBackground>
     </View>
   );
