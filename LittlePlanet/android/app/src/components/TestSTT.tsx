@@ -1,5 +1,5 @@
 import React, {useState, useEffect} from 'react';
-import {View, Text, Button} from 'react-native';
+import {View, Text} from 'react-native';
 import Voice from '@react-native-community/voice';
 
 interface TestSTTProps {
@@ -11,6 +11,26 @@ interface TestSTTProps {
 const TestSTT: React.FC<TestSTTProps> = ({isSTTActive, onSTTResult}) => {
   const [isRecording, setIsRecording] = useState<boolean>(false);
   const [text, setText] = useState<string>('');
+  const [timeoutId, setTimeoutId] = useState<NodeJS.Timeout | null>(null);
+
+  // 타임딜레이 주는 함수
+  const stopRecordingWithDelay = async (delay: number) => {
+    // 이미 설정된 타임아웃을 취소
+    if (timeoutId) clearTimeout(timeoutId);
+
+    // 새로운 타임아웃을 설정
+    const newTimeoutId = setTimeout(async () => {
+      try {
+        await Voice.stop();
+        setIsRecording(false); // 음성 인식이 멈춘 후에 isRecording 상태를 업데이트
+      } catch (e) {
+        console.error(e);
+      }
+    }, delay);
+
+    // 새로운 타임아웃 ID를 저장
+    setTimeoutId(newTimeoutId);
+  };
 
   const onSpeechStart = () => {
     setIsRecording(true);
@@ -20,6 +40,8 @@ const TestSTT: React.FC<TestSTTProps> = ({isSTTActive, onSTTResult}) => {
   const onSpeechEnd = () => {
     onSTTResult(text);
     console.log('최최종말끝남', 'text');
+    // 즉시 음성 인식을 멈추지 않고, 지연 시간 후에 멈춤
+    stopRecordingWithDelay(3000); // 3초 후에 음성 인식을 멈추도록 설정
     setIsRecording(false);
   };
   // 음성 인식의 임시 결과를 처리하는 함수
@@ -35,7 +57,7 @@ const TestSTT: React.FC<TestSTTProps> = ({isSTTActive, onSTTResult}) => {
     // 최종 결과를 setText로 설정하고 onSTTResult 콜백을 호출
     let finalResult = event.value.join(' ');
     setText(prevText => prevText + ' ' + finalResult);
-    console.log("최종말들 이어졌나요?", finalResult )
+    console.log('최종말들 이어졌나요?', finalResult);
     onSTTResult(finalResult);
   };
   // const onSpeechResults = (event: any) => {
@@ -55,42 +77,28 @@ const TestSTT: React.FC<TestSTTProps> = ({isSTTActive, onSTTResult}) => {
     Voice.onSpeechResults = onSpeechResults;
     Voice.onSpeechPartialResults = onSpeechPartialResults;
 
-    // let timerId: NodeJS.Timeout; // 타이머 ID 타입을 NodeJS.Timeout으로 설정
-    // STT 활성화/비활성화를 위한 useEffect(10초버전)
-    // if (isSTTActive) {
-    //   startRecording().catch(console.error);
-    //   timerId = setTimeout(() => {
-    //     if (isRecording) {
-    //       stopRecording().catch(console.error);
-    //     }
-    //   }, 10000);
-    // } else {
-    //   if (isRecording) {
-    //     stopRecording().catch(console.error);
-    //   }
-    // }
-
     // STT 활성화/비활성화를 위한 useEffect
     if (isSTTActive) {
-      startRecording();
+      startRecording().catch(console.error);
     } else {
       if (isRecording) {
-        stopRecording();
+        stopRecording().catch(console.error);
       }
     }
     // 컴포넌트가 언마운트될 때 리스너 제거 및 타이머 취소
     return () => {
-      // clearTimeout(timerId); // 타이머 취소
+      // clearTimeout(timerId); // 10초 타이머 취소
+      if (timeoutId) clearTimeout(timeoutId); // 타임아웃 취소
       Voice.destroy().then(Voice.removeAllListeners);
     };
-  }, [isSTTActive]);
+  }, [isSTTActive, timeoutId]);
 
   const startRecording = async () => {
     try {
       await Voice.start('ko-KR');
-      if (isRecording) {
-        stopRecording();
-      }
+      // if (isRecording) {
+      //   stopRecording();
+      // }
     } catch (e) {
       console.error(e);
     }
