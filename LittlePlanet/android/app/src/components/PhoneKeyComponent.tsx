@@ -52,42 +52,11 @@ const PhoneKeyComponent: React.FC<PhoneKeyProps> = ({onCallInitiated}) => {
     // '119'라면 onCallInitiated를 호출(콜링컴포넌트로 넘어감)
     if (number === '119') {
       // signalSound.play(() => {
-        handleSendMessage();
-        onCallInitiated(number);
+      onCallInitiated(number);
       // });
     } else {
       // 다른 번호일때
       Alert.alert('통화 실패', '119를 다시 입력해볼까요?');
-    }
-  };
-
-  const message = 'go Next';
-
-  const [socket, setSocket] = useState<WebSocket | null>(null);
-
-  useEffect(() => {
-
-
-    const newSocket = new WebSocket('wss://k9c203.p.ssafy.io:17777');
-
-    newSocket.onopen = () => {
-      console.log('WebSocket connection established.');
-      setSocket(newSocket);
-    };
-
-    newSocket.onclose = () => {
-      console.log('WebSocket connection closed.');
-    };
-
-    return () => {
-      newSocket.close();
-      console.log("콜링으로 넘어간다")
-    };
-  }, []);
-
-  const handleSendMessage = () => {
-    if (socket && message) {
-      socket.send(message);
     }
   };
 
@@ -117,11 +86,11 @@ const KeypadButton: React.FC<{
   number: string | number;
   onPress: (key: string | number) => void;
 }> = ({number, onPress}) => {
-  // 화면 너비를 기반으로 버튼 크기 계산을 여기에서 수행
+  // 화면 너비를 기반으로 버튼 크기 계산
   const screenWidth = Dimensions.get('window').width;
   const numColumns = 3;
   const size = screenWidth / numColumns;
-  
+
   const buttonStyle: ViewStyle = {
     width: size - 40,
     height: size - 40,
@@ -135,8 +104,8 @@ const KeypadButton: React.FC<{
   const textStyle: TextStyle = {
     fontSize: 28,
     fontWeight: 'bold',
-    textAlign: 'center', // 버튼 내의 텍스트를 중앙 정렬
-    lineHeight: size - 40, // 버튼 높이에 맞춰 lineHeight 설정
+    textAlign: 'center',
+    lineHeight: size - 40,
   };
 
   return (
