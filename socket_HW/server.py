@@ -40,7 +40,8 @@ def threaded(client_socket, addr):
             print(flag)
             print(redis_client.get(flag))
             break
-        email_length = recvall(client_socket, 16)
+        else:
+            email_length = recvall(client_socket, 16)
         if email_length is not None:
             email_data = recvall(client_socket, int(email_length))
             email = email_data.decode()
