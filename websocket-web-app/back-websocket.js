@@ -1,9 +1,7 @@
-require("dotenv").config();
 const WebSocket = require("ws");
 const http = require("http");
-const redis = require("redis");
 
-const server_port = process.env.SERVER_PORT;
+const server_port = 7777;
 
 // HTTP 서버 생성
 const server = http.createServer((req, res) => {
@@ -18,15 +16,6 @@ const server = http.createServer((req, res) => {
 
 // WebSocket 서버 생성
 const wss = new WebSocket.Server({ server });
-
-// Redis 연결
-const redisClient = redis.createClient({
-  url: process.env.REDIS_URL,
-});
-
-redisClient.on("connect", () => console.log("Redis에 연결되었습니다."));
-
-redisClient.connect();
 
 // IP를 key로, 웹소켓 배열을 value로 갖는 Map
 let clients = [];
@@ -58,14 +47,6 @@ wss.on("connection", (ws, req) => {
       ws.email = mes.email;
       ws.send(JSON.stringify(`hi ${ws.email} app`));
       ws.send(JSON.stringify("app 이메일 등록 성공"));
-    }
-    if (mes.type == "HW" && mes.email) {
-      ws.email = mes.email;
-      msg = {
-        type: "HW",
-        lefthand: redisClient.lPop(ws.email),
-      };
-      ws.send(JSON.stringify(msg))
     }
     // 메시지를 다시 클라이언트로 보내기
     // clients.forEach((client) => {
