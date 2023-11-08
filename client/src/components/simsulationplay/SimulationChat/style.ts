@@ -1,77 +1,105 @@
 /* eslint-disable import/prefer-default-export */
-import styled from 'styled-components';
+import styled, { keyframes } from 'styled-components';
+
+const fadeIn = keyframes`
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+`;
+
+const popIn = keyframes`
+  0% {
+    opacity: 0;
+    transform: translateY(-10px);
+  }
+  100% {
+    opacity: 1;
+    transform: translateY(0);
+  }
+`;
 
 export const SimulationChatWrapper = styled.div`
-	* {
-		padding: 0;
-		margin: 0;
-		box-sizing: border-box;
-	}
-
-	.wrap {
-		padding: 40px 0;
-		background-color: #a8c0d6;
-		width: 50%;
-	}
-
-	.wrap .chat {
+	.ch1 {
 		display: flex;
-		align-items: flex-start;
+		align-items: center;
 		padding: 20px;
+		margin-left: 3rem;
 	}
 
-	.wrap .chat .icon {
+	.ch2 {
+		display: flex;
+		align-items: center;
+		padding: 20px;
+		margin-right: 5rem;
+	}
+
+	.icon {
 		position: relative;
 		overflow: hidden;
-		width: 50px;
-		height: 50px;
+		width: 150px;
+		height: 150px;
 		border-radius: 50%;
 		background-color: #eee;
 	}
 
-	.wrap .chat .icon i {
-		position: absolute;
-		top: 10px;
-		left: 50%;
-		font-size: 2.5rem;
-		color: #aaa;
-		transform: translateX(-50%);
+	.ch2-icon {
+		display: flex;
+		justify-content: center;
+		align-items: center;
+		overflow: hidden;
+		width: 120px;
+		height: 120px;
+		border-radius: 50%;
+		background-color: white;
+		font-size: 35px;
 	}
 
-	.wrap .chat .textbox {
+	.textbox {
+		white-space: pre-wrap;
 		position: relative;
 		display: inline-block;
 		max-width: calc(100% - 70px);
-		padding: 10px;
-		margin-top: 7px;
-		font-size: 13px;
+		padding: 20px;
+		font-size: 40px;
 		border-radius: 10px;
 	}
 
-	.wrap .chat .textbox::before {
+	.textbox::before {
 		position: absolute;
 		display: block;
 		top: 0;
 		font-size: 1.5rem;
 	}
 
-	.wrap .ch1 .textbox {
+	.ch1 .textbox {
 		margin-left: 20px;
-		background-color: #ddd;
+		background-color: white;
+		animation: ${fadeIn} 1s ease-out;
 	}
 
-	.wrap .ch1 .textbox::before {
+	.ch1 .textbox::before {
 		left: -15px;
 		content: '◀';
-		color: #ddd;
+		color: white;
 	}
 
-	.wrap .ch2 {
+	.ch2 {
 		flex-direction: row-reverse;
 	}
 
-	.wrap .ch2 .textbox {
+	.ch2 .textbox {
 		margin-right: 20px;
 		background-color: #f9eb54;
+		animation: ${fadeIn} 1s ease-out;
+	}
+
+	.letter {
+		display: inline-block;
+		opacity: 0;
+		transform: translateY(-10px);
+		animation: ${popIn} 1s forwards;
 	}
 `;

@@ -1,13 +1,20 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
 import logo from 'assets/images/logo.png';
+// import { useResetRecoilState } from 'recoil';
+// import { userEmail, studentName } from 'store/RecoilState';
 import api from '../../../api';
 import { NavBarWrapper, NavBarLink } from './style';
 
 function NavBar() {
+	// const resetUserEmail = useResetRecoilState(userEmail);
+	// const resetStudentName = useResetRecoilState(studentName);
+
 	const handleLogout = async () => {
 		try {
 			const response = await api.post('/member/logout');
+			// resetUserEmail();
+			// resetStudentName();
 			console.log(response);
 		} catch (error) {
 			console.log(error);

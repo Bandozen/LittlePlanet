@@ -2,20 +2,18 @@ import React, { useState, useEffect } from 'react';
 import { Button } from '@material-tailwind/react';
 import { useRecoilValue } from 'recoil';
 import api from '../../api';
-import Scene1page from './Scene1page';
+import Scene1page from './Scene1/Scene1page';
 import Scene2page from './Scene2page';
 import Scene3page from './Scene3page';
-import Scene4page from './Scene4page';
-import { userEmail, studentName } from '../../store/RecoilState';
+import Scene4page from './Scene4/Scene4page';
+import { userEmail } from '../../store/RecoilState';
 
 function EmergencyCall() {
 	// 시뮬레이션 씬 저장하기
 	const [status, setStatus] = useState(0);
 
-	// 멤버 이메일, 학생 이름 가져오기
+	// 멤버 이메일 가져오기
 	const memberEmail = useRecoilValue(userEmail);
-	const student = useRecoilValue(studentName);
-	console.log(memberEmail, student);
 
 	// 인트로 불러오기.
 	const fetchData = async () => {
@@ -31,22 +29,18 @@ function EmergencyCall() {
 
 	useEffect(() => {
 		fetchData();
-		const newSocket = new WebSocket('wss://k9c203.p.ssafy.io:17777');
 
+		const newSocket = new WebSocket('wss://k9c203.p.ssafy.io:17777');
+		// const newSocket = new WebSocket('ws://192.168.100.38:7777');
 		newSocket.onopen = () => {
 			console.log('WebSocket connection established.');
 			setSocket(newSocket);
 
-			// 소켓 열릴 때, 이메일과 학생 이름 보내기
+			// 소켓 열릴 때, 이메일 보내기
 			const handShake = {
 				type: 'web',
 				email: memberEmail,
-				studentName: student,
 			};
-			// const handShake = {
-			// 	type: 'page',
-			// 	content: 1,
-			// };
 			newSocket.send(JSON.stringify(handShake));
 		};
 
@@ -54,7 +48,6 @@ function EmergencyCall() {
 		newSocket.onmessage = (event) => {
 			const eventMessage = JSON.parse(event.data);
 			console.log(eventMessage);
-
 			if (eventMessage.type === 'page') {
 				setStatus(eventMessage.content);
 			}
@@ -70,12 +63,22 @@ function EmergencyCall() {
 	}, []);
 
 	// 인트로 끝나면 앱에 키패드 띄우라는 신호 보내기
-	const message = {
-		type: 'narr',
-		content: 0,
+	const sendKeypadMessage = () => {
+		const message = {
+			type: 'narr',
+			content: 0,
+		};
+		if (socket) {
+			socket.send(JSON.stringify(message));
+		}
 	};
 
-	const sendKeypadMessage = () => {
+	// 페이지 이동 버튼 나중에 삭제
+	const sendNextPageMessage = () => {
+		const message = {
+			type: 'page',
+			content: status + 1,
+		};
 		if (socket) {
 			socket.send(JSON.stringify(message));
 		}
@@ -83,6 +86,7 @@ function EmergencyCall() {
 
 	return (
 		<>
+			<Button onClick={sendNextPageMessage}> 다음 페이지 이동 </Button>
 			<Button onClick={sendKeypadMessage}> 인트로 끝남 </Button>
 			{/* 1번부터 5번씬 차례대로 status에 따라 */}
 			{status === 1 && <Scene1page />}
