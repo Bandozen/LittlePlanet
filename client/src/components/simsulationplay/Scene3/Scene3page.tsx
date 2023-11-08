@@ -1,6 +1,5 @@
 import React, { useState, useEffect } from 'react';
 import { Alert, Button, Typography } from '@material-tailwind/react';
-import { PhoneArrowUpRightIcon, SparklesIcon } from '@heroicons/react/24/outline';
 import { Scene3Wrapper } from './style3';
 // import { PhoneArrowUpRightIcon, SparklesIcon } from '@heroicons/react/24/outline';
 import api from '../../../api';
@@ -18,8 +17,7 @@ function Scene3page() {
 	const [firstNarr, setFirstNarr] = useState(true);
 	const [arrived, setArrived] = useState(false);
 	// const answer = '다리를 다쳐서 피가 많이 나요.';
-	const [direction, setDirection] = useState(0);
-	const [isWrong, setIsWrong] = useState(false);
+	// const [isWrong, setIsWrong] = useState(false);
 	const [socket, setSocket] = useState<WebSocket | null>(null);
 	const fetchData = async () => {
 		try {
