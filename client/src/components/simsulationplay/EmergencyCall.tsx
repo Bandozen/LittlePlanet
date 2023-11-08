@@ -3,14 +3,14 @@ import { Button } from '@material-tailwind/react';
 import { useRecoilValue } from 'recoil';
 import api from '../../api';
 import Scene1page from './Scene1/Scene1page';
-import Scene2page from './Scene2page';
+import Scene2page from './Scene2/Scene2page';
 import Scene3page from './Scene3page';
 import Scene4page from './Scene4/Scene4page';
 import { userEmail } from '../../store/RecoilState';
 
 function EmergencyCall() {
 	// 시뮬레이션 씬 저장하기
-	const [status, setStatus] = useState(2);
+	const [status, setStatus] = useState(0);
 
 	// 멤버 이메일 가져오기
 	const memberEmail = useRecoilValue(userEmail);
