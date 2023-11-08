@@ -56,6 +56,10 @@ function Login() {
 				memberEmail: email,
 				memberPassword: password,
 			});
+			await api.post('member/command', {
+				memberEmail: email,
+				memberCommand: 'ready',
+			});
 			console.log(loginResponse);
 			setLoginFailed(false);
 			console.log(email);
