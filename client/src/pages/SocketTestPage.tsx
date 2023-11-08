@@ -29,7 +29,7 @@ function ImageDisplay() {
 		// eslint-disable-next-line react-hooks/exhaustive-deps
 	}, [userMail]);
 
-	return <div>{image && <img src={image} alt="" />}</div>;
+	return <div>{image !== '0' && <img src={image} alt="" />}</div>;
 }
 
 export default ImageDisplay;
