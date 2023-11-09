@@ -1,11 +1,9 @@
 import React, { Dispatch, SetStateAction, useEffect, useState } from 'react';
-import io from 'socket.io-client';
-import { useRecoilValue } from 'recoil';
 import loadingImage from 'assets/images/livecam_loading.jpg';
 import Button from 'components/common/Button';
+import CharacterDisplay from 'components/characterDisplay';
 import CheckStep from '../atoms/CheckStep';
 import { Wrapper } from './style';
-import { userEmail } from '../../../store/RecoilState';
 
 interface IStepFourProps {
 	setStep: Dispatch<SetStateAction<number>>;
@@ -15,8 +13,6 @@ function StepFour(props: IStepFourProps) {
 	const { setStep } = props;
 	const [activeStep, setActiveStep] = useState(4);
 	const [isDone, setIsDone] = useState(false);
-	const [image, setImage] = useState(loadingImage);
-	const userMail = useRecoilValue(userEmail);
 
 	const testClick = () => {
 		if (!isDone) {
@@ -31,27 +27,6 @@ function StepFour(props: IStepFourProps) {
 		}
 	}, [activeStep]);
 
-	useEffect(() => {
-		const socket = io('wss://k9c203.p.ssafy.io:18099', {
-			extraHeaders: {
-				userMail,
-			},
-			secure: true,
-		});
-
-		socket.on('image', (data) => {
-			if (image !== data.url) {
-				setImage(data.url);
-				console.log(data);
-			}
-		});
-
-		return () => {
-			socket.disconnect();
-		};
-		// eslint-disable-next-line react-hooks/exhaustive-deps
-	}, [userMail]);
-
 	return (
 		<Wrapper>
 			<div>
@@ -61,9 +36,13 @@ function StepFour(props: IStepFourProps) {
 				<CheckStep activeStep={activeStep} checkNum={4} message="캐릭터 연동 확인" />
 				<CheckStep activeStep={activeStep} checkNum={5} message="시작하기!" />
 			</div>
-			<div className="image-wrapper">
-				<img className="loading" src={image} alt="" />
-			</div>
+			{CharacterDisplay ? (
+				<div className="loading">
+					<CharacterDisplay />
+				</div>
+			) : (
+				<img className="loading" src={loadingImage} alt="" />
+			)}
 			<Button text="다음" handleClick={() => testClick()} />
 		</Wrapper>
 	);
