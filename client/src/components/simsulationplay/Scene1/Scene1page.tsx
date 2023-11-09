@@ -56,8 +56,8 @@ function Scene1page() {
 		}, 5000);
 
 		// 소켓 연결
-		// const newSocket = new WebSocket('wss://k9c203.p.ssafy.io:17777');
-		const newSocket = new WebSocket('ws://192.168.100.38:7777');
+		const newSocket = new WebSocket('wss://k9c203.p.ssafy.io:17777');
+		// const newSocket = new WebSocket('ws://192.168.100.38:7777');
 
 		// 소켓 열리면
 		newSocket.onopen = () => {
