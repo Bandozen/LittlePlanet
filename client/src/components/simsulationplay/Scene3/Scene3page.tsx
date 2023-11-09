@@ -128,7 +128,10 @@ function Scene3page() {
 				</Button>
 
 				{firstNarr && (
-					<Alert variant="outlined">이제 소방관에게 친구가 어디를 다쳤는지 알려줘야 해. 친구에게 다가가 볼까?</Alert>
+					<Alert variant="outlined">
+						{contentsData[0] ? contentsData[0].contentsUrlName : '...loading'}
+						이제 소방관에게 친구가 어디를 다쳤는지 알려줘야 해. 친구에게 다가가 볼까?
+					</Alert>
 				)}
 				{/* 구조물 터치하면 구조물 확대하고 터치된 구조물 seq로 touched 변경 */}
 				{/* <Alert open={isTouched}> */}
