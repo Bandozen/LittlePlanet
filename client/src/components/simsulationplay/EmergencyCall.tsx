@@ -30,8 +30,8 @@ function EmergencyCall() {
 	useEffect(() => {
 		fetchData();
 
-		const newSocket = new WebSocket('wss://k9c203.p.ssafy.io:17777');
-		// const newSocket = new WebSocket('ws://192.168.100.38:7777');
+		// const newSocket = new WebSocket('wss://k9c203.p.ssafy.io:17777');
+		const newSocket = new WebSocket('ws://192.168.100.36:7777');
 		newSocket.onopen = () => {
 			console.log('WebSocket connection established.');
 			setSocket(newSocket);
@@ -50,6 +50,7 @@ function EmergencyCall() {
 			console.log(eventMessage);
 			if (eventMessage.type === 'page') {
 				setStatus(eventMessage.content);
+				console.log(status);
 			}
 		};
 
@@ -83,6 +84,17 @@ function EmergencyCall() {
 			socket.send(JSON.stringify(message));
 		}
 	};
+
+	if (socket) {
+		socket.onmessage = (event) => {
+			const eventMessage = JSON.parse(event.data);
+			console.log(eventMessage);
+			if (eventMessage.type === 'page') {
+				setStatus(eventMessage.content);
+				console.log(status);
+			}
+		};
+	}
 
 	return (
 		<>
