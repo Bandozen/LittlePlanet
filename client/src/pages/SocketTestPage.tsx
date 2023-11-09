@@ -17,10 +17,9 @@ function ImageDisplay() {
 		});
 
 		socket.on('image', (data) => {
-			if (image !== data.url) {
-				setImage(data.url);
-				console.log(data);
-			}
+			setImage(data.url);
+			console.log(data);
+			console.log(userMail);
 		});
 
 		return () => {
