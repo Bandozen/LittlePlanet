@@ -1,7 +1,7 @@
 import React, { Dispatch, SetStateAction, useEffect, useState } from 'react';
 import loadingImage from 'assets/images/livecam_loading.jpg';
 import Button from 'components/common/Button';
-import CharacterDisplay from 'components/characterDisplay';
+import CharacterDisplay from 'components/CharacterDisplay';
 import CheckStep from '../atoms/CheckStep';
 import { Wrapper } from './style';
 

@@ -6,10 +6,11 @@ import { userEmail } from 'store/RecoilState';
 function CamDisplay() {
 	const [image, setImage] = useState('0');
 	const userMail = useRecoilValue(userEmail);
-	const websocketHw: string = process.env.REACT_APP_WEBSOCKET_HW!;
+	// const websocketHw: string = process.env.REACT_APP_WEBSOCKET_HW!;
+	console.log(userMail);
 
 	useEffect(() => {
-		const socket = io(websocketHw, {
+		const socket = io('wss://k9c203.p.ssafy.io:18097', {
 			query: {
 				userMail,
 				fileName: 'cam.jpg',

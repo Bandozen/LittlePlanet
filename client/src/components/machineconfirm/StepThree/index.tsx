@@ -3,7 +3,7 @@ import api from 'api';
 import { useRecoilValue } from 'recoil';
 import loadingImage from 'assets/images/livecam_loading.jpg';
 import Button from 'components/common/Button';
-import CamDisplay from 'components/camDisplay';
+import CamDisplay from 'components/CamDisplay';
 import { Wrapper } from './style';
 import CheckStep from '../atoms/CheckStep';
 import { userEmail } from '../../../store/RecoilState';
