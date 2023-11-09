@@ -59,8 +59,9 @@ function Scene1page() {
 		}, 3000);
 
 		// 소켓 연결
-		const newSocket = new WebSocket('wss://k9c203.p.ssafy.io:17777');
+		// const newSocket = new WebSocket('wss://k9c203.p.ssafy.io:17777');
 		// const newSocket = new WebSocket('ws://192.168.100.38:7777');
+		const newSocket = new WebSocket('ws://192.168.100.85:7777');
 
 		// 소켓 열리면
 		newSocket.onopen = () => {
@@ -78,8 +79,8 @@ function Scene1page() {
 			console.log(event.data);
 			const eventMessage = JSON.parse(event.data);
 			// 타입 확인 후 setText
-			if (eventMessage.type === 'text1') {
-				setText(event.data.content);
+			if (eventMessage.type === 'text') {
+				setText(eventMessage.content);
 			}
 			if (eventMessage.type === 'wrong') {
 				setWrongSignal(true);
@@ -102,6 +103,7 @@ function Scene1page() {
 	// 만일 text가 바뀌면 gpt에 요청을 보내야 함.
 	useEffect(() => {
 		console.log('텍스트 변경');
+		console.log('여기', text);
 		if (text) {
 			const prompt = {
 				role: 'user',
