@@ -12,9 +12,12 @@ import {
   ScrollView,
   RefreshControl,
 } from 'react-native';
+import Icon from 'react-native-vector-icons/MaterialIcons';
+import {KeyboardAwareScrollView} from 'react-native-keyboard-aware-scroll-view';
+import FontAwesome from 'react-native-vector-icons/FontAwesome';
 import {StackNavigationProp} from '@react-navigation/stack';
 import {MemberAPI} from '../utils/MemberAPI';
-import TestSTT from '../components/TestSTT';
+import STTComponent from '../components/STTComponent';
 
 type MainProps = {
   navigation: StackNavigationProp<any, 'Main'>;
@@ -30,7 +33,7 @@ export default function Main({navigation}: MainProps) {
   const [refreshing, setRefreshing] = useState(false);
   const [isSTTActive, setIsSTTActive] = useState(false);
   const [transcript, setTranscript] = useState('');
-  const [status, setstatus] = useState('');
+  const [narrstatus, setnarrstatus] = useState('');
 
   const handleLogin = async () => {
     try {
@@ -42,7 +45,8 @@ export default function Main({navigation}: MainProps) {
         Alert.alert('로그인 성공', '환영합니다!');
         setIsLoggedin(true);
         // 로그인 성공 후 WebSocket 연결 초기화
-        const newSocket = new WebSocket('ws://192.168.100.38:7777');
+        // const newSocket = new WebSocket('ws://192.168.100.85:7777');
+        const newSocket = new WebSocket('wss://k9c203.p.ssafy.io:17777');
 
         newSocket.onopen = () => {
           console.log('웹소켓 연결');
@@ -98,7 +102,7 @@ export default function Main({navigation}: MainProps) {
     setTranscript(text);
     if (socket && text) {
       const textMessage = {
-        type: `text${status}`,
+        type: 'text',
         content: text,
       };
       socket.send(JSON.stringify(textMessage));
@@ -107,14 +111,25 @@ export default function Main({navigation}: MainProps) {
     }
     setIsSTTActive(false);
   };
+  const socket_send = (text: string) => {
+    if (socket && text) {
+      const textMessage = {
+        type: 'text',
+        content: text,
+      };
+      socket.send(JSON.stringify(textMessage));
+    } else {
+      console.log('text 없는듯?');
+    }
+  };
   const toggleSTT = () => {
     setIsSTTActive(!isSTTActive);
   };
   return (
-    <View style={styles.container}>
-      <ImageBackground
-        source={require('../assets/images/login_img.jpg')}
-        style={styles.backgroundImage}>
+    <ImageBackground
+      source={require('../assets/images/login_img.jpg')}
+      style={styles.backgroundImage}>
+      <KeyboardAwareScrollView>
         <View style={styles.contentContainer}>
           <Image
             source={require('../assets/images/logo.png')}
@@ -129,7 +144,11 @@ export default function Main({navigation}: MainProps) {
                 시뮬레이션 상황에 맞게 어플이 재구성되니
               </Text>
               <Text style={styles.textStyle}>잠시 기다려주세요.</Text>
-              <Button title="로그아웃" onPress={handleLogout} />
+              <TouchableOpacity
+                style={styles.buttonStyle}
+                onPress={handleLogout}>
+                <Text style={styles.buttonText}>로그아웃</Text>
+              </TouchableOpacity>
             </React.Fragment>
           ) : (
             // 로그아웃 상태일 때 보이는 버튼
@@ -163,22 +182,40 @@ export default function Main({navigation}: MainProps) {
               </TouchableOpacity>
             </React.Fragment>
           )}
-          <Button
-            title="전화 걸기"
-            onPress={() => navigation.navigate('Call')}
-          />
-          <Button
-            title={isSTTActive ? 'Stop STT' : 'Start STT'}
+          <TouchableOpacity
+            style={[styles.callButton]}
+            onPress={() => navigation.navigate('Call')}>
+            <Icon name="phone" size={40} color="yellow" />
+            <Text style={styles.textStyle}>전화</Text>
+          </TouchableOpacity>
+
+          <TouchableOpacity
+            style={[styles.sttButton]}
             onPress={toggleSTT}
-          />
+            activeOpacity={0.7} // 옵셔널: 눌렀을 때 투명도 효과를 줍니다.
+          >
+            <FontAwesome
+              name={isSTTActive ? 'microphone-slash' : 'microphone'}
+              size={40}
+              color="yellow"
+            />
+            <Text style={styles.textStyle}>
+              {isSTTActive ? 'Stop STT' : 'Start STT'}
+            </Text>
+          </TouchableOpacity>
         </View>
-        <TestSTT isSTTActive={isSTTActive} onSTTResult={handleSTTResult} />
-      </ImageBackground>
-    </View>
+        <STTComponent
+          isSTTActive={isSTTActive}
+          onSTTResult={handleSTTResult}
+          socketSend={socket_send}
+        />
+      </KeyboardAwareScrollView>
+    </ImageBackground>
   );
 }
 const styles = StyleSheet.create({
   container: {
+    fontFamily: 'GowunDodum-Regular',
     flex: 1,
     justifyContent: 'center',
     alignItems: 'center',
@@ -202,14 +239,25 @@ const styles = StyleSheet.create({
     marginBottom: 10,
   },
   buttonStyle: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'center',
     backgroundColor: 'yellow',
-    padding: 10,
-    borderRadius: 5,
+    paddingVertical: 15,
+    paddingHorizontal: 20,
+    borderRadius: 20,
+    textAlign: 'center',
     marginTop: 10,
+    shadowOpacity: 0.3,
+    shadowRadius: 3,
+    shadowOffset: {width: 0, height: 2},
+    elevation: 5,
   },
   buttonText: {
     color: 'black',
+    marginLeft: 10,
     fontSize: 16,
+    fontWeight: '600',
     textAlign: 'center',
     fontFamily: 'GowunDodum-Regular',
   },
@@ -222,6 +270,10 @@ const styles = StyleSheet.create({
     borderColor: 'white',
     color: 'black',
     borderRadius: 10,
+    shadowOpacity: 0.1,
+    shadowRadius: 2,
+    shadowOffset: {width: 0, height: 1},
+    elevation: 2,
   },
   logo: {
     width: 200,
@@ -235,5 +287,15 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     alignItems: 'center',
     marginBottom: 10,
+  },
+  callButton: {
+    position: 'absolute',
+    bottom: -80,
+    left: 100, // 왼쪽 하단, left의 값을 조정하여 위치 변경
+  },
+  sttButton: {
+    position: 'absolute',
+    bottom: -80,
+    right: 50, // 오른쪽 하단, right의 값을 조정하여 위치 변경
   },
 });

@@ -4,7 +4,7 @@ import { useRecoilValue } from 'recoil';
 import api from '../../api';
 import Scene1page from './Scene1/Scene1page';
 import Scene2page from './Scene2/Scene2page';
-import Scene3page from './Scene3page';
+import Scene3page from './Scene3/Scene3page';
 import Scene4page from './Scene4/Scene4page';
 import { userEmail } from '../../store/RecoilState';
 
