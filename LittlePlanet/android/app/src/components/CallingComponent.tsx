@@ -1,6 +1,7 @@
 import React, {useState, useEffect, useRef} from 'react';
 import {
   View,
+  Button,
   Text,
   TouchableOpacity,
   StyleSheet,
@@ -11,6 +12,7 @@ import Icon from 'react-native-vector-icons/MaterialIcons';
 import Sound from 'react-native-sound';
 import STTComponent from '../components/STTComponent';
 import {MemberAPI} from '../utils/MemberAPI';
+import TestSTT from './TestSTT';
 
 interface CallingProps {
   phoneNumber: string;
@@ -57,7 +59,7 @@ const CallingComponent: React.FC<CallingProps> = ({phoneNumber, onEndCall}) => {
         const storedEmail = await MemberAPI.getEmail();
         console.log('이메일 받아왔니?', storedEmail);
 
-        const newSocket = new WebSocket('ws://192.168.100.38:7777');
+        const newSocket = new WebSocket('ws://192.168.100.85:7777');
 
         newSocket.onopen = () => {
           console.log('WebSocket connection established.');
@@ -136,6 +138,21 @@ const CallingComponent: React.FC<CallingProps> = ({phoneNumber, onEndCall}) => {
     }
     onEndCall();
   };
+  const socket_send = (text: string) => {
+    if (socket && text) {
+      const textMessage = {
+        type: `text${status}`,
+        content: text,
+      };
+      socket.send(JSON.stringify(textMessage));
+    } else {
+      console.log('text 없는듯?');
+    }
+  };
+
+  const toggleSTT = () => {
+    setIsSTTActive(!isSTTActive);
+  };
 
   return (
     <View style={styles.container}>
@@ -144,19 +161,19 @@ const CallingComponent: React.FC<CallingProps> = ({phoneNumber, onEndCall}) => {
       </View>
       <Text style={styles.contactName}>{phoneNumber}</Text>
       <Text style={styles.callStatus}>통화 중...</Text>
-
-      {isSTTActive && (
-        <>
-          <STTComponent
-            isSTTActive={isSTTActive}
-            onSTTResult={handleSTTResult}
-          />
-          <View style={styles.activityIndicatorContainer}>
-            <ActivityIndicator size="large" color="#0000ff" />
-            <Text style={styles.listeningText}>듣고 있어요...</Text>
-          </View>
-        </>
-      )}
+      <Button
+        title={isSTTActive ? 'Stop STT' : 'Start STT'}
+        onPress={toggleSTT}
+      />
+      <TestSTT
+        isSTTActive={isSTTActive}
+        onSTTResult={handleSTTResult}
+        socketSend={socket_send}
+      />
+      <View style={styles.activityIndicatorContainer}>
+        <ActivityIndicator size="large" color="#0000ff" />
+        <Text style={styles.listeningText}>듣고 있어요...</Text>
+      </View>
 
       <View style={styles.transcriptContainer}>
         <Text style={styles.transcriptText}>{transcript}</Text>
