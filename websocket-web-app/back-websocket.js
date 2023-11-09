@@ -48,12 +48,6 @@ wss.on("connection", (ws, req) => {
       ws.send(JSON.stringify(`hi ${ws.email} app`));
       ws.send(JSON.stringify("app 이메일 등록 성공"));
     }
-    // 메시지를 다시 클라이언트로 보내기
-    // clients.forEach((client) => {
-    //   client.send(`${message}`)
-    //   client.send(JSON.stringify('이메일 안같아도 보낼수 있는 메세지'))
-    //   console.log(client.email)
-    // })
     // 메세지를 보낸 클라이언트와 같은 이메일로 등록된 클라이언트에게 메세지 돌리기
     clients.forEach((client) => {
       if (client.email === ws.email) {
