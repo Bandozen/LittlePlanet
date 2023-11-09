@@ -10,4 +10,17 @@ export const Scene2Wrapper = styled.div`
 		width: 100%;
 		height: 100vh;
 	}
+
+	.alert-container {
+		position: absolute;
+		bottom: 65%;
+		right: 30%;
+	}
+
+	.wrong-container {
+		position: absolute;
+		top: 35%;
+		left: 50%;
+		transform: translate(-50%, -50%);
+	}
 `;
