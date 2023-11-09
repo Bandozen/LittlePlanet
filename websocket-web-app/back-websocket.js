@@ -1,9 +1,7 @@
-require("dotenv").config();
 const WebSocket = require("ws");
 const http = require("http");
-const redis = require("redis");
 
-const server_port = process.env.SERVER_PORT;
+const server_port = 7777;
 
 // HTTP 서버 생성
 const server = http.createServer((req, res) => {
@@ -18,15 +16,6 @@ const server = http.createServer((req, res) => {
 
 // WebSocket 서버 생성
 const wss = new WebSocket.Server({ server });
-
-// Redis 연결
-const redisClient = redis.createClient({
-  url: process.env.REDIS_URL,
-});
-
-redisClient.on("connect", () => console.log("Redis에 연결되었습니다."));
-
-redisClient.connect();
 
 // IP를 key로, 웹소켓 배열을 value로 갖는 Map
 let clients = [];
@@ -59,20 +48,6 @@ wss.on("connection", (ws, req) => {
       ws.send(JSON.stringify(`hi ${ws.email} app`));
       ws.send(JSON.stringify("app 이메일 등록 성공"));
     }
-    if (mes.type == "HW" && mes.email) {
-      ws.email = mes.email;
-      msg = {
-        type: "HW",
-        lefthand: redisClient.lPop(ws.email),
-      };
-      ws.send(JSON.stringify(msg))
-    }
-    // 메시지를 다시 클라이언트로 보내기
-    // clients.forEach((client) => {
-    //   client.send(`${message}`)
-    //   client.send(JSON.stringify('이메일 안같아도 보낼수 있는 메세지'))
-    //   console.log(client.email)
-    // })
     // 메세지를 보낸 클라이언트와 같은 이메일로 등록된 클라이언트에게 메세지 돌리기
     clients.forEach((client) => {
       if (client.email === ws.email) {

@@ -45,6 +45,9 @@ function Scene1page() {
 	const [isWrong, setIsWrong] = useState(false);
 	const answer = '친구가 높은 곳에서 뛰어내려서 많이 다쳤어요.';
 
+	// 오답이라면 소방관과의 대화도 변경되어야 함.
+	const [wrongSignal, setWrongSignal] = useState(false);
+
 	// 처음 컴포넌트가 마운트되면,
 	useEffect(() => {
 		// asset 불러오고
@@ -53,11 +56,12 @@ function Scene1page() {
 		// 5초 타이머 설정해서 Alert
 		const timer = setTimeout(() => {
 			setShowAlert(false);
-		}, 5000);
+		}, 3000);
 
 		// 소켓 연결
-		const newSocket = new WebSocket('wss://k9c203.p.ssafy.io:17777');
+		// const newSocket = new WebSocket('wss://k9c203.p.ssafy.io:17777');
 		// const newSocket = new WebSocket('ws://192.168.100.38:7777');
+		const newSocket = new WebSocket('ws://192.168.100.85:7777');
 
 		// 소켓 열리면
 		newSocket.onopen = () => {
@@ -75,8 +79,11 @@ function Scene1page() {
 			console.log(event.data);
 			const eventMessage = JSON.parse(event.data);
 			// 타입 확인 후 setText
-			if (eventMessage.type === 'text1') {
-				setText(event.data.content);
+			if (eventMessage.type === 'text') {
+				setText(eventMessage.content);
+			}
+			if (eventMessage.type === 'wrong') {
+				setWrongSignal(true);
 			}
 		};
 
@@ -96,6 +103,7 @@ function Scene1page() {
 	// 만일 text가 바뀌면 gpt에 요청을 보내야 함.
 	useEffect(() => {
 		console.log('텍스트 변경');
+		console.log('여기', text);
 		if (text) {
 			const prompt = {
 				role: 'user',
@@ -114,6 +122,7 @@ function Scene1page() {
 							type: 'wrong',
 						};
 						setIsWrong(true);
+						setText('');
 						socket?.send(JSON.stringify(message));
 					}
 				})
@@ -123,22 +132,25 @@ function Scene1page() {
 		}
 	}, [text]);
 
-	// const handleClickNarrTest = async () => {
-	// 	if (socket) {
-	// 		const playNarrMessage = {
-	// 			type: 'narr',
-	// 			content: 1,
-	// 		};
-	// 		socket.send(JSON.stringify(playNarrMessage));
-	// 	}
-	// };
+	// 4. 오답 가이드라인 alert 타이머 추가
+	useEffect(() => {
+		let alertTimer: any;
+		if (isWrong) {
+			alertTimer = setTimeout(() => {
+				setIsWrong(false);
+			}, 3000);
+		}
+		return () => {
+			if (alertTimer) clearTimeout(alertTimer);
+		};
+	}, [isWrong]);
 
 	const handleClickWrongAnswer = () => {
 		setIsWrong((prev) => !prev);
 	};
 
 	const handleClickSetText = () => {
-		setText('선생님이 다쳤어요');
+		setText('선생님이 다쳤어요.');
 	};
 
 	const handleCorrectAnswer = () => {
@@ -147,33 +159,38 @@ function Scene1page() {
 
 	return (
 		<Scene1Wrapper>
-			{/* <Button onClick={handleClickNarrTest}>APP 나레이션 플레이 test</Button> */}
 			<Button onClick={handleClickWrongAnswer}>오답</Button>
 			<Button onClick={handleClickSetText}>오답 한번 보내보자.</Button>
 			<Button onClick={handleCorrectAnswer}>정답 한번 보내보자.</Button>
-			{showAlert ? (
+			{showAlert && (
 				<div className="alert-container">
 					<Alert>
 						<Typography variant="h3">다친 친구가 있다는 사실을 소방관에게 알려줘!</Typography>
 					</Alert>
 				</div>
-			) : (
+			)}
+			{!showAlert && !isWrong && !wrongSignal && (
 				<SimulationChat chatNumber={text ? 2 : 1} text={text || '네, 119입니다. 무슨 일이시죠?'} />
 			)}
-			<div className="wrong-container">
-				<Alert className="flex justify-center" variant="gradient" open={isWrong} onClose={() => setIsWrong(false)}>
-					<div className="flex flex-row items-center m-2">
-						<SparklesIcon className="w-5 h-5 mr-2" color="yellow" />
-						<Typography variant="h4" color="yellow">
-							이렇게 말해볼까?
-						</Typography>
-					</div>
-					<div className="flex flex-row items-center m-2">
-						<PhoneArrowUpRightIcon className="w-5 h-5 mr-2" />
-						<Typography variant="h3">{answer}</Typography>
-					</div>
-				</Alert>
-			</div>
+			{isWrong && (
+				<div className="wrong-container">
+					<Alert className="flex justify-center" variant="gradient" open={isWrong} onClose={() => setIsWrong(false)}>
+						<div className="flex flex-row items-center m-2">
+							<SparklesIcon className="w-5 h-5 mr-2" color="yellow" />
+							<Typography variant="h4" color="yellow">
+								이렇게 말해볼까?
+							</Typography>
+						</div>
+						<div className="flex flex-row items-center m-2">
+							<PhoneArrowUpRightIcon className="w-5 h-5 mr-2" />
+							<Typography variant="h3">{answer}</Typography>
+						</div>
+					</Alert>
+				</div>
+			)}
+			{!showAlert && !isWrong && wrongSignal && (
+				<SimulationChat chatNumber={text ? 2 : 1} text={text || '다시 한번 얘기해줄래요?'} />
+			)}
 		</Scene1Wrapper>
 	);
 }
