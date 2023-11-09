@@ -1,10 +1,17 @@
 import React, {useState, useEffect} from 'react';
-import {View, StyleSheet} from 'react-native';
+import {View, StyleSheet, TouchableOpacity, Text} from 'react-native';
+import Icon from 'react-native-vector-icons/MaterialIcons';
 import CallingComponent from '../components/CallingComponent';
 import PhoneKeyComponent from '../components/PhoneKeyComponent';
+import {StackNavigationProp} from '@react-navigation/stack';
+
 import {MemberAPI} from '../utils/MemberAPI';
 
-const Call = () => {
+type CallProps = {
+  navigation: StackNavigationProp<any, 'Call'>;
+};
+
+const Call = ({navigation}: CallProps) => {
   // 상태 추가: 현재 전화를 거는 중인지 통화 중인지 결정
   const [inCall, setInCall] = useState(false);
   const [phoneNumber, setPhoneNumber] = useState('');
@@ -24,7 +31,8 @@ const Call = () => {
         const storedEmail = await MemberAPI.getEmail();
         console.log('이메일 받아왔니?', storedEmail);
 
-        const newSocket = new WebSocket('ws://192.168.100.38:7777');
+        // const newSocket = new WebSocket('ws://192.168.100.85:7777');
+        const newSocket = new WebSocket('wss://k9c203.p.ssafy.io:17777');
 
         newSocket.onopen = () => {
           console.log('WebSocket connection established.');
@@ -54,36 +62,9 @@ const Call = () => {
       }
     };
 
-    
     // 정의한 비동기 함수를 호출합니다.
     fetchEmailAndConnect();
   }, []);
-
-  // useEffect(() => {
-  //   const newSocket = new WebSocket('ws://192.168.100.38:7777');
-
-  //   newSocket.onopen = () => {
-  //     console.log('WebSocket connection established.');
-  //     // 소켓이 열린 후에 핸드셰이크를 수행
-  //     const handShake = {
-  //       type: 'app',
-  //       email,
-  //     };
-  //     newSocket.send(JSON.stringify(handShake));
-  //     console.log('핸드셰이크 전송 성공');
-
-  //     setSocket(newSocket);
-  //   };
-
-  //   newSocket.onclose = () => {
-  //     console.log('WebSocket connection closed.');
-  //   };
-
-  //   return () => {
-  //     newSocket.close();
-  //     console.log('콜링으로 넘어간다');
-  //   };
-  // }, []);
 
   useEffect(() => {
     if (inCall && socket) {
@@ -108,7 +89,12 @@ const Call = () => {
         <PhoneKeyComponent
           onCallInitiated={handleCallInitiation} // 전화 시작 함수 전달
         />
+        
       )}
+      <TouchableOpacity
+        onPress={() => navigation.navigate('Main')}>
+        <Icon name="home" size={30} color="green" />
+      </TouchableOpacity>
     </View>
   );
 };
@@ -118,6 +104,12 @@ const styles = StyleSheet.create({
     flex: 1,
     justifyContent: 'center',
     alignItems: 'center',
+  },
+  textStyle: {
+    fontFamily: 'GowunDodum-Regular',
+    fontSize: 20,
+    color: 'green',
+    marginBottom: 30,
   },
 });
 

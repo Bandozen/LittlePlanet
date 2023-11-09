@@ -1,6 +1,7 @@
 import React, {useState, useEffect, useRef} from 'react';
 import {
   View,
+  Button,
   Text,
   TouchableOpacity,
   StyleSheet,
@@ -9,8 +10,8 @@ import {
 import {globalStyles} from '../../../../src/styles/globalStyles';
 import Icon from 'react-native-vector-icons/MaterialIcons';
 import Sound from 'react-native-sound';
-import STTComponent from '../components/STTComponent';
 import {MemberAPI} from '../utils/MemberAPI';
+import STTComponent from './STTComponent';
 
 interface CallingProps {
   phoneNumber: string;
@@ -18,9 +19,9 @@ interface CallingProps {
 }
 
 const CallingComponent: React.FC<CallingProps> = ({phoneNumber, onEndCall}) => {
-  const [isSTTActive, setIsSTTActive] = useState(true);
+  const [isSTTActive, setIsSTTActive] = useState(false);
   const [transcript, setTranscript] = useState('');
-  const [status, setstatus] = useState('');
+  const [soundnum, setsoundnum] = useState('');
   const [socket, setSocket] = useState<WebSocket | null>(null);
 
   // 사운드 인스턴스 생성
@@ -57,7 +58,8 @@ const CallingComponent: React.FC<CallingProps> = ({phoneNumber, onEndCall}) => {
         const storedEmail = await MemberAPI.getEmail();
         console.log('이메일 받아왔니?', storedEmail);
 
-        const newSocket = new WebSocket('ws://192.168.100.38:7777');
+        // const newSocket = new WebSocket('ws://192.168.100.85:7777');
+        const newSocket = new WebSocket('wss://k9c203.p.ssafy.io:17777');
 
         newSocket.onopen = () => {
           console.log('WebSocket connection established.');
@@ -78,10 +80,11 @@ const CallingComponent: React.FC<CallingProps> = ({phoneNumber, onEndCall}) => {
           console.log('이벤트데이터', event.data);
           if (eventMessage.type === 'narr') {
             const narrFilename = `narr_${eventMessage.content}.mp3`;
-            playSoundFile(narrFilename, () =>
-              console.log(`${narrFilename} 재생됨`),
-            );
-            setstatus(eventMessage.content);
+            playSoundFile(narrFilename, () => {
+              console.log(`${narrFilename} 재생됨`);
+              setIsSTTActive(true);
+            });
+            setsoundnum(eventMessage.content);
           } else if (eventMessage.type === 'end') {
             console.log('엔드메세지 받고 웹소켓 종료됨');
             newSocket.close();
@@ -122,7 +125,7 @@ const CallingComponent: React.FC<CallingProps> = ({phoneNumber, onEndCall}) => {
     setTranscript(text);
     if (socket && text) {
       const textMessage = {
-        type: `text${status}`,
+        type: `text${soundnum}`,
         content: text,
       };
       socket.send(JSON.stringify(textMessage));
@@ -136,6 +139,21 @@ const CallingComponent: React.FC<CallingProps> = ({phoneNumber, onEndCall}) => {
     }
     onEndCall();
   };
+  const socket_send = (text: string) => {
+    if (socket && text) {
+      const textMessage = {
+        type: `text${soundnum}`,
+        content: text,
+      };
+      socket.send(JSON.stringify(textMessage));
+    } else {
+      console.log('text 없는듯?');
+    }
+  };
+
+  const toggleSTT = () => {
+    setIsSTTActive(!isSTTActive);
+  };
 
   return (
     <View style={styles.container}>
@@ -144,22 +162,19 @@ const CallingComponent: React.FC<CallingProps> = ({phoneNumber, onEndCall}) => {
       </View>
       <Text style={styles.contactName}>{phoneNumber}</Text>
       <Text style={styles.callStatus}>통화 중...</Text>
-
-      {isSTTActive && (
-        <>
-          <STTComponent
-            isSTTActive={isSTTActive}
-            onSTTResult={handleSTTResult}
-          />
-          <View style={styles.activityIndicatorContainer}>
-            <ActivityIndicator size="large" color="#0000ff" />
-            <Text style={styles.listeningText}>듣고 있어요...</Text>
-          </View>
-        </>
-      )}
-
-      <View style={styles.transcriptContainer}>
-        <Text style={styles.transcriptText}>{transcript}</Text>
+      <Button
+        title={isSTTActive ? 'Stop STT' : 'Start STT'}
+        onPress={toggleSTT}
+        color={isSTTActive ? 'red' : 'blue'}
+      />
+      <STTComponent
+        isSTTActive={isSTTActive}
+        onSTTResult={handleSTTResult}
+        socketSend={socket_send}
+      />
+      <View style={styles.activityIndicatorContainer}>
+        <ActivityIndicator size="large" color="#0000ff" />
+        <Text style={styles.listeningText}>듣고 있어요...</Text>
       </View>
 
       <TouchableOpacity
@@ -175,13 +190,13 @@ const CallingComponent: React.FC<CallingProps> = ({phoneNumber, onEndCall}) => {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    justifyContent: 'center',
+    justifyContent: 'space-between',
     alignItems: 'center',
     padding: 20,
     backgroundColor: '#f5f5f5',
   },
   profileIconContainer: {
-    marginBottom: 30,
+    marginBottom: 20,
   },
   contactInfoContainer: {
     alignItems: 'center',
@@ -192,9 +207,10 @@ const styles = StyleSheet.create({
     color: '#000',
   },
   callStatus: {
-    fontSize: 18,
+    fontSize: 20,
     color: '#666',
     marginTop: 8,
+    fontWeight: 'bold',
   },
   callActionContainer: {
     alignSelf: 'stretch', // 부모의 너비에 맞춤
@@ -243,7 +259,8 @@ const styles = StyleSheet.create({
     color: 'red',
   },
   activityIndicatorContainer: {
-    marginVertical: 20,
+    flexDirection: 'row',
+    marginTop: 10,
     justifyContent: 'center',
     alignItems: 'center',
   },
