@@ -42,7 +42,7 @@ export default function Main({navigation}: MainProps) {
         Alert.alert('로그인 성공', '환영합니다!');
         setIsLoggedin(true);
         // 로그인 성공 후 WebSocket 연결 초기화
-        const newSocket = new WebSocket('ws://192.168.100.38:7777');
+        const newSocket = new WebSocket('ws://192.168.100.85:7777');
 
         newSocket.onopen = () => {
           console.log('웹소켓 연결');
@@ -106,6 +106,17 @@ export default function Main({navigation}: MainProps) {
       console.log('텍스트 안넘어감');
     }
     setIsSTTActive(false);
+  };
+  const socket_send = (text: string) => {
+    if (socket && text) {
+      const textMessage = {
+        type: `text${status}`,
+        content: text,
+      };
+      socket.send(JSON.stringify(textMessage));
+    } else {
+      console.log('text 없는듯?');
+    }
   };
   const toggleSTT = () => {
     setIsSTTActive(!isSTTActive);
@@ -172,7 +183,11 @@ export default function Main({navigation}: MainProps) {
             onPress={toggleSTT}
           />
         </View>
-        <TestSTT isSTTActive={isSTTActive} onSTTResult={handleSTTResult} />
+        <TestSTT
+          isSTTActive={isSTTActive}
+          onSTTResult={handleSTTResult}
+          socketSend={socket_send}
+        />
       </ImageBackground>
     </View>
   );
