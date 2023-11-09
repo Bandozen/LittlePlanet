@@ -22,7 +22,7 @@ export const Scene3Wrapper = styled.div`
 	}
 	.zoomed {
 		transform: scale(2); /* 원하는 확대 비율을 지정 */
-		transition: transform 0.5s; /* 원하는 애니메이션 시간을 지정 */
+		transition: transform 1s; /* 원하는 애니메이션 시간을 지정 */
 		transform-origin: 60% 80%;
 	}
 `;
