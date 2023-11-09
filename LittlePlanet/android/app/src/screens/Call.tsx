@@ -24,7 +24,7 @@ const Call = () => {
         const storedEmail = await MemberAPI.getEmail();
         console.log('이메일 받아왔니?', storedEmail);
 
-        const newSocket = new WebSocket('ws://192.168.100.38:7777');
+        const newSocket = new WebSocket('ws://192.168.100.85:7777');
 
         newSocket.onopen = () => {
           console.log('WebSocket connection established.');
@@ -54,13 +54,12 @@ const Call = () => {
       }
     };
 
-    
     // 정의한 비동기 함수를 호출합니다.
     fetchEmailAndConnect();
   }, []);
 
   // useEffect(() => {
-  //   const newSocket = new WebSocket('ws://192.168.100.38:7777');
+  //   const newSocket = new WebSocket('ws://192.168.100.85:7777');
 
   //   newSocket.onopen = () => {
   //     console.log('WebSocket connection established.');
