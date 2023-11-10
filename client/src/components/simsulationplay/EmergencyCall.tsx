@@ -58,7 +58,7 @@ function EmergencyCall() {
 		newSocket.onclose = () => {
 			console.log('WebSocket connection closed.');
 		};
-		
+
 		return () => {
 			newSocket.close();
 		};
