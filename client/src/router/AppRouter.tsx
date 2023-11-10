@@ -14,9 +14,9 @@ import SimulationMachinePage from 'pages/SimulationMachinePage/SimulationMachine
 import MachineConfirmPage from 'pages/MachineConfirmPage/MachineConfirmPage';
 import ApplicationLayout from 'layouts/common/ApplicationLayout';
 import ScrollToTop from 'components/common/ScrollToTop';
-import SocketTestPage from 'pages/SocketTestPage';
 import EmergencyCall from 'components/simsulationplay/EmergencyCall';
 // import SimulationPlayPage from 'pages/SimulationPlayPage';
+import RedisTestPage from 'pages/RedisTestPage';
 
 function AppRouter() {
 	return (
@@ -36,8 +36,8 @@ function AppRouter() {
 						<Route path="/mypage" element={<MyPage />} />
 						<Route path="/simulationmachine" element={<SimulationMachinePage />} />
 						<Route path="/machineconfirm" element={<MachineConfirmPage />} />
-						<Route path="/sockettest" element={<SocketTestPage />} />
 						<Route path="/simulation/test" element={<EmergencyCall />} />
+						<Route path="/redistest" element={<RedisTestPage />} />
 					</Routes>
 				</BrowserRouter>
 			</ApplicationLayout>
