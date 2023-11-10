@@ -49,13 +49,9 @@ function Scene2page() {
 			setShowNarr(false);
 		}, 5000);
 
-		const timer2 = setTimeout(() => {
-			setShowNarr2(false);
-		}, 4000);
-
 		// 소켓 연결 부분(ip주소 및 배포주소)
-		// const newSocket = new WebSocket('wss://k9c203.p.ssafy.io:17777');
-		const newSocket = new WebSocket('ws://192.168.100.36:7777');
+		const newSocket = new WebSocket('wss://k9c203.p.ssafy.io:17777');
+		// const newSocket = new WebSocket('ws://192.168.100.36:7777');
 		// const newSocket = new WebSocket('ws://192.168.100.38:7777');
 
 		newSocket.onopen = () => {
@@ -79,7 +75,6 @@ function Scene2page() {
 		return () => {
 			newSocket.close();
 			clearTimeout(timer);
-			clearTimeout(timer2);
 		};
 	}, []);
 
@@ -117,6 +112,10 @@ function Scene2page() {
 		setLocation((prev) => !prev);
 	};
 
+	const changeNarration = () => {
+		setShowNarr2(false);
+	};
+
 	const clickWrongAnswer = () => {
 		setIsWrong((prev) => !prev);
 	};
@@ -134,9 +133,10 @@ function Scene2page() {
 
 	return (
 		<Scene2Wrapper>
-			<div className="background-image">
+			<div className="background-image zoom left-right">
 				{/* Test 버튼들 */}
 				<Button onClick={changeLocation}>장소바꾸기</Button>
+				<Button onClick={changeNarration}>내레이션바꾸기</Button>
 				<Button onClick={clickWrongAnswer}>오답으로 바꾸기</Button>
 				<Button onClick={clickSetText}>오답으로 보내기</Button>
 				<Button onClick={clickCorrectAnswer}>정답으로 보내기</Button>
@@ -150,14 +150,12 @@ function Scene2page() {
 				) : (
 					<SimulationChat chatNumber={text ? 2 : 1} text={text || '거기 위치가 어디인가요?'} />
 				)}
-				{showNarr2 ? (
+				{showNarr2 && (
 					<div className="alert-container">
 						<Alert>
 							<Typography variant="h3">확인한 위치를 소방관에게 알려줘!</Typography>
 						</Alert>
 					</div>
-				) : (
-					<div>잠시만 기다려주세요</div>
 				)}
 				{/* 소켓에서 받아온 메시지에 따라 isWrong 설정하고 스크립트 보여주기 */}
 				<div className="wrong-container">
