@@ -19,7 +19,7 @@ public class MailService {
         MimeMessage message = javaMailSender.createMimeMessage();
 
         message.addRecipients(Message.RecipientType.TO, email);
-        message.setSubject("소행성 홈페이지 회원가입 인증번호입니다.");
+        message.setSubject("소행성 홈페이지 인증번호입니다.");
         message.setText("이메일 인증코드: "+code);
 
         message.setFrom(new InternetAddress("alsrnr1791@naver.com", "소행성"));
