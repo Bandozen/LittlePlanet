@@ -85,6 +85,12 @@ const CallingComponent: React.FC<CallingProps> = ({phoneNumber, onEndCall}) => {
               setIsSTTActive(true);
             });
             setsoundnum(eventMessage.content);
+          } else if (eventMessage.type === 'wrong') {
+            const narrFilename = `narr_6.mp3`;
+            playSoundFile(narrFilename, () => {
+              console.log(`오답나레이션 재생됨`);
+              setIsSTTActive(true);
+            });
           } else if (eventMessage.type === 'end') {
             console.log('엔드메세지 받고 웹소켓 종료됨');
             newSocket.close();
