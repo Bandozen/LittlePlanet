@@ -210,10 +210,13 @@ function Login() {
 								crossOrigin=""
 								value={emailResetPW}
 								onChange={handleEmailResetPWChange}
+								disabled={pwOpen || codeOpen}
 							/>
-							<Button className="w-3/12 ml-2" onClick={handleCodeOpen}>
-								발송
-							</Button>
+							{!codeOpen && (
+								<Button className="w-3/12 ml-2" onClick={handleCodeOpen}>
+									발송
+								</Button>
+							)}
 						</div>
 
 						<Alert variant="outlined" color="red" open={notFound} onClose={() => setNotFound(false)}>
