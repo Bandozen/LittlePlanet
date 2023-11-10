@@ -17,9 +17,12 @@ const TestSTT: React.FC<TestSTTProps> = ({
   const [isRecording, setIsRecording] = useState<boolean>(false);
   const [text, setText] = useState<string>('');
 <<<<<<< HEAD
+<<<<<<< HEAD
   const [isFinal, setIsFinal] = useState<string>('');
 
 =======
+=======
+>>>>>>> bce34b93ae35da6089d24e565787e4aba463edfd
   const [timeoutId, setTimeoutId] = useState<NodeJS.Timeout | null>(null);
   const [isFinal, setIsFinal] = useState<string>('');
   // 타임딜레이 주는 함수
@@ -67,10 +70,13 @@ const TestSTT: React.FC<TestSTTProps> = ({
     // 최종 결과만을 setText로 설정
     let finalResult = event.value.join(' ');
 <<<<<<< HEAD
+<<<<<<< HEAD
     setText(finalResult); // 이전 텍스트에 더하지 않고 새로운 값을 설정
     console.log('조인된 finalResult?', finalResult);
     onSTTResult(finalResult); // 부모 컴포넌트에 결과 전달
 =======
+=======
+>>>>>>> bce34b93ae35da6089d24e565787e4aba463edfd
     setText(prevText => prevText + ' ' + event.value.join(' '));
     console.log('최종말들 이어졌나요?', finalResult);
     ;
@@ -97,16 +103,22 @@ const TestSTT: React.FC<TestSTTProps> = ({
   // };
   useEffect(() => {
 <<<<<<< HEAD
+<<<<<<< HEAD
     // text 상태가 변경될 때만 socketSend를 호출
     if (text) {
       socketSend(text);
     }
   }, [text]); // text 상태가 변경될 때마다 실행
 =======
+=======
+>>>>>>> bce34b93ae35da6089d24e565787e4aba463edfd
     setIsFinal(text)
   
   
   }, [text]);
+<<<<<<< HEAD
+>>>>>>> bce34b93ae35da6089d24e565787e4aba463edfd
+=======
 >>>>>>> bce34b93ae35da6089d24e565787e4aba463edfd
 
   useEffect(() => {
@@ -132,6 +144,12 @@ const TestSTT: React.FC<TestSTTProps> = ({
 
   useEffect(() => {
     socketSend(text);
+  }, [isFinal]);
+
+  useEffect(() => {
+    
+    socketSend(text)
+    
   }, [isFinal]);
 
   useEffect(() => {
