@@ -23,54 +23,49 @@ server_socket.setsockopt(socket.SOL_SOCKET, socket.SO_REUSEADDR, 1)
 server_socket.bind((server_ip, server_port))
 server_socket.listen()
 
-def recvall(sock, count):
+def recvall(sock, count, timeout = 5):
     buf = b''
+    sock.settimeout(timeout)
     while count:
-        newbuf = sock.recv(count)
-        if not newbuf: return None
-        buf += newbuf
-        count -= len(newbuf)
+        try:
+            newbuf = sock.recv(count)
+            if not newbuf:
+                return None
+            buf += newbuf
+            count -= len(newbuf)
+        except socket.timeout:
+            return None
     return buf
 
 def threaded(client_socket, addr):
-    temp = ""
-    flag = ""
+    flag = None
+    cam_flag = False
     while True:
-        if flag != "" and redis_client.get(flag) == "logout":
-            client_socket.close()
-            break
-        
         email_length = recvall(client_socket, 16)
         if email_length is not None:
             email_data = recvall(client_socket, int(email_length))
             email = email_data.decode()
-            past = temp
-            value = redis_client.get(email)
-            temp = value
             flag = email
-            if past != "" and past != value:
-                client_socket.close()
-                break
-
+            value = redis_client.get(email)
             if value == "start":
+                if cam_flag:
+                    cam_flag = False
+                    continue
                 subprocess.Popen(["python3", "/home/ubuntu/character/trans.py", email])
             elif value == "cam":
-                continue
-            # else:
-            #     client_socket.close()
-            #     break
+                cam_flag = True
+                image_length = recvall(client_socket, 16)
+                image_data = recvall(client_socket, int(image_length))
+                image_path = f"/home/ubuntu/user/{email}/cam.jpg"
+                with open(image_path, "wb") as file:
+                    file.write(image_data)
 
-    # email_length = recvall(client_socket, 16)
-    # if email_length is not None:
-    #     email_data = recvall(client_socket, int(email_length))
-    #     email = email_data.decode()
-    #     value = redis_client.get(email)
-    #     if value == "cam":
-
-    #     elif value == "start":
-    #         subprocess.Popen(["python3", "/home/ubuntu/character/trans.py", email])
-    
-    # client_socket.close()
+        else:
+            if flag is not None:
+                value = redis_client.get(flag)
+                if value != "start" and value != "cam":
+                    client_socket.close()
+                    break
 
 try:
     while True:
