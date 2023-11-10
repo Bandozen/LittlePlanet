@@ -1,12 +1,12 @@
 import React, { useState, useEffect } from 'react';
 import { Alert, Button, Typography } from '@material-tailwind/react';
 import { SparklesIcon } from '@heroicons/react/24/outline';
+import { useRecoilValue } from 'recoil';
 import api from '../../../api';
 import { CallGPT } from '../gpt/gpt';
-import SimulationChat from '../SimulationChat/index';
-import { useRecoilValue } from 'recoil';
 import { userEmail } from '../../../store/RecoilState';
 import { Scene3Wrapper } from './style3';
+import SimulationChat from '../SimulationChat/index';
 
 type Content = {
 	contentsUrlName: string;
