@@ -204,6 +204,7 @@ function Scene3page() {
 						<Typography variant="h3">이렇게 말해볼까?</Typography>
 					</div>
 				</Alert> */}
+				<Alert>{isWrong}</Alert>
 			</div>
 		</Scene3Wrapper>
 	);
