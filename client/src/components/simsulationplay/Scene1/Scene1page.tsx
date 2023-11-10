@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { Alert, Typography, Button } from '@material-tailwind/react';
+import { Alert, Typography } from '@material-tailwind/react';
 import { PhoneArrowUpRightIcon, SparklesIcon } from '@heroicons/react/24/outline';
 import { useRecoilValue } from 'recoil';
 import api from '../../../api';
@@ -53,15 +53,8 @@ function Scene1page() {
 		// asset 불러오고
 		fetchData();
 
-		// 5초 타이머 설정해서 Alert
-		const timer = setTimeout(() => {
-			setShowAlert(false);
-		}, 3000);
-
 		// 소켓 연결
-		// const newSocket = new WebSocket('wss://k9c203.p.ssafy.io:17777');
-		// const newSocket = new WebSocket('ws://192.168.100.38:7777');
-		const newSocket = new WebSocket('ws://192.168.100.85:7777');
+		const newSocket = new WebSocket('wss://k9c203.p.ssafy.io:17777');
 
 		// 소켓 열리면
 		newSocket.onopen = () => {
@@ -79,7 +72,7 @@ function Scene1page() {
 			console.log(event.data);
 			const eventMessage = JSON.parse(event.data);
 			// 타입 확인 후 setText
-			if (eventMessage.type === 'text') {
+			if (eventMessage.type === 'text1') {
 				setText(eventMessage.content);
 			}
 			if (eventMessage.type === 'wrong') {
@@ -92,7 +85,13 @@ function Scene1page() {
 			console.log('WebSocket connection closed.');
 		};
 
-		// 컴포넌트 닫히면 소켓 닫기
+		// 3초 타이머 설정해서 Alert
+		const timer = setTimeout(() => {
+			setShowAlert(false);
+			newSocket.send(JSON.stringify({ type: 'narr', content: 1 }));
+		}, 3000);
+
+		// 컴포넌트 닫히면 소켓, 타이머 초기화
 		return () => {
 			newSocket.close();
 			clearTimeout(timer);
@@ -145,23 +144,28 @@ function Scene1page() {
 		};
 	}, [isWrong]);
 
-	const handleClickWrongAnswer = () => {
-		setIsWrong((prev) => !prev);
-	};
+	// const handleClickWrongAnswer = () => {
+	// 	setIsWrong((prev) => !prev);
+	// };
 
-	const handleClickSetText = () => {
-		setText('선생님이 다쳤어요.');
-	};
+	// const handleClickSetText = () => {
+	// 	setText('선생님이 다쳤어요.');
+	// };
 
-	const handleCorrectAnswer = () => {
-		setText('친구가 높은 곳에서 떨어져서 다쳤어요.');
-	};
+	// const handleCorrectAnswer = () => {
+	// 	setText('친구가 높은 곳에서 떨어져서 다쳤어요.');
+	// };
+
+	// const handleNarr = () => {
+	// 	socket?.send(JSON.stringify({ type: 'narr', content: 4 }));
+	// };
 
 	return (
 		<Scene1Wrapper>
-			<Button onClick={handleClickWrongAnswer}>오답</Button>
-			<Button onClick={handleClickSetText}>오답 한번 보내보자.</Button>
-			<Button onClick={handleCorrectAnswer}>정답 한번 보내보자.</Button>
+			{/* <Button onClick={handleNarr}>나레이션</Button> */}
+			{/* <Button onClick={handleClickWrongAnswer}>오답</Button> */}
+			{/* <Button onClick={handleClickSetText}>오답 한번 보내보자.</Button> */}
+			{/* <Button onClick={handleCorrectAnswer}>정답 한번 보내보자.</Button> */}
 			{showAlert && (
 				<div className="alert-container">
 					<Alert>

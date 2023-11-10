@@ -96,10 +96,16 @@ export const SimulationChatWrapper = styled.div`
 		animation: ${fadeIn} 1s ease-out;
 	}
 
+	.ch2 .textbox::before {
+		right: -15px;
+		content: '▶';
+		color: #f9eb54;
+	}
+
 	.letter {
 		display: inline-block;
 		opacity: 0;
 		transform: translateY(-10px);
-		animation: ${popIn} 1s forwards;
+		animation: ${popIn} 3s forwards;
 	}
 `;

@@ -108,7 +108,7 @@ function SignUp({ setCondition }: SignUpProps) {
 	}
 	return (
 		<Card>
-			<CardBody>
+			<CardBody className="p-3">
 				<div>
 					<div className="space-y-5">
 						<div className="flex items-center space-x-5">
@@ -119,18 +119,22 @@ function SignUp({ setCondition }: SignUpProps) {
 								onChange={(e) => setEmail(e.target.value)}
 								color="blue" // 추가
 								crossOrigin=""
+								disabled={verifying || emailPass}
 							/>
-							<Button
-								size="sm"
-								color="blue"
-								onClick={() => {
-									verifyEmail();
-								}}
-								// width="w-full" // block 대신 width를 사용
-								hidden={emailPass}
-							>
-								인증 요청
-							</Button>
+							{!verifying && (
+								<Button
+									// className="mx-2"
+									size="sm"
+									color="gray"
+									onClick={() => {
+										verifyEmail();
+									}}
+									// width="w-full" // block 대신 width를 사용
+									hidden={emailPass}
+								>
+									인증 요청
+								</Button>
+							)}
 						</div>
 						{verifying && (
 							<div className="flex items-center space-x-5">
@@ -188,7 +192,7 @@ function SignUp({ setCondition }: SignUpProps) {
 							/>
 						</div>
 						<Button
-							color="blue"
+							color="gray"
 							onClick={() => {
 								signupClick();
 							}}

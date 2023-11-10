@@ -1,7 +1,9 @@
+require("dotenv").config();
 const WebSocket = require("ws");
 const http = require("http");
+const redis = require("redis");
 
-const server_port = 7777;
+const server_port = process.env.SERVER_PORT;
 
 // HTTP 서버 생성
 const server = http.createServer((req, res) => {
@@ -16,6 +18,27 @@ const server = http.createServer((req, res) => {
 
 // WebSocket 서버 생성
 const wss = new WebSocket.Server({ server });
+
+// Redis 명령어 연결
+const redisClientCommand = redis.createClient({
+  url: process.env.REDIS_URL_1,
+});
+
+// Redis 좌표 연결
+const redisClientCoordinate = redis.createClient({
+  url: process.env.REDIS_URL_3,
+});
+
+
+redisClientCommand.on("connect", () =>
+  console.log("Redis 명령에 연결되었습니다.")
+);
+redisClientCoordinate.on("connect", () =>
+  console.log("Redis 좌표에 연결되었습니다.")
+);
+
+redisClientCommand.connect();
+redisClientCoordinate.connect();
 
 // IP를 key로, 웹소켓 배열을 value로 갖는 Map
 let clients = [];
@@ -32,7 +55,7 @@ wss.on("connection", (ws, req) => {
   clients.push(ws);
 
   // 클라이언트로부터 메시지를 수신할 때 실행될 콜백
-  ws.on("message", (message) => {
+  ws.on("message", async (message) => {
     const mes = JSON.parse(message);
     console.log(mes);
     // 메세지 타입이 web이거나 app이라면 처음 이메일을 등록하는 메세지이니
@@ -48,6 +71,28 @@ wss.on("connection", (ws, req) => {
       ws.send(JSON.stringify(`hi ${ws.email} app`));
       ws.send(JSON.stringify("app 이메일 등록 성공"));
     }
+    if (mes.type == "HW" && mes.email) {
+      ws.email = mes.email;
+      while (true) {
+        if (redisClientCommand.get(ws.email) == "start") {
+          console.log("된다")
+          msg = {
+            type: "HW",
+            lefthand: redisClientCoordinate.lPop(ws.email),
+          };
+          ws.send(JSON.stringify(msg));
+          await setMaxIdleHTTPParsers(1000);
+        } else if (redisClientCommand.get(ws.email) == "logout") {
+          break;
+        }
+      }
+    }
+    // 메시지를 다시 클라이언트로 보내기
+    // clients.forEach((client) => {
+    //   client.send(`${message}`)
+    //   client.send(JSON.stringify('이메일 안같아도 보낼수 있는 메세지'))
+    //   console.log(client.email)
+    // })
     // 메세지를 보낸 클라이언트와 같은 이메일로 등록된 클라이언트에게 메세지 돌리기
     clients.forEach((client) => {
       if (client.email === ws.email) {
@@ -66,6 +111,6 @@ wss.on("connection", (ws, req) => {
 });
 
 // 서버를 7777 포트에서 시작
-server.listen(server_port,  async () => {
+server.listen(server_port, async () => {
   console.log(`WebSocket server is listening on port ${server_port}`);
 });
