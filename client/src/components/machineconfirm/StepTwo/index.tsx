@@ -40,6 +40,7 @@ function StepTwo(props: IStepTwoProps) {
 			});
 		}
 	};
+	console.log(userMail);
 
 	useEffect(() => {
 		if (activeStep === 2) {
