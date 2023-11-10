@@ -40,6 +40,7 @@ function Scene2page() {
 
 		const newSocket = new WebSocket('wss://k9c203.p.ssafy.io:17777');
 		// const newSocket = new WebSocket('ws://192.168.100.38:7777');
+		// const newSocket = new WebSocket('ws://localhost:7777');
 
 		newSocket.onopen = () => {
 			console.log('WebSocket connection established.');
