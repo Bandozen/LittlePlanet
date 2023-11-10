@@ -89,12 +89,14 @@ const KeypadButton: React.FC<{
   // 화면 너비를 기반으로 버튼 크기 계산
   const screenWidth = Dimensions.get('window').width;
   const numColumns = 3;
-  const size = screenWidth / numColumns;
+  const buttonMargin = 5; // 버튼 마진 값 조정 가능
+  const size = ((screenWidth - buttonMargin * (numColumns * 2)) / numColumns)*0.75;
+
 
   const buttonStyle: ViewStyle = {
-    width: size - 40,
-    height: size - 40,
-    margin: 5,
+    width: size,
+    height: size,
+    margin: buttonMargin,
     justifyContent: 'center',
     alignItems: 'center',
     backgroundColor: '#e0e0e0',
@@ -131,7 +133,7 @@ const styles = StyleSheet.create({
   keypad: {
     flexDirection: 'row',
     flexWrap: 'wrap',
-    justifyContent: 'flex-start',
+    justifyContent: 'center',
   },
   keypadButton: {
     width: 100,
