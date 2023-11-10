@@ -18,9 +18,12 @@ const TestSTT: React.FC<TestSTTProps> = ({
   const [text, setText] = useState<string>('');
 <<<<<<< HEAD
 <<<<<<< HEAD
+<<<<<<< HEAD
   const [isFinal, setIsFinal] = useState<string>('');
 
 =======
+=======
+>>>>>>> bce34b93ae35da6089d24e565787e4aba463edfd
 =======
 >>>>>>> bce34b93ae35da6089d24e565787e4aba463edfd
   const [timeoutId, setTimeoutId] = useState<NodeJS.Timeout | null>(null);
@@ -71,10 +74,13 @@ const TestSTT: React.FC<TestSTTProps> = ({
     let finalResult = event.value.join(' ');
 <<<<<<< HEAD
 <<<<<<< HEAD
+<<<<<<< HEAD
     setText(finalResult); // 이전 텍스트에 더하지 않고 새로운 값을 설정
     console.log('조인된 finalResult?', finalResult);
     onSTTResult(finalResult); // 부모 컴포넌트에 결과 전달
 =======
+=======
+>>>>>>> bce34b93ae35da6089d24e565787e4aba463edfd
 =======
 >>>>>>> bce34b93ae35da6089d24e565787e4aba463edfd
     setText(prevText => prevText + ' ' + event.value.join(' '));
@@ -104,6 +110,7 @@ const TestSTT: React.FC<TestSTTProps> = ({
   useEffect(() => {
 <<<<<<< HEAD
 <<<<<<< HEAD
+<<<<<<< HEAD
     // text 상태가 변경될 때만 socketSend를 호출
     if (text) {
       socketSend(text);
@@ -112,11 +119,16 @@ const TestSTT: React.FC<TestSTTProps> = ({
 =======
 =======
 >>>>>>> bce34b93ae35da6089d24e565787e4aba463edfd
+=======
+>>>>>>> bce34b93ae35da6089d24e565787e4aba463edfd
     setIsFinal(text)
   
   
   }, [text]);
 <<<<<<< HEAD
+<<<<<<< HEAD
+>>>>>>> bce34b93ae35da6089d24e565787e4aba463edfd
+=======
 >>>>>>> bce34b93ae35da6089d24e565787e4aba463edfd
 =======
 >>>>>>> bce34b93ae35da6089d24e565787e4aba463edfd
@@ -144,6 +156,12 @@ const TestSTT: React.FC<TestSTTProps> = ({
 
   useEffect(() => {
     socketSend(text);
+  }, [isFinal]);
+
+  useEffect(() => {
+    
+    socketSend(text)
+    
   }, [isFinal]);
 
   useEffect(() => {
