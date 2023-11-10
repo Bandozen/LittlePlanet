@@ -18,6 +18,7 @@ import FontAwesome from 'react-native-vector-icons/FontAwesome';
 import {StackNavigationProp} from '@react-navigation/stack';
 import {MemberAPI} from '../utils/MemberAPI';
 import STTComponent from '../components/STTComponent';
+import {FlipInEasyX} from 'react-native-reanimated';
 
 type MainProps = {
   navigation: StackNavigationProp<any, 'Main'>;
@@ -126,123 +127,133 @@ export default function Main({navigation}: MainProps) {
     setIsSTTActive(!isSTTActive);
   };
   return (
-    <ImageBackground
-      source={require('../assets/images/login_img.jpg')}
-      style={styles.backgroundImage}>
-      <KeyboardAwareScrollView>
-        <View style={styles.contentContainer}>
-          <Image
-            source={require('../assets/images/logo.png')}
-            style={styles.logo}></Image>
-          {IsLoggedin ? (
-            // 로그인 상태일 때 보이는 버튼
-            <React.Fragment>
-              <Text style={styles.textStyle}>
-                소행성에 오신 것을 환영합니다!
-              </Text>
-              <Text style={styles.textStyle}>
-                시뮬레이션 상황에 맞게 어플이 재구성되니
-              </Text>
-              <Text style={styles.textStyle}>잠시 기다려주세요.</Text>
-              <TouchableOpacity
-                style={styles.buttonStyle}
-                onPress={handleLogout}>
-                <Text style={styles.buttonText}>로그아웃</Text>
-              </TouchableOpacity>
-            </React.Fragment>
-          ) : (
-            // 로그아웃 상태일 때 보이는 버튼
-            <React.Fragment>
-              <View style={styles.textinputStyle}>
-                <TextInput
-                  style={styles.inputText}
-                  placeholder="이메일을 입력하세요."
-                  value={email}
-                  onChangeText={setEmail}
-                />
-                {emailError && <Text style={{color: 'red'}}>{emailError}</Text>}
-              </View>
-              <View style={styles.textinputStyle}>
-                <TextInput
-                  style={styles.inputText}
-                  placeholder="비밀번호를 입력하세요."
-                  secureTextEntry
-                  value={password}
-                  onChangeText={setPassword}
-                />
-                {passwordError && (
-                  <Text style={{color: 'red'}}>{passwordError}</Text>
-                )}
-              </View>
+    <View style={styles.container}>
+      <ImageBackground
+        source={require('../assets/images/login_img.jpg')}
+        style={styles.backgroundImage}>
+        <KeyboardAwareScrollView
+        style={{ flex: 1 }}
+        contentContainerStyle={{
+          flexGrow: 1,
+          justifyContent: 'center', 
+          alignItems: 'center'
+        }}
+        keyboardShouldPersistTaps="handled">
+          <View style={{ width: '100%', alignItems: 'center' }}>
+            <Image
+              source={require('../assets/images/logo.png')}
+              style={styles.logo}></Image>
+            {IsLoggedin ? (
+              // 로그인 상태일 때 보이는 버튼
+              <React.Fragment>
+                <Text style={styles.textStyle}>
+                  소행성에 오신 것을 환영합니다!
+                </Text>
+                <Text style={styles.textStyle}>
+                  시뮬레이션 상황에 맞게 어플이 재구성되니
+                </Text>
+                <Text style={styles.textStyle}>잠시 기다려주세요.</Text>
+                <TouchableOpacity
+                  style={styles.buttonStyle}
+                  onPress={handleLogout}>
+                  <Text style={styles.buttonText}>로그아웃</Text>
+                </TouchableOpacity>
+              </React.Fragment>
+            ) : (
+              // 로그아웃 상태일 때 보이는 버튼
+              <React.Fragment>
+                <Text style={styles.textStyle}>
+                  소행성에 오신 것을 환영합니다!
+                </Text>
+                <Text style={styles.textStyle}>
+                  웹에서 가입하신 아이디로 로그인해주세요.
+                </Text>
+                <View style={styles.textinputStyle}>
+                  <TextInput
+                    style={styles.inputText}
+                    placeholder="이메일을 입력하세요."
+                    value={email}
+                    onChangeText={setEmail}
+                  />
+                  {emailError && (
+                    <Text style={{color: 'red'}}>{emailError}</Text>
+                  )}
 
-              <TouchableOpacity
-                style={styles.buttonStyle}
-                onPress={handleLogin}>
-                <Text style={styles.buttonText}>로그인</Text>
-              </TouchableOpacity>
-            </React.Fragment>
-          )}
-          <TouchableOpacity
-            style={[styles.callButton]}
-            onPress={() => navigation.navigate('Call')}>
-            <Icon name="phone" size={40} color="yellow" />
-            <Text style={styles.textStyle}>전화</Text>
-          </TouchableOpacity>
+                  <TextInput
+                    style={styles.inputText}
+                    placeholder="비밀번호를 입력하세요."
+                    secureTextEntry
+                    value={password}
+                    onChangeText={setPassword}
+                  />
+                  {passwordError && (
+                    <Text style={{color: 'red'}}>{passwordError}</Text>
+                  )}
+                </View>
 
-          <TouchableOpacity
-            style={[styles.sttButton]}
-            onPress={toggleSTT}
-            activeOpacity={0.7} // 옵셔널: 눌렀을 때 투명도 효과를 줍니다.
-          >
-            <FontAwesome
-              name={isSTTActive ? 'microphone-slash' : 'microphone'}
-              size={40}
-              color="yellow"
-            />
-            <Text style={styles.textStyle}>
-              {isSTTActive ? 'Stop STT' : 'Start STT'}
-            </Text>
-          </TouchableOpacity>
-        </View>
-        <STTComponent
-          isSTTActive={isSTTActive}
-          onSTTResult={handleSTTResult}
-          socketSend={socket_send}
-        />
-      </KeyboardAwareScrollView>
-    </ImageBackground>
+                <View style={{flex: 1, alignItems: 'center'}}>
+                  <TouchableOpacity
+                    style={styles.buttonStyle}
+                    onPress={handleLogin}>
+                    <Text style={styles.buttonText}>로그인</Text>
+                  </TouchableOpacity>
+                </View>
+              </React.Fragment>
+            )}
+            {/* <TouchableOpacity
+              style={[styles.extraButton]}
+              onPress={() => navigation.navigate('Call')}>
+              <Icon name="phone" size={40} color="yellow" />
+              <Text style={styles.textStyle}>전화</Text>
+            </TouchableOpacity>
+
+            <TouchableOpacity
+              style={[styles.extraButton]}
+              onPress={toggleSTT}
+              activeOpacity={0.7} // 옵셔널: 눌렀을 때 투명도 효과를 줍니다.
+            >
+              <FontAwesome
+                name={isSTTActive ? 'microphone-slash' : 'microphone'}
+                size={40}
+                color="yellow"
+              />
+              <Text style={styles.textStyle}>
+                {isSTTActive ? 'Stop STT' : 'Start STT'}
+              </Text>
+            </TouchableOpacity>
+            <STTComponent
+              isSTTActive={isSTTActive}
+              onSTTResult={handleSTTResult}
+              socketSend={socket_send}
+            /> */}
+          </View>
+        </KeyboardAwareScrollView>
+      </ImageBackground>
+    </View>
   );
 }
 const styles = StyleSheet.create({
   container: {
-    fontFamily: 'GowunDodum-Regular',
     flex: 1,
+    fontFamily: 'GowunDodum-Regular',
     justifyContent: 'center',
     alignItems: 'center',
   },
   backgroundImage: {
-    flex: 1,
     width: '100%',
     height: '100%',
     resizeMode: 'cover',
-  },
-  contentContainer: {
-    flex: 1,
-    justifyContent: 'center',
-    alignItems: 'center',
-    padding: 20,
   },
   textStyle: {
     fontFamily: 'GowunDodum-Regular',
     fontSize: 20,
     color: 'white',
-    marginBottom: 10,
   },
   buttonStyle: {
-    flexDirection: 'row',
+    backgroundColor: 'yellow',
+    width: 100,
     alignItems: 'center',
     justifyContent: 'center',
-    backgroundColor: 'yellow',
     paddingVertical: 15,
     paddingHorizontal: 20,
     borderRadius: 20,
@@ -252,10 +263,10 @@ const styles = StyleSheet.create({
     shadowRadius: 3,
     shadowOffset: {width: 0, height: 2},
     elevation: 5,
+    marginBottom: 20, 
   },
   buttonText: {
     color: 'black',
-    marginLeft: 10,
     fontSize: 16,
     fontWeight: '600',
     textAlign: 'center',
@@ -265,6 +276,7 @@ const styles = StyleSheet.create({
     borderWidth: 1,
     padding: 10,
     marginBottom: 10,
+    marginTop: 10,
     width: '80%',
     backgroundColor: 'white',
     borderColor: 'white',
@@ -280,22 +292,30 @@ const styles = StyleSheet.create({
     height: 100,
     resizeMode: 'contain',
     alignSelf: 'center',
-    marginBottom: 20,
+    marginBottom: 30,
   },
   textinputStyle: {
-    flexDirection: 'row',
+    // flex: 1,
+    // flexDirection: 'row',
+    width: 400,
+
     justifyContent: 'center',
     alignItems: 'center',
-    marginBottom: 10,
+    margin: 10,
   },
-  callButton: {
-    position: 'absolute',
-    bottom: -80,
-    left: 100, // 왼쪽 하단, left의 값을 조정하여 위치 변경
-  },
-  sttButton: {
-    position: 'absolute',
-    bottom: -80,
-    right: 50, // 오른쪽 하단, right의 값을 조정하여 위치 변경
+  extraButton: {
+    // flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'center',
+    paddingVertical: 15,
+    paddingHorizontal: 20,
+    borderRadius: 20,
+    textAlign: 'center',
+    marginTop: 10,
+    shadowOpacity: 0.3,
+    shadowRadius: 3,
+    shadowOffset: {width: 0, height: 2},
+    elevation: 5,
+    marginLeft: 0,
   },
 });
