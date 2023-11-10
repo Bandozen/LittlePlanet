@@ -2,18 +2,14 @@ import React from 'react';
 import { Link } from 'react-router-dom';
 import { useRecoilValue, useSetRecoilState } from 'recoil';
 import logo from 'assets/images/logo.png';
-// import { useResetRecoilState } from 'recoil';
-// import { userEmail, studentName } from 'store/RecoilState';
+import { userEmail, studentName } from 'store/RecoilState';
 import api from '../../../api';
 import { NavBarWrapper, NavBarLink } from './style';
-import { userEmail } from '../../../store/RecoilState';
 
 function NavBar() {
-	// const resetUserEmail = useResetRecoilState(userEmail);
-	// const resetStudentName = useResetRecoilState(studentName);
-
 	const userMail = useRecoilValue(userEmail);
 	const setUserMail = useSetRecoilState(userEmail);
+	const setStudentName = useSetRecoilState(studentName);
 
 	const handleLogout = async () => {
 		try {
@@ -22,9 +18,9 @@ function NavBar() {
 				memberCommand: 'logout',
 			});
 			setUserMail('');
+			setStudentName('');
 			const response = await api.post('/member/logout');
 			// resetUserEmail();
-			// resetStudentName();
 			console.log(response);
 		} catch (error) {
 			console.log(error);
@@ -54,11 +50,19 @@ function NavBar() {
 							마이페이지
 						</NavBarLink>
 					</li>
-					<li>
-						<NavBarLink to="/" onClick={handleLogout}>
-							로그아웃
-						</NavBarLink>
-					</li>
+					{userMail ? (
+						<li>
+							<Link to="/main" onClick={handleLogout}>
+								로그아웃
+							</Link>
+						</li>
+					) : (
+						<li>
+							<NavBarLink to="/" onClick={handleLogout}>
+								로그인
+							</NavBarLink>
+						</li>
+					)}
 				</ul>
 			</div>
 		</NavBarWrapper>
