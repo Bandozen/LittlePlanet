@@ -2,6 +2,7 @@
 import styled from 'styled-components';
 import background from '../../../assets/images/background.png';
 import background2 from '../../../assets/images/background2.png';
+import background3 from '../../../assets/images/backgroundzoomed.jpg';
 
 export const Scene3Wrapper = styled.div`
 	.background-image {
@@ -14,6 +15,14 @@ export const Scene3Wrapper = styled.div`
 	}
 	.background-image2 {
 		background-image: url(${background2});
+		background-size: cover;
+		background-position: center;
+		background-repeat: no-repeat;
+		width: 100%;
+		height: 100vh;
+	}
+	.background-zoomed {
+		background-image: url(${background3});
 		background-size: cover;
 		background-position: center;
 		background-repeat: no-repeat;
