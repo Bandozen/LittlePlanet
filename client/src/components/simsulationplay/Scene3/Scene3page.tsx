@@ -3,6 +3,8 @@ import { Alert, Button, Typography } from '@material-tailwind/react';
 import { Scene3Wrapper } from './style3';
 // import { PhoneArrowUpRightIcon, SparklesIcon } from '@heroicons/react/24/outline';
 import api from '../../../api';
+import { CallGPT } from '../gpt/gpt';
+import SimulationChat from '../SimulationChat/index';
 
 type Content = {
 	contentsUrlName: string;
@@ -20,8 +22,13 @@ function Scene3page() {
 	const [arrived, setArrived] = useState(false);
 	// 친구 모습을 확대하기 위한 변수
 	const [zoom, setZoom] = useState(false);
+	// 소방관 대화를 나타내기 위한 변수
+	const [firefighter, setFirefighter] = useState(false);
+	// stt 텍스트를 받기 위한 변수
+	const [text, setText] = useState('');
 	// const answer = '다리를 다쳐서 피가 많이 나요.';
-	// const [isWrong, setIsWrong] = useState(false);
+	// 답변이 틀렸다는 것을 나타내기 위한 변수
+	const [isWrong, setIsWrong] = useState(false);
 	const [socket, setSocket] = useState<WebSocket | null>(null);
 	const fetchData = async () => {
 		try {
@@ -52,12 +59,17 @@ function Scene3page() {
 				setArrived(true);
 			}, 3000);
 		}
+		if (mes.type === 'text') {
+			setText(mes.content);
+		}
 	}
 
 	useEffect(() => {
 		fetchData();
 
 		const newSocket = new WebSocket('wss://k9c203.p.ssafy.io:17777');
+		// const newSocket = new WebSocket('ws://192.168.100.38:7777');
+		// const newSocket = new WebSocket('ws://localhost:7777');
 
 		newSocket.onopen = () => {
 			console.log('WebSocket connection established.');
@@ -93,7 +105,42 @@ function Scene3page() {
 			socket.send(JSON.stringify(handshakemessage));
 		}
 	}, [socket]); // socket가 변경될 때 : 즉 소켓에 설정한 링크로 변경 됐을 때 자동으로 실행
-
+	useEffect(() => {
+		if (text) {
+			const prompt = {
+				role: 'user',
+				content: `1. [GOAL] : Let the firefighters know where friend got hurt 2. [FIREFIGHTER'S QUESTION] : 친구가 어디를 다쳤나요? 3. [CHILD'S ANSWER] : ${text} ## Use the output in the JSON format. ##`,
+			};
+			CallGPT(prompt)
+				.then((isCorrect) => {
+					if (isCorrect) {
+						const message = {
+							type: 'page',
+							content: 3,
+						};
+						socket?.send(JSON.stringify(message));
+					} else {
+						const message = {
+							type: 'wrong',
+						};
+						setIsWrong(true);
+						setText('');
+						socket?.send(JSON.stringify(message));
+					}
+				})
+				.catch((error) => {
+					console.log(error);
+				});
+		}
+	}, [text]);
+	useEffect(() => {
+		if (arrived) {
+			setTimeout(() => {
+				setArrived(false);
+				setFirefighter(true);
+			}, 3000);
+		}
+	}, [arrived]);
 	const arrive = () => {
 		if (socket) {
 			const message = { type: 'arrive', content: 'friend' };
@@ -112,11 +159,21 @@ function Scene3page() {
 			<div className={`${zoom ? 'background-image2 zoomed' : 'background-image'}`}>
 				<Button
 					type="button"
-					// onClick={() => {
-					// 	firstNarrEnd();
-					// }}
+					onClick={() => {
+						setText('친구가 아픈척 해요!');
+					}}
 				>
-					첫번째 나레이션 끝났을 때
+					오답
+				</Button>
+				<Button
+					type="button"
+					onClick={() => {
+						setText('친구 다리에 피가 나요');
+						const nextPage = { type: 'page', content: 4 };
+						socket?.send(JSON.stringify(nextPage));
+					}}
+				>
+					정답
 				</Button>
 				<Button
 					type="button"
@@ -140,7 +197,7 @@ function Scene3page() {
 						<Typography variant="h3">친구가 어디를 다쳤는지 소방관에게 설명해줘!</Typography>
 					</Alert>
 				)}
-
+				{firefighter && <SimulationChat chatNumber={text ? 2 : 1} text={text || '친구가 어디를 다쳤나요?'} />}
 				{/* 소켓에서 받아온 메시지에 따라 isWrong 설정하고 스크립트 보여주기 */}
 				{/* <Alert className="flex justify-center" variant="gradient" open={isWrong} onClose={() => setIsWrong(false)}>
 					<div className="flex flex-row m-3">
