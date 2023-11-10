@@ -120,17 +120,19 @@ function SignUp({ setCondition }: SignUpProps) {
 								color="blue" // 추가
 								crossOrigin=""
 							/>
-							<Button
-								size="sm"
-								color="blue"
-								onClick={() => {
-									verifyEmail();
-								}}
-								// width="w-full" // block 대신 width를 사용
-								hidden={emailPass}
-							>
-								인증 요청
-							</Button>
+							{!verifying && (
+								<Button
+									size="sm"
+									color="blue"
+									onClick={() => {
+										verifyEmail();
+									}}
+									// width="w-full" // block 대신 width를 사용
+									hidden={emailPass}
+								>
+									인증 요청
+								</Button>
+							)}
 						</div>
 						{verifying && (
 							<div className="flex items-center space-x-5">
