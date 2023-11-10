@@ -119,6 +119,7 @@ function SignUp({ setCondition }: SignUpProps) {
 								onChange={(e) => setEmail(e.target.value)}
 								color="blue" // 추가
 								crossOrigin=""
+								disabled={verifying || emailPass}
 							/>
 							{!verifying && (
 								<Button

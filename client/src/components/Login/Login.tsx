@@ -210,6 +210,7 @@ function Login() {
 								crossOrigin=""
 								value={emailResetPW}
 								onChange={handleEmailResetPWChange}
+								disabled={pwOpen || codeOpen}
 							/>
 							{!codeOpen && (
 								<Button className="w-3/12 ml-2" onClick={handleCodeOpen}>
