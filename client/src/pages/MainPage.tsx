@@ -1,4 +1,5 @@
 import React from 'react';
+import api from 'api';
 import styled from 'styled-components';
 import { useRecoilValue } from 'recoil';
 import DownloadModal from 'components/simualtionapplication/DownloadModal/DownloadModal';
@@ -19,7 +20,11 @@ const MainContents = styled.div`
 
 function MainPage() {
 	const userMail = useRecoilValue(userEmail);
-	console.log(userMail);
+
+	api.post('/member/command', {
+		memberEmail: userMail,
+		memberCommand: 'ready',
+	});
 
 	return (
 		<div>
