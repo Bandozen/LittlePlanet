@@ -1,9 +1,9 @@
 import React from 'react';
-import api from 'api';
+// import api from 'api';
 import styled from 'styled-components';
 import { useRecoilValue } from 'recoil';
 import DownloadModal from 'components/simualtionapplication/DownloadModal/DownloadModal';
-import { userEmail } from '../store/RecoilState';
+import { userEmail, studentName } from '../store/RecoilState';
 import NavBar from '../components/common/NavBar/NavBar';
 import Footer from '../components/Footer/Footer';
 import Main from '../components/Main/Main';
@@ -19,12 +19,17 @@ const MainContents = styled.div`
 `;
 
 function MainPage() {
-	const userMail = useRecoilValue(userEmail);
+	// const userMail = useRecoilValue(userEmail);
 
-	api.post('/member/command', {
-		memberEmail: userMail,
-		memberCommand: 'ready',
-	});
+	// api.post('/member/command', {
+	// 	memberEmail: userMail,
+	// 	memberCommand: 'ready',
+	// });
+
+	const userMail = useRecoilValue(userEmail);
+	const student = useRecoilValue(studentName);
+
+	console.log(userMail, student);
 
 	return (
 		<div>
