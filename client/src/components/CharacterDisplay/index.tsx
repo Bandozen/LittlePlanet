@@ -2,6 +2,7 @@ import React, { useEffect, useState } from 'react';
 import io from 'socket.io-client';
 import { useRecoilValue } from 'recoil';
 import { userEmail } from 'store/RecoilState';
+import { CharacterDisplayWrapper } from './style';
 
 function CharacterDisplay() {
 	const [image, setImage] = useState('0');
@@ -19,7 +20,7 @@ function CharacterDisplay() {
 
 		socket.on('image', (data) => {
 			setImage(data.url);
-			console.log(data);
+			// console.log(data);
 		});
 
 		return () => {
@@ -28,9 +29,9 @@ function CharacterDisplay() {
 	}, [userMail, image]);
 
 	return (
-		<div>
-			<img src={image} alt="" />
-		</div>
+		<CharacterDisplayWrapper>
+			<img className="character" src={image} alt="" />
+		</CharacterDisplayWrapper>
 	);
 }
 
