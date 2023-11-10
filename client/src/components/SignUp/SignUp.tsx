@@ -108,7 +108,7 @@ function SignUp({ setCondition }: SignUpProps) {
 	}
 	return (
 		<Card>
-			<CardBody>
+			<CardBody className="p-3">
 				<div>
 					<div className="space-y-5">
 						<div className="flex items-center space-x-5">
@@ -123,8 +123,9 @@ function SignUp({ setCondition }: SignUpProps) {
 							/>
 							{!verifying && (
 								<Button
+									// className="mx-2"
 									size="sm"
-									color="blue"
+									color="gray"
 									onClick={() => {
 										verifyEmail();
 									}}
@@ -191,7 +192,7 @@ function SignUp({ setCondition }: SignUpProps) {
 							/>
 						</div>
 						<Button
-							color="blue"
+							color="gray"
 							onClick={() => {
 								signupClick();
 							}}
