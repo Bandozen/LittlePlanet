@@ -1,10 +1,12 @@
 import React, { useState, useEffect } from 'react';
 import { Alert, Button, Typography } from '@material-tailwind/react';
-import { Scene3Wrapper } from './style3';
 import { SparklesIcon } from '@heroicons/react/24/outline';
+import { Scene3Wrapper } from './style3';
 import api from '../../../api';
 import { CallGPT } from '../gpt/gpt';
 import SimulationChat from '../SimulationChat/index';
+import { useRecoilValue } from 'recoil';
+import { userEmail } from '../../../store/RecoilState';
 
 type Content = {
 	contentsUrlName: string;
@@ -29,6 +31,7 @@ function Scene3page() {
 	// const answer = '다리를 다쳐서 피가 많이 나요.';
 	// 답변이 틀렸다는 것을 나타내기 위한 변수
 	const [isWrong, setIsWrong] = useState(false);
+	const memberEmail = useRecoilValue(userEmail);
 	const [socket, setSocket] = useState<WebSocket | null>(null);
 	const fetchData = async () => {
 		try {
@@ -101,7 +104,7 @@ function Scene3page() {
 			const handshakemessage = {
 				type: 'web',
 				// 후에 이메일 recoil로 받아오는 작업 필요
-				content: 'test@ssafy.com',
+				content: memberEmail,
 			};
 
 			socket.send(JSON.stringify(handshakemessage));
