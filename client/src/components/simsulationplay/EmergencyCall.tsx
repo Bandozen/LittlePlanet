@@ -51,6 +51,7 @@ function EmergencyCall() {
 			console.log(eventMessage);
 			if (eventMessage.type === 'page') {
 				setStatus(eventMessage.content);
+				console.log(status);
 			}
 		};
 
@@ -84,6 +85,17 @@ function EmergencyCall() {
 			socket.send(JSON.stringify(message));
 		}
 	};
+
+	if (socket) {
+		socket.onmessage = (event) => {
+			const eventMessage = JSON.parse(event.data);
+			console.log(eventMessage);
+			if (eventMessage.type === 'page') {
+				setStatus(eventMessage.content);
+				console.log(status);
+			}
+		};
+	}
 
 	return (
 		<>
