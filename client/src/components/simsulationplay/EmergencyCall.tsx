@@ -31,6 +31,7 @@ function EmergencyCall() {
 		fetchData();
 
 		const newSocket = new WebSocket('wss://k9c203.p.ssafy.io:17777');
+
 		newSocket.onopen = () => {
 			console.log('WebSocket connection established.');
 			setSocket(newSocket);
@@ -49,6 +50,7 @@ function EmergencyCall() {
 			console.log(eventMessage);
 			if (eventMessage.type === 'page') {
 				setStatus(eventMessage.content);
+				console.log(status);
 			}
 		};
 
@@ -82,6 +84,17 @@ function EmergencyCall() {
 			socket.send(JSON.stringify(message));
 		}
 	};
+
+	if (socket) {
+		socket.onmessage = (event) => {
+			const eventMessage = JSON.parse(event.data);
+			console.log(eventMessage);
+			if (eventMessage.type === 'page') {
+				setStatus(eventMessage.content);
+				console.log(status);
+			}
+		};
+	}
 
 	return (
 		<>

@@ -1,17 +1,19 @@
 import React, { useEffect, useState } from 'react';
 import io from 'socket.io-client';
 import { useRecoilValue } from 'recoil';
-import { userEmail } from '../store/RecoilState';
+import { userEmail } from 'store/RecoilState';
 
-function ImageDisplay() {
+function CamDisplay() {
 	const [image, setImage] = useState('0');
 	const userMail = useRecoilValue(userEmail);
+	const websocketHw: string = process.env.REACT_APP_WEBSOCKET_HW!;
 	console.log(userMail);
 
 	useEffect(() => {
-		const socket = io('wss://k9c203.p.ssafy.io:18099', {
-			extraHeaders: {
+		const socket = io(websocketHw, {
+			query: {
 				userMail,
+				fileName: 'cam.jpg',
 			},
 			secure: true,
 		});
@@ -19,16 +21,18 @@ function ImageDisplay() {
 		socket.on('image', (data) => {
 			setImage(data.url);
 			console.log(data);
-			console.log(userMail);
 		});
 
 		return () => {
 			socket.disconnect();
 		};
-		// eslint-disable-next-line react-hooks/exhaustive-deps
-	}, [userMail]);
+	}, [userMail, image]);
 
-	return <div>{image && <img src={image} alt="" />}</div>;
+	return (
+		<div>
+			<img src={image} alt="" />
+		</div>
+	);
 }
 
-export default ImageDisplay;
+export default CamDisplay;

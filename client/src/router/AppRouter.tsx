@@ -1,8 +1,9 @@
 import React from 'react';
-import { RecoilRoot } from 'recoil';
+import { RecoilRoot, useRecoilValue } from 'recoil';
+import { userEmail } from 'store/RecoilState';
 import { GlobalFonts } from 'styles/GlobalFonts';
 import { GlobalStyles } from 'styles/GlobalStyles';
-import { BrowserRouter, Route, Routes } from 'react-router-dom';
+import { BrowserRouter, Route, Routes, Navigate, Outlet } from 'react-router-dom';
 import LoginPage from 'pages/LoginPage';
 import MainPage from 'pages/MainPage';
 import SimulationListPage from 'pages/SimulationListPage';
@@ -14,9 +15,14 @@ import SimulationMachinePage from 'pages/SimulationMachinePage/SimulationMachine
 import MachineConfirmPage from 'pages/MachineConfirmPage/MachineConfirmPage';
 import ApplicationLayout from 'layouts/common/ApplicationLayout';
 import ScrollToTop from 'components/common/ScrollToTop';
-import SocketTestPage from 'pages/SocketTestPage';
 import EmergencyCall from 'components/simsulationplay/EmergencyCall';
 // import SimulationPlayPage from 'pages/SimulationPlayPage';
+import RedisTestPage from 'pages/RedisTestPage';
+
+function ProtectedRoute() {
+	const email = useRecoilValue(userEmail);
+	return email ? <Outlet /> : <Navigate to="/" />;
+}
 
 function AppRouter() {
 	return (
@@ -29,15 +35,17 @@ function AppRouter() {
 					<Routes>
 						<Route path="/" element={<LoginPage />} />
 						<Route path="/main" element={<MainPage />} />
-						<Route path="/simulationlist" element={<SimulationListPage />} />
-						<Route path="/simulationdetail/:simulationId" element={<SimulationDetailPage />} />
-						<Route path="/gamelist" element={<GameListPage />} />
-						<Route path="/gamedetail/:gameId" element={<GameDetailPage />} />
-						<Route path="/mypage" element={<MyPage />} />
-						<Route path="/simulationmachine" element={<SimulationMachinePage />} />
-						<Route path="/machineconfirm" element={<MachineConfirmPage />} />
-						<Route path="/sockettest" element={<SocketTestPage />} />
-						<Route path="/simulation/test" element={<EmergencyCall />} />
+						<Route element={<ProtectedRoute />}>
+							<Route path="/simulationlist" element={<SimulationListPage />} />
+							<Route path="/simulationdetail/:simulationId" element={<SimulationDetailPage />} />
+							<Route path="/gamelist" element={<GameListPage />} />
+							<Route path="/gamedetail/:gameId" element={<GameDetailPage />} />
+							<Route path="/mypage" element={<MyPage />} />
+							<Route path="/simulationmachine" element={<SimulationMachinePage />} />
+							<Route path="/machineconfirm" element={<MachineConfirmPage />} />
+							<Route path="/simulation/test" element={<EmergencyCall />} />
+							<Route path="/redistest" element={<RedisTestPage />} />
+						</Route>
 					</Routes>
 				</BrowserRouter>
 			</ApplicationLayout>

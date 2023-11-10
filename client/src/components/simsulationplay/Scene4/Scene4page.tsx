@@ -45,19 +45,21 @@ function Scene4page() {
 	const [isWrong, setIsWrong] = useState(false);
 	const answer = useRecoilValue(studentName);
 
+	// 오답이라면 소방관과의 대화도 변경되어야 함.
+	const [wrongSignal, setWrongSignal] = useState(false);
+
 	// 처음 컴포넌트가 마운트되면,
 	useEffect(() => {
 		// asset 불러오고
 		fetchData();
 
-		// 5초 타이머 설정해서 Alert
+		// 3초 타이머 설정해서 Alert
 		const timer = setTimeout(() => {
 			setShowAlert(false);
 		}, 3000);
 
 		// 소켓 연결
 		const newSocket = new WebSocket('wss://k9c203.p.ssafy.io:17777');
-		// const newSocket = new WebSocket('ws://192.168.100.38:7777');
 
 		// 소켓 열리면
 		newSocket.onopen = () => {
@@ -75,8 +77,11 @@ function Scene4page() {
 			console.log(event.data);
 			const eventMessage = JSON.parse(event.data);
 			// 타입 확인 후 setText
-			if (eventMessage.type === 'text4') {
-				setText(event.data.content);
+			if (eventMessage.type === 'text7') {
+				setText(eventMessage.content);
+			}
+			if (eventMessage.type === 'wrong') {
+				setWrongSignal(true);
 			}
 		};
 
@@ -114,6 +119,7 @@ function Scene4page() {
 							type: 'wrong',
 						};
 						setIsWrong(true);
+						setText('');
 						socket?.send(JSON.stringify(message));
 					}
 				})
@@ -122,6 +128,19 @@ function Scene4page() {
 				});
 		}
 	}, [text]);
+
+	// 4. 오답 가이드라인 alert 타이머 추가
+	useEffect(() => {
+		let alertTimer: any;
+		if (isWrong) {
+			alertTimer = setTimeout(() => {
+				setIsWrong(false);
+			}, 3000);
+		}
+		return () => {
+			if (alertTimer) clearTimeout(alertTimer);
+		};
+	}, [isWrong]);
 
 	const handleClickWrongAnswer = () => {
 		setIsWrong((prev) => !prev);
@@ -135,32 +154,43 @@ function Scene4page() {
 		setText(`${answer}이에요.`);
 	};
 
+	const handleNarr = () => {
+		socket?.send(JSON.stringify({ type: 'narr', content: 7 }));
+	};
+
 	return (
 		<Scene4Wrapper>
+			<Button onClick={handleNarr}>나레이션</Button>
 			<Button onClick={handleClickWrongAnswer}>오답</Button>
 			<Button onClick={handleClickSetText}>오답 한번 보내보자.</Button>
 			<Button onClick={handleCorrectAnswer}>정답 한번 보내보자.</Button>
-			{showAlert ? (
+			{showAlert && (
 				<div className="alert-container">
 					<Alert>
 						<Typography variant="h3">네 이름을 말해볼까?</Typography>
 					</Alert>
 				</div>
-			) : (
+			)}
+			{!showAlert && !isWrong && !wrongSignal && (
 				<SimulationChat chatNumber={text ? 2 : 1} text={text || '전화하고 있는 학생 이름을 말해줄래요?'} />
 			)}
-			<div className="wrong-container">
-				<Alert className="flex justify-center" variant="gradient" open={isWrong} onClose={() => setIsWrong(false)}>
-					<div className="flex flex-row m-3">
-						<SparklesIcon className="w-10 h-10 mr-2" color="yellow" />
-						<Typography variant="h3">이렇게 말해볼까?</Typography>
-					</div>
-					<div className="flex flex-row items-center">
-						<PhoneArrowUpRightIcon className="w-5 h-5 mr-2" />
-						<Typography variant="h5">저는 {answer}입니다.</Typography>
-					</div>
-				</Alert>
-			</div>
+			{isWrong && (
+				<div className="wrong-container">
+					<Alert className="flex justify-center" variant="gradient" open={isWrong} onClose={() => setIsWrong(false)}>
+						<div className="flex flex-row m-3">
+							<SparklesIcon className="w-10 h-10 mr-2" color="yellow" />
+							<Typography variant="h3">이렇게 말해볼까?</Typography>
+						</div>
+						<div className="flex flex-row items-center">
+							<PhoneArrowUpRightIcon className="w-5 h-5 mr-2" />
+							<Typography variant="h5">저는 {answer}입니다.</Typography>
+						</div>
+					</Alert>
+				</div>
+			)}
+			{!showAlert && !isWrong && wrongSignal && (
+				<SimulationChat chatNumber={text ? 2 : 1} text={text || '다시 한번 얘기해줄래요?'} />
+			)}
 		</Scene4Wrapper>
 	);
 }
