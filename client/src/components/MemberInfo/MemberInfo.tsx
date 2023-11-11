@@ -38,12 +38,16 @@ function MemberInfo() {
 	const [isValid, setIsValid] = useState(true);
 
 	const [studentOpen, setStudentOpen] = useState(false);
-	const handleStudentOpen = () => setStudentOpen((cur) => !cur);
-
 	const [newStudentName, setNewStudentName] = useState('');
 	const [newStudentGrade, setNewStudentGrade] = useState('');
 	const [newStudentClass, setNewStudentClass] = useState('');
 	const [isStudentValid, setIsStudentValid] = useState(true);
+	const handleStudentOpen = () => {
+		setStudentOpen((cur) => !cur);
+		setNewStudentName('');
+		setNewStudentGrade('');
+		setNewStudentClass('');
+	};
 
 	const handlePassword = (e: React.ChangeEvent<HTMLInputElement>) => {
 		setPassword(e.target.value);
@@ -66,11 +70,21 @@ function MemberInfo() {
 	};
 
 	const handleNewStudentGrade = (e: React.ChangeEvent<HTMLInputElement>) => {
-		setNewStudentGrade(e.target.value);
+		const inputValue = parseInt(e.target.value, 10); // 10은 진수를 나타냅니다.
+		if (inputValue >= 1 && inputValue <= 6) {
+			setNewStudentGrade(e.target.value);
+		} else {
+			setNewStudentGrade('');
+		}
 	};
 
 	const handleNewStudentClass = (e: React.ChangeEvent<HTMLInputElement>) => {
-		setNewStudentClass(e.target.value);
+		const inputValue = parseInt(e.target.value, 10); // 10은 진수를 나타냅니다.
+		if (inputValue >= 1 && inputValue <= 20) {
+			setNewStudentClass(e.target.value);
+		} else {
+			setNewStudentClass('');
+		}
 	};
 
 	const fetchData = async () => {
