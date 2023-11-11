@@ -7,8 +7,8 @@ function RedisTestPage() {
 	const [socket, setSocket] = useState<WebSocket | null>(null);
 
 	useEffect(() => {
-		// const newSocket = new WebSocket('wss://k9c203.p.ssafy.io:17776');
-		const newSocket = new WebSocket('ws://localhost:7776');
+		const newSocket = new WebSocket('wss://k9c203.p.ssafy.io:17776');
+		// const newSocket = new WebSocket('ws://localhost:7776');
 		newSocket.onopen = () => {
 			console.log('WebSocket connection established.');
 			setSocket(newSocket);
