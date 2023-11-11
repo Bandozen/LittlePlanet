@@ -3,6 +3,8 @@ import { Input, Button, Dialog, Card, CardBody, Typography, Alert } from '@mater
 import { useNavigate } from 'react-router-dom';
 import { useSetRecoilState } from 'recoil';
 import { userEmail } from '../../store/RecoilState';
+import { LoginWrapper } from './style';
+
 import api from '../../api';
 
 function Login() {
@@ -29,20 +31,24 @@ function Login() {
 	const handleEmailChange = (e: React.ChangeEvent<HTMLInputElement>) => {
 		const { value } = e.target; // Object destructuring
 		setEmail(value);
-		if (!isEmailValid(value)) {
-			setEmailError('이메일 형식으로 입력해주세요');
+		if (value.trim() === '') {
+			setEmailError(''); // 입력이 비어있으면 에러 메시지 제거
+		} else if (!isEmailValid(value)) {
+			setEmailError('정확한 이메일 형식으로 입력해주세요');
 		} else {
-			setEmailError('');
+			setEmailError(''); // 유효한 이메일 형식일 경우 에러 메시지 제거
 		}
 	};
 
 	const handlePasswordChange = (e: React.ChangeEvent<HTMLInputElement>) => {
 		const { value } = e.target; // Object destructuring
 		setPassword(value);
-		if (!isPasswordValid(value)) {
-			setPasswordError('비밀번호는 8자 이상');
+		if (value.trim() === '') {
+			setPasswordError(''); // 입력이 비어있으면 에러 메시지 제거
+		} else if (!isPasswordValid(value)) {
+			setPasswordError('비밀번호는 8자 이상입니다.');
 		} else {
-			setPasswordError('');
+			setPasswordError(''); // 유효한 비밀번호일 경우 에러 메시지 제거
 		}
 	};
 
@@ -155,122 +161,139 @@ function Login() {
 	};
 
 	return (
-		<div className="w-10/12">
-			<Input
-				type="email"
-				label="이메일"
-				value={email}
-				onChange={handleEmailChange}
-				containerProps={{
-					className: 'm-2',
-				}}
-				crossOrigin=""
-			/>
-			{emailError && <p className="text-red-500 text-xs ml-2 mb-3">{emailError}</p>}
-			<Input
-				type="password"
-				label="비밀번호"
-				value={password}
-				onChange={handlePasswordChange}
-				containerProps={{
-					className: 'm-2',
-				}}
-				crossOrigin=""
-				onKeyUp={(e) => {
-					if (e.key === 'Enter') {
-						handleLogin();
-					}
-				}}
-			/>
-			{passwordError && <p className="text-red-500 text-xs ml-2">{passwordError}</p>}
-			<Alert className="p-2 m-3" open={loginFailed} variant="outlined" color="red">
-				로그인 실패
-			</Alert>
-			<Button className="p-3 m-3" disabled={!isFormValid()} onClick={handleLogin}>
-				로그인
-			</Button>
-			<Button className="p-3 m-3" onClick={handleOpen}>
-				비밀번호 찾기
-			</Button>
-			<Dialog size="xs" open={open} handler={handleOpen} className="bg-transparent shadow-none">
-				<Card className="mx-auto w-full max-w-[24rem]">
-					<CardBody className="flex flex-col gap-4">
-						<Typography variant="h4" color="blue-gray">
-							비밀번호 재설정
-						</Typography>
-						<Typography className="mb-3 font-normal" variant="paragraph" color="gray">
-							메일 인증 완료 후, 비밀번호를 재설정하세요.
-						</Typography>
+		<LoginWrapper>
+			<div className="login-form">
+				<Typography variant="h5" className="form-title mb-3">
+					소행성에 오신 것을 환영합니다.
+				</Typography>
+				<Input
+					type="email"
+					label="이메일"
+					value={email}
+					onChange={handleEmailChange}
+					containerProps={{
+						className: 'mb-2',
+					}}
+					className="form-input"
+					crossOrigin=""
+				/>
+				{emailError && <p className="text-red-500 text-xs ml-2 mb-3">{emailError}</p>}
+				<Input
+					type="password"
+					label="비밀번호"
+					value={password}
+					onChange={handlePasswordChange}
+					containerProps={{
+						className: 'mb-2',
+					}}
+					crossOrigin=""
+					onKeyUp={(e) => {
+						if (e.key === 'Enter') {
+							handleLogin();
+						}
+					}}
+				/>
+				{passwordError && <p className="text-red-500 text-xs ml-2">{passwordError}</p>}
+				<Alert className="p-2 m-3" open={loginFailed} variant="outlined" color="red">
+					로그인 실패
+				</Alert>
+				<div className="btn-login">
+					<Button
+						className="p-3 m-3"
+						disabled={!isFormValid()}
+						onClick={handleLogin}
+						style={{ backgroundColor: '#188eb7', width: '100px' }}
+					>
+						로그인
+					</Button>
+				</div>
+				<Button
+					className="forget-btn"
+					onClick={handleOpen}
+					style={{ backgroundColor: 'white', color: 'black', textAlign: 'end' }}
+				>
+					비밀번호를 잊어버리셨나요?
+				</Button>
+				<Dialog size="xs" open={open} handler={handleOpen} className="bg-transparent shadow-none">
+					<Card className="mx-auto w-full max-w-[24rem]">
+						<CardBody className="flex flex-col gap-4">
+							<Typography variant="h4" color="blue-gray">
+								비밀번호 재설정
+							</Typography>
+							<Typography className="mb-3 font-normal" variant="paragraph" color="gray">
+								메일 인증 완료 후, 비밀번호를 재설정하세요.
+							</Typography>
 
-						<div className="flex flex-row">
-							<Input
-								type="text"
-								size="lg"
-								label="이메일"
-								crossOrigin=""
-								value={emailResetPW}
-								onChange={handleEmailResetPWChange}
-								disabled={pwOpen || codeOpen}
-							/>
-							{!codeOpen && (
-								<Button className="w-3/12 ml-2" onClick={handleCodeOpen}>
-									발송
-								</Button>
-							)}
-						</div>
-
-						<Alert variant="outlined" color="red" open={notFound} onClose={() => setNotFound(false)}>
-							가입된 메일이 아닙니다.
-						</Alert>
-						{codeOpen && (
 							<div className="flex flex-row">
 								<Input
 									type="text"
 									size="lg"
-									label="인증번호"
-									value={authCode}
-									onChange={handleAuthCodeChange}
+									label="이메일"
 									crossOrigin=""
+									value={emailResetPW}
+									onChange={handleEmailResetPWChange}
+									disabled={pwOpen || codeOpen}
 								/>
-								<Button className="w-3/12 ml-2" onClick={handlePWOpen}>
-									인증
-								</Button>
+								{!codeOpen && (
+									<Button className="w-3/12 ml-2" onClick={handleCodeOpen}>
+										발송
+									</Button>
+								)}
 							</div>
-						)}
-						<Alert variant="outlined" color="red" open={notVerified} onClose={() => setNotVerified(false)}>
-							인증번호를 다시 입력해주세요.
-						</Alert>
-						{pwOpen && (
-							<>
-								<Input
-									type="password"
-									size="lg"
-									label="비밀번호"
-									value={newPassword}
-									onChange={handleNewPasswordChange}
-									crossOrigin=""
-								/>
-								<Input
-									type="password"
-									size="lg"
-									label="비밀번호 확인"
-									value={passwordConfirm}
-									onChange={handlePasswordConfirmChange}
-									crossOrigin=""
-								/>
-								<Button onClick={changePassword}>비밀번호 수정</Button>
-							</>
-						)}
-						<Alert variant="outlined" color="red" open={!isEqual} onClose={() => setIsEqual(true)}>
-							비밀번호가 일치하지 않습니다.
-						</Alert>
-						<Alert variant="outlined" color="red" open={!isValid} onClose={() => setIsValid(true)}>
-							비밀번호는 8자 이상이면서 숫자와 영어와 특수문자를 모두 포함해야 합니다
-						</Alert>
-					</CardBody>
-				</Card>
-			</Dialog>
-		</div>
+
+							<Alert variant="outlined" color="red" open={notFound} onClose={() => setNotFound(false)}>
+								가입된 메일이 아닙니다.
+							</Alert>
+							{codeOpen && (
+								<div className="flex flex-row">
+									<Input
+										type="text"
+										size="lg"
+										label="인증번호"
+										value={authCode}
+										onChange={handleAuthCodeChange}
+										crossOrigin=""
+									/>
+									<Button className="w-3/12 ml-2" onClick={handlePWOpen}>
+										인증
+									</Button>
+								</div>
+							)}
+							<Alert variant="outlined" color="red" open={notVerified} onClose={() => setNotVerified(false)}>
+								인증번호를 다시 입력해주세요.
+							</Alert>
+							{pwOpen && (
+								<>
+									<Input
+										type="password"
+										size="lg"
+										label="비밀번호"
+										value={newPassword}
+										onChange={handleNewPasswordChange}
+										crossOrigin=""
+									/>
+									<Input
+										type="password"
+										size="lg"
+										label="비밀번호 확인"
+										value={passwordConfirm}
+										onChange={handlePasswordConfirmChange}
+										crossOrigin=""
+									/>
+									<Button onClick={changePassword}>비밀번호 수정</Button>
+								</>
+							)}
+							<Alert variant="outlined" color="red" open={!isEqual} onClose={() => setIsEqual(true)}>
+								비밀번호가 일치하지 않습니다.
+							</Alert>
+							<Alert variant="outlined" color="red" open={!isValid} onClose={() => setIsValid(true)}>
+								비밀번호는 8자 이상이면서 숫자와 영어와 특수문자를 모두 포함해야 합니다
+							</Alert>
+						</CardBody>
+					</Card>
+				</Dialog>
+			</div>
+		</LoginWrapper>
 	);
 }
 
