@@ -1,4 +1,5 @@
-import React, { memo, useEffect, useState } from 'react';
+import React, { memo, useEffect, useState, useCallback } from 'react';
+import PropTypes from 'prop-types';
 import Button from 'components/common/Button';
 import WindModal from 'components/common/Modal/WindModal';
 import useMovePage from 'hooks/useMovePage';
@@ -8,13 +9,21 @@ import { useRecoilValue } from 'recoil';
 import { userEmail } from '../../../store/RecoilState';
 import { Wrapper } from './style';
 
-export const Timer = memo(() => {
-	const MINUTES_IN_MS = 3 * 60 * 1000;
+interface TimerProps {
+	onTimerEnd: () => void;
+}
+
+export const Timer: React.FC<TimerProps> = memo(({ onTimerEnd }) => {
+	const MINUTES_IN_MS = 1 * 30 * 1000;
 	const INTERVAL = 1000;
 	const [timeLeft, setTimeLeft] = useState<number>(MINUTES_IN_MS);
 
 	const minutes = String(Math.floor((timeLeft / (1000 * 60)) % 60)).padStart(2, '0');
 	const second = String(Math.floor((timeLeft / 1000) % 60)).padStart(2, '0');
+
+	const handleTimerEnd = useCallback(() => {
+		onTimerEnd();
+	}, [onTimerEnd]);
 
 	useEffect(() => {
 		const timer = setInterval(() => {
@@ -23,13 +32,14 @@ export const Timer = memo(() => {
 
 		if (timeLeft <= 0) {
 			clearInterval(timer);
-			console.log('타이머가 종료되었습니다.');
+			handleTimerEnd();
+			setTimeLeft(MINUTES_IN_MS);
 		}
 
 		return () => {
 			clearInterval(timer);
 		};
-	}, [timeLeft]);
+	}, [timeLeft, handleTimerEnd]);
 
 	return (
 		<div>
@@ -37,6 +47,10 @@ export const Timer = memo(() => {
 		</div>
 	);
 });
+
+Timer.propTypes = {
+	onTimerEnd: PropTypes.func.isRequired,
+};
 
 function OpenModal() {
 	const [otpNum, setOtpNum] = useState('');
@@ -93,7 +107,7 @@ function OpenModal() {
 			</div>
 			<div className="flex justify-center">
 				<Button text="확인" handleClick={() => getApiConnected()} />
-				<Timer />
+				<Timer onTimerEnd={clickModal} />
 			</div>
 		</div>
 	);
