@@ -49,8 +49,13 @@ function SeqThree(props: ISeqThreeProps) {
 			console.log('WebSocket connection closed.');
 		};
 
+		const narr = setTimeout(() => {
+			newSocket.send(JSON.stringify({ type: 'narr', content: 2 }));
+		}, 3000);
+
 		return () => {
 			newSocket.close();
+			clearTimeout(narr);
 		};
 	}, []);
 
