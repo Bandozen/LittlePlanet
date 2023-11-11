@@ -12,7 +12,7 @@ function Simulation() {
 					<p>우리 아이 안전한 생활을 위한 시뮬레이션!</p>
 					<div className="main-btn-div">
 						<div className="main-btn-div-detail">
-							<NavBarLink to="simulationlist">
+							<NavBarLink to="/simulationlist">
 								<DetailButton text="더보기 +" />
 							</NavBarLink>
 						</div>
