@@ -23,11 +23,13 @@ const LoginBg = styled.div`
 		opacity: 0.9;
 		border-radius: 15px;
 		// margin-top: 20%;
-		overflow: hidden;
+		// overflow: hidden;
 	}
 	.change-bar {
 		display: flex;
 		justify-content: space-around;
+		border-radius: 15px 15px 0px 0px;
+		overflow: hidden;
 	}
 	.button-div {
 		display: flex;
