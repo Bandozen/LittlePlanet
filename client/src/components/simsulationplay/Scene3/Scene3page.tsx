@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { Alert, Button, Typography } from '@material-tailwind/react';
-import { SparklesIcon } from '@heroicons/react/24/outline';
+import { PhoneArrowUpRightIcon, SparklesIcon } from '@heroicons/react/24/outline';
 import { useRecoilValue } from 'recoil';
 import api from '../../../api';
 import { CallGPT } from '../gpt/gpt';
@@ -53,15 +53,15 @@ function Scene3page() {
 		if (mes.type === 'narr' && mes.content === 'first') {
 			setFirstNarr(false);
 		}
-		if (mes.type === 'arrive' && mes.content === 'friend') {
-			// 친구 화면 확대
-			setZoom(true);
-			setTimeout(() => {
-				//  두번째 나레이션(친구가 어디가 다쳤는지 알려주기) 표시
-				setArrived(true);
-			}, 3000);
-		}
-		if (mes.type === 'text') {
+		// if (mes.type === 'arrive' && mes.content === 'friend') {
+		// 	// 친구 화면 확대
+		// 	setZoom(true);
+		// 	setTimeout(() => {
+		// 		//  두번째 나레이션(친구가 어디가 다쳤는지 알려주기) 표시
+		// 		setArrived(true);
+		// 	}, 3000);
+		// }
+		if (mes.type === 'text3') {
 			setText(mes.content);
 		}
 		if (mes.type === 'wrong') {
@@ -103,8 +103,7 @@ function Scene3page() {
 			// 핸드세이크 메세지 설정 후 JSON 변환 후 보내기
 			const handshakemessage = {
 				type: 'web',
-				// 후에 이메일 recoil로 받아오는 작업 필요
-				content: memberEmail,
+				email: memberEmail,
 			};
 
 			socket.send(JSON.stringify(handshakemessage));
@@ -123,7 +122,7 @@ function Scene3page() {
 							type: 'page',
 							content: 4,
 						};
-						setIsWrong(false);
+						// setIsWrong(false);
 						socket?.send(JSON.stringify(message));
 					} else {
 						const message = {
@@ -139,19 +138,24 @@ function Scene3page() {
 				});
 		}
 	}, [text]);
-	useEffect(() => {
-		if (arrived) {
-			setTimeout(() => {
-				setArrived(false);
-				setFirefighter(true);
-			}, 3000);
-		}
-	}, [arrived]);
+	// 친구에게 도달했을 때 실행되는 함수
 	const arrive = () => {
-		if (socket) {
-			const message = { type: 'arrive', content: 'friend' };
-			socket.send(JSON.stringify(message));
-		}
+		// 확대하기
+		setZoom(true);
+		// alert 띄우기
+		setArrived(true);
+		setTimeout(() => {
+			// alert 끄기
+			setArrived(false);
+			// 소켓 있다면
+			if (socket) {
+				const message = { type: 'narr', content: '3' };
+				// 3번 장면 소방관 나레이션 재생을 위해 앱으로 메세지 보내기
+				socket.send(JSON.stringify(message));
+				// 소방관 대화창 띄우기
+				setFirefighter(true);
+			}
+		}, 3000);
 	};
 
 	return (
@@ -185,12 +189,13 @@ function Scene3page() {
 				</Button>
 
 				{firstNarr && (
-					<Alert variant="outlined">
-						{contentsData[0] ? contentsData[0].contentsUrlName : '...loading'}
-						<Typography variant="h3">
-							이제 소방관에게 친구가 어디를 다쳤는지 알려줘야 해. 친구에게 다가가 볼까?
-						</Typography>
-					</Alert>
+					<div className="alert-container">
+						<Alert>
+							<Typography variant="h3">
+								이제 소방관에게 친구가 어디를 다쳤는지 알려줘야 해. 친구에게 다가가 볼까?
+							</Typography>
+						</Alert>
+					</div>
 				)}
 				{/* 구조물 터치하면 구조물 확대하고 터치된 구조물 seq로 touched 변경 */}
 				{/* <Alert open={isTouched}> */}
@@ -204,12 +209,20 @@ function Scene3page() {
 				)}
 				{firefighter && isWrong && <SimulationChat chatNumber={text ? 2 : 1} text={text || '다시 한번 말해줄래요?'} />}
 				{/* 소켓에서 받아온 메시지에 따라 isWrong 설정하고 스크립트 보여주기 */}
-				<Alert className="flex justify-center" variant="gradient" open={isWrong} onClose={() => setIsWrong(false)}>
-					<div className="flex flex-row m-3">
-						<SparklesIcon className="w-10 h-10 mr-2" color="yellow" />
-						<Typography variant="h3">이렇게 말해볼까?</Typography>
+				{isWrong && (
+					<div className="wrong-container">
+						<Alert className="flex justify-center" variant="gradient" open={isWrong} onClose={() => setIsWrong(false)}>
+							<div className="flex flex-row m-3">
+								<SparklesIcon className="w-10 h-10 mr-2" color="yellow" />
+								<Typography variant="h3">이렇게 말해볼까?</Typography>
+							</div>
+							<div className="flex flex-row items-center m-2">
+								<PhoneArrowUpRightIcon className="w-5 h-5 mr-2" />
+								<Typography variant="h3">친구 다리에 피가 나요.</Typography>
+							</div>
+						</Alert>
 					</div>
-				</Alert>
+				)}
 			</div>
 		</Scene3Wrapper>
 	);
