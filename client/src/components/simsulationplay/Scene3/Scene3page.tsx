@@ -17,7 +17,6 @@ type Content = {
 
 // 다리를 다쳐서 피가 나요.
 function Scene3page() {
-	const [contentsData, setContentsData] = useState<Content[]>([]);
 	// 화면 첫번째 나레이션을 나타내고 없애주기 위한 변수
 	const [firstNarr, setFirstNarr] = useState(true);
 	// 친구에게 도달했을 때 상황을 나타내기 위한 변수
@@ -33,15 +32,15 @@ function Scene3page() {
 	const [isWrong, setIsWrong] = useState(false);
 	const memberEmail = useRecoilValue(userEmail);
 	const [socket, setSocket] = useState<WebSocket | null>(null);
-	const fetchData = async () => {
-		try {
-			const contentsResponse = await api.get('/contents?type=11&num=3');
-			setContentsData(contentsResponse.data);
-			console.log(contentsResponse.data);
-		} catch (e) {
-			console.log(e);
-		}
-	};
+	// const fetchData = async () => {
+	// 	try {
+	// 		const contentsResponse = await api.get('/contents?type=11&num=3');
+	// 		setContentsData(contentsResponse.data);
+	// 		console.log(contentsResponse.data);
+	// 	} catch (e) {
+	// 		console.log(e);
+	// 	}
+	// };
 	// 웹소켓에서 메세지를 받고 그 메세지 값에 따라 다르게 실행하는 함수 설정
 	function getMessage(message: string) {
 		// 메세지를 mes 변수에 JSON 파싱한것을 변환
@@ -70,7 +69,7 @@ function Scene3page() {
 	}
 
 	useEffect(() => {
-		fetchData();
+		// fetchData();
 
 		const newSocket = new WebSocket('wss://k9c203.p.ssafy.io:17777');
 		// const newSocket = new WebSocket('ws://192.168.100.38:7777');
