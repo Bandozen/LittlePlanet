@@ -29,6 +29,11 @@ function ProtectedConnectRoute() {
 	return email ? <Outlet /> : <Navigate to="/main" />;
 }
 
+function LoginProtectedRoute() {
+	const email = useRecoilValue(userEmail);
+	return email ? <Navigate to="/main" /> : <Outlet />;
+}
+
 function AppRouter() {
 	return (
 		<RecoilRoot>
@@ -38,7 +43,9 @@ function AppRouter() {
 				<BrowserRouter>
 					<ScrollToTop />
 					<Routes>
-						<Route path="/" element={<LoginPage />} />
+						<Route element={<LoginProtectedRoute />}>
+							<Route path="/" element={<LoginPage />} />
+						</Route>
 						<Route path="/main" element={<MainPage />} />
 						<Route element={<ProtectedRoute />}>
 							<Route path="/simulationlist" element={<SimulationListPage />} />

@@ -38,7 +38,7 @@ def recvall(sock, count, timeout = 5):
     return buf
 
 def threaded(client_socket, addr):
-    print('connect')
+    print('connect', flush=True)
     flag = None
     cam_flag = False
     while True:
@@ -65,7 +65,7 @@ def threaded(client_socket, addr):
             if flag is not None:
                 value = redis_client.get(flag)
                 if value != "start" and value != "cam":
-                    print('disconnect')
+                    print('disconnect', flush=True)
                     client_socket.close()
                     break
 

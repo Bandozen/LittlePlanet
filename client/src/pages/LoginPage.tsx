@@ -23,10 +23,21 @@ const LoginBg = styled.div`
 		opacity: 0.9;
 		border-radius: 15px;
 		// margin-top: 20%;
+		overflow: hidden;
 	}
 	.change-bar {
 		display: flex;
-		justify-content: space-between;
+		justify-content: space-around;
+	}
+	.button-div {
+		display: flex;
+		justify-content: center;
+		width: 100%;
+		height: 100%;
+	}
+	.no-select {
+		background-color: gray;
+		color: white;
 	}
 `;
 
@@ -38,12 +49,16 @@ function LoginPage() {
 			<div className="bgimage">
 				<div className="page-box">
 					<div className="change-bar">
-						<button type="button" onClick={() => setCondition('login')}>
-							로그인
-						</button>
-						<button type="button" onClick={() => setCondition('signup')}>
-							회원가입
-						</button>
+						<div className={`button-div ${condition === 'signup' ? 'no-select' : ''}`}>
+							<button type="button" onClick={() => setCondition('login')}>
+								로그인
+							</button>
+						</div>
+						<div className={`button-div ${condition === 'login' ? 'no-select' : ''}`}>
+							<button type="button" onClick={() => setCondition('signup')}>
+								회원가입
+							</button>
+						</div>
 					</div>
 					{condition === 'login' && <Login />}
 					{condition === 'signup' && <SignUp setCondition={setCondition} />}
