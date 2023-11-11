@@ -14,3 +14,9 @@ export const studentName = atom<string>({
 	default: '',
 	effects_UNSTABLE: [persistAtom],
 });
+
+export const deviceStatus = atom<string>({
+	key: 'deviceStatus',
+	default: '',
+	effects_UNSTABLE: [persistAtom],
+});
