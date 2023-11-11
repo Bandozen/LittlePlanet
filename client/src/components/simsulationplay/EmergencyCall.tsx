@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { Button } from '@material-tailwind/react';
+// import { Button } from '@material-tailwind/react';
 import { useRecoilValue } from 'recoil';
 import api from '../../api';
 import Scene1page from './Scene1/Scene1page';
@@ -65,26 +65,26 @@ function EmergencyCall() {
 	}, []);
 
 	// 인트로 끝나면 앱에 키패드 띄우라는 신호 보내기
-	const sendKeypadMessage = () => {
-		const message = {
-			type: 'narr',
-			content: 0,
-		};
-		if (socket) {
-			socket.send(JSON.stringify(message));
-		}
-	};
+	// const sendKeypadMessage = () => {
+	// 	const message = {
+	// 		type: 'narr',
+	// 		content: 0,
+	// 	};
+	// 	if (socket) {
+	// 		socket.send(JSON.stringify(message));
+	// 	}
+	// };
 
 	// 페이지 이동 버튼 나중에 삭제
-	const sendNextPageMessage = () => {
-		const message = {
-			type: 'page',
-			content: status + 1,
-		};
-		if (socket) {
-			socket.send(JSON.stringify(message));
-		}
-	};
+	// const sendNextPageMessage = () => {
+	// 	const message = {
+	// 		type: 'page',
+	// 		content: status + 1,
+	// 	};
+	// 	if (socket) {
+	// 		socket.send(JSON.stringify(message));
+	// 	}
+	// };
 
 	if (socket) {
 		socket.onmessage = (event) => {
@@ -99,8 +99,8 @@ function EmergencyCall() {
 
 	return (
 		<>
-			<Button onClick={sendNextPageMessage}> 다음 페이지 이동 </Button>
-			<Button onClick={sendKeypadMessage}> 인트로 끝남 </Button>
+			{/* <Button onClick={sendNextPageMessage}> 다음 페이지 이동 </Button> */}
+			{/* <Button onClick={sendKeypadMessage}> 인트로 끝남 </Button> */}
 			{/* 1번부터 5번씬 차례대로 status에 따라 */}
 			{status === 1 && <Scene1page />}
 			{status === 2 && <Scene2page />}

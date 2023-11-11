@@ -5,7 +5,7 @@ import { useRecoilValue } from 'recoil';
 import api from '../../../api';
 import { CallGPT } from '../gpt/gpt';
 import { userEmail } from '../../../store/RecoilState';
-import { Scene1Wrapper } from './style';
+import { Scene1Wrapper, WrongWrapper } from './style';
 import SimulationChat from '../SimulationChat/index';
 import CharacterDisplay from '../../CharacterDisplay/index';
 
@@ -165,7 +165,6 @@ function Scene1page() {
 		let alertTimer: any;
 		if (isWrong) {
 			alertTimer = setTimeout(() => {
-				setIsWrong(false);
 				socket?.send(JSON.stringify({ type: 'wrong' }));
 			}, 5000);
 		}
@@ -174,53 +173,47 @@ function Scene1page() {
 		};
 	}, [isWrong]);
 
-	// const handleClickSetText = () => {
-	// 	setText('선생님이 다쳤어요.');
-	// };
+	const handleClickSetText = () => {
+		setText('선생님이 다쳤어요.');
+	};
 
-	// const handleCorrectAnswer = () => {
-	// 	setText('친구가 높은 곳에서 떨어져서 다쳤어요.');
-	// };
+	const handleCorrectAnswer = () => {
+		setText('친구가 높은 곳에서 떨어져서 다쳤어요.');
+	};
 
-	// const handleNarr = () => {
-	// 	socket?.send(JSON.stringify({ type: 'narr', content: 4 }));
-	// };
-
-	return (
+	return isWrong ? (
+		<WrongWrapper>
+			<div className="wrong-container">
+				<Alert className="flex justify-center" variant="gradient" open={isWrong}>
+					<div className="flex flex-row items-center m-2">
+						<SparklesIcon className="w-5 h-5 mr-2" color="yellow" />
+						<Typography variant="h4" color="yellow">
+							이렇게 말해볼까?
+						</Typography>
+					</div>
+					<div className="flex flex-row items-center m-2">
+						<PhoneArrowUpRightIcon className="w-5 h-5 mr-2" />
+						<Typography variant="h3">{answer}</Typography>
+					</div>
+				</Alert>
+			</div>
+			{wrongSignal && <SimulationChat chatNumber={text ? 2 : 3} text={text || '다시 한번 말해볼래요?'} />}
+		</WrongWrapper>
+	) : (
 		<Scene1Wrapper>
 			{/* <Button onClick={handleNarr}>나레이션</Button> */}
-			{/* <Button onClick={handleClickSetText}>오답 한번 보내보자.</Button> */}
-			{/* <Button onClick={handleCorrectAnswer}>정답 한번 보내보자.</Button> */}
+			<Button onClick={handleClickSetText}>오답 한번 보내보자.</Button>
+			<Button onClick={handleCorrectAnswer}>정답 한번 보내보자.</Button>
 			<Button onClick={handleLeft}>왼쪽</Button>
 			<Button onClick={handleRight}>오른쪽</Button>
-			{showAlert && (
+			{showAlert ? (
 				<div className="alert-container">
 					<Alert>
 						<Typography variant="h3">다친 친구가 있다는 사실을 소방관에게 알려줘!</Typography>
 					</Alert>
 				</div>
-			)}
-			{!showAlert && !isWrong && !wrongSignal && (
+			) : (
 				<SimulationChat chatNumber={text ? 2 : 1} text={text || '네, 119입니다. 무슨 일이시죠?'} />
-			)}
-			{isWrong && (
-				<div className="wrong-container">
-					<Alert className="flex justify-center" variant="gradient" open={isWrong} onClose={() => setIsWrong(false)}>
-						<div className="flex flex-row items-center m-2">
-							<SparklesIcon className="w-5 h-5 mr-2" color="yellow" />
-							<Typography variant="h4" color="yellow">
-								이렇게 말해볼까?
-							</Typography>
-						</div>
-						<div className="flex flex-row items-center m-2">
-							<PhoneArrowUpRightIcon className="w-5 h-5 mr-2" />
-							<Typography variant="h3">{answer}</Typography>
-						</div>
-					</Alert>
-				</div>
-			)}
-			{!showAlert && !isWrong && wrongSignal && (
-				<SimulationChat chatNumber={text ? 2 : 1} text={text || '다시 한번 얘기해줄래요?'} />
 			)}
 			<div style={{ position: 'absolute', left: `${left}px` }}>
 				<CharacterDisplay />
