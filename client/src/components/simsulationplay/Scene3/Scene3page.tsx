@@ -2,18 +2,18 @@ import React, { useState, useEffect } from 'react';
 import { Alert, Button, Typography } from '@material-tailwind/react';
 import { PhoneArrowUpRightIcon, SparklesIcon } from '@heroicons/react/24/outline';
 import { useRecoilValue } from 'recoil';
-import api from '../../../api';
+// import api from '../../../api';
 import { CallGPT } from '../gpt/gpt';
 import { userEmail } from '../../../store/RecoilState';
 import { Scene3Wrapper } from './style3';
 import SimulationChat from '../SimulationChat/index';
 
-type Content = {
-	contentsUrlName: string;
-	contentsUrlAddress: string;
-	contentsUrlType: number;
-	contentsUrlNum: number;
-};
+// type Content = {
+// 	contentsUrlName: string;
+// 	contentsUrlAddress: string;
+// 	contentsUrlType: number;
+// 	contentsUrlNum: number;
+// };
 
 // 다리를 다쳐서 피가 나요.
 function Scene3page() {
