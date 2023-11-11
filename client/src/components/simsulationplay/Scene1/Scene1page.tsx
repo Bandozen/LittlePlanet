@@ -100,9 +100,14 @@ function Scene1page() {
 
 	// 3.GPT
 	// 만일 text가 바뀌면 gpt에 요청을 보내야 함.
+	const [isRender, setIsRender] = useState(false);
+
 	useEffect(() => {
+		const timer = setTimeout(() => {
+			setIsRender(true);
+		}, 3000);
+
 		console.log('텍스트 변경');
-		console.log('여기', text);
 		if (text) {
 			const prompt = {
 				role: 'user',
@@ -115,20 +120,29 @@ function Scene1page() {
 							type: 'page',
 							content: 2,
 						};
-						socket?.send(JSON.stringify(message));
+						if (isRender) {
+							socket?.send(JSON.stringify(message));
+						}
+						setIsRender(false);
 					} else {
 						const message = {
 							type: 'wrong',
 						};
+						if (isRender) {
+							socket?.send(JSON.stringify(message));
+						}
 						setIsWrong(true);
 						setText('');
-						socket?.send(JSON.stringify(message));
+						setIsRender(false);
 					}
 				})
 				.catch((error) => {
 					console.log(error);
 				});
 		}
+		return () => {
+			clearTimeout(timer);
+		};
 	}, [text]);
 
 	// 4. 오답 가이드라인 alert 타이머 추가
