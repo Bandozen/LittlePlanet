@@ -1,7 +1,6 @@
 require("dotenv").config();
 const WebSocket = require("ws");
 const http = require("http");
-const redis = require("redis");
 
 const server_port = process.env.SERVER_PORT;
 
@@ -18,27 +17,6 @@ const server = http.createServer((req, res) => {
 
 // WebSocket 서버 생성
 const wss = new WebSocket.Server({ server });
-
-// Redis 명령어 연결
-const redisClientCommand = redis.createClient({
-  url: process.env.REDIS_URL_1,
-});
-
-// Redis 좌표 연결
-const redisClientCoordinate = redis.createClient({
-  url: process.env.REDIS_URL_3,
-});
-
-
-redisClientCommand.on("connect", () =>
-  console.log("Redis 명령에 연결되었습니다.")
-);
-redisClientCoordinate.on("connect", () =>
-  console.log("Redis 좌표에 연결되었습니다.")
-);
-
-redisClientCommand.connect();
-redisClientCoordinate.connect();
 
 // IP를 key로, 웹소켓 배열을 value로 갖는 Map
 let clients = [];
@@ -71,22 +49,7 @@ wss.on("connection", (ws, req) => {
       ws.send(JSON.stringify(`hi ${ws.email} app`));
       ws.send(JSON.stringify("app 이메일 등록 성공"));
     }
-    if (mes.type == "HW" && mes.email) {
-      ws.email = mes.email;
-      while (true) {
-        if (redisClientCommand.get(ws.email) == "start") {
-          console.log("된다")
-          msg = {
-            type: "HW",
-            lefthand: redisClientCoordinate.lPop(ws.email),
-          };
-          ws.send(JSON.stringify(msg));
-          await setMaxIdleHTTPParsers(1000);
-        } else if (redisClientCommand.get(ws.email) == "logout") {
-          break;
-        }
-      }
-    }
+
     // 메시지를 다시 클라이언트로 보내기
     // clients.forEach((client) => {
     //   client.send(`${message}`)
