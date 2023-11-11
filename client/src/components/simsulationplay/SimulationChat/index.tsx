@@ -38,6 +38,11 @@ function SimulationChat({ chatNumber, text }: SimulationChatProps) {
 					<div className="textbox">{renderText(text)}</div>
 				</div>
 			)}
+			{chatNumber === 3 && (
+				<div className="ch3">
+					<div className="textbox">{renderText(text)}</div>
+				</div>
+			)}
 		</SimulationChatWrapper>
 	);
 }
