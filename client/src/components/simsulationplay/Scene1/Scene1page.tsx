@@ -76,7 +76,6 @@ function Scene1page() {
 
 		// 소켓에 메시지 들어오면
 		newSocket.onmessage = (event) => {
-			console.log(event.data);
 			const eventMessage = JSON.parse(event.data);
 			// 타입 확인 후 setText
 			if (eventMessage.type === 'text1') {
@@ -113,90 +112,53 @@ function Scene1page() {
 	}, []);
 
 	// 3.GPT
-	// 만일 text가 바뀌면 gpt에 요청을 보내야 함.
+	// 만일 text가 바뀌면 gpt에 요청을 보내야 함. 그리고 text 바뀌면 화면에 띄울 시간 필요함 (3초)
 
+	function handleTimer(time: number) {
+		return new Promise((resolve) => {
+			setTimeout(() => {
+				resolve(true);
+			}, time);
+		});
+	}
 	useEffect(() => {
-		console.log('텍스트 변경');
-		if (text) {
-			const prompt = {
-				role: 'user',
-				content: `1. [GOAL] : Let the firefighters know that your friend is injured. 2. [FIREFIGHTER'S QUESTION] : 네, 119입니다. 무슨 일이시죠? 3. [CHILD'S ANSWER] : ${text} ## Use the output in the JSON format. ##`,
-			};
-			CallGPT(prompt)
-				.then((isCorrect) => {
-					if (isCorrect) {
-						const message = {
-							type: 'page',
-							content: 2,
-						};
-						socket?.send(JSON.stringify(message));
-					} else {
-						const message = {
-							type: 'wrong',
-						};
-						socket?.send(JSON.stringify(message));
-						setIsWrong(true);
-						setText('');
+		async function handleAsyncOperations() {
+			if (text) {
+				const prompt = {
+					role: 'user',
+					content: `1. [GOAL] : Let the firefighters know that your friend is injured. 2. [FIREFIGHTER'S QUESTION] : 네, 119입니다. 무슨 일이시죠? 3. [CHILD'S ANSWER] : ${text} ## Use the output in the JSON format. ##`,
+				};
+
+				const textLength = text.length;
+				const animationTime = textLength * 0.05 * 1000 + 2500;
+				console.log('여기 시간', animationTime);
+
+				try {
+					const [timerResult, isCorrect] = await Promise.all([
+						handleTimer(animationTime), // 글자 수에 맞춰서 타이머 설정
+						CallGPT(prompt), // CallGPT 호출
+					]);
+
+					if (timerResult) {
+						if (isCorrect) {
+							const message = {
+								type: 'page',
+								content: 2,
+							};
+							socket?.send(JSON.stringify(message));
+						} else {
+							setIsWrong(true);
+							setText('');
+						}
 					}
-				})
-				.catch((error) => {
+				} catch (error) {
 					console.log(error);
-				});
+				}
+			}
 		}
-	}, []);
 
-	// const [gptResponseReceived, setGptResponseReceived] = useState(false);
-	// const [timerCompleted, setTimerCompleted] = useState(false);
-	// const [message, setMessage] = useState({ type: 'default', content: 0 });
-
-	// useEffect(() => {
-	// 	let timer: any;
-	// 	console.log('텍스트 변경');
-	// 	if (text) {
-	// 		setGptResponseReceived(false);
-	// 		setTimerCompleted(false);
-	// 		const prompt = {
-	// 			role: 'user',
-	// 			content: `1. [GOAL] : Let the firefighters know that your friend is injured. 2. [FIREFIGHTER'S QUESTION] : 네, 119입니다. 무슨 일이시죠? 3. [CHILD'S ANSWER] : ${text} ## Use the output in the JSON format. ##`,
-	// 		};
-	// 		CallGPT(prompt)
-	// 			.then((isCorrect) => {
-	// 				setGptResponseReceived(true);
-	// 				if (isCorrect) {
-	// 					setMessage({
-	// 						type: 'page',
-	// 						content: 2,
-	// 					});
-	// 				} else {
-	// 					setMessage({
-	// 						type: 'wrong',
-	// 						content: 0,
-	// 					});
-	// 					setIsWrong(true);
-	// 					setText('');
-	// 				}
-	// 			})
-	// 			.catch((error) => {
-	// 				console.log(error);
-	// 			});
-	// 		timer = setTimeout(() => {
-	// 			setTimerCompleted(true);
-	// 		}, 3000);
-	// 	}
-
-	// 	return () => {
-	// 		if (timer) {
-	// 			clearTimeout(timer);
-	// 		}
-	// 	};
-	// }, [text]);
-
-	// useEffect(() => {
-	// 	if (gptResponseReceived && timerCompleted && message.type !== 'default') {
-	// 		socket?.send(JSON.stringify(message));
-	// 		setMessage({ type: 'default', content: 0 });
-	// 	}
-	// }, [gptResponseReceived, timerCompleted, message]);
+		handleAsyncOperations();
+	}, [text]);
 
 	// 4. 오답 가이드라인 alert 타이머 추가
 	useEffect(() => {
@@ -204,36 +166,33 @@ function Scene1page() {
 		if (isWrong) {
 			alertTimer = setTimeout(() => {
 				setIsWrong(false);
-			}, 3000);
+				socket?.send(JSON.stringify({ type: 'wrong' }));
+			}, 5000);
 		}
 		return () => {
 			if (alertTimer) clearTimeout(alertTimer);
 		};
 	}, [isWrong]);
 
-	// const handleClickWrongAnswer = () => {
-	// 	setIsWrong((prev) => !prev);
+	// const handleClickSetText = () => {
+	// 	setText('선생님이 다쳤어요.');
 	// };
 
-	const handleClickSetText = () => {
-		setText('선생님이 다쳤어요.');
-	};
+	// const handleCorrectAnswer = () => {
+	// 	setText('친구가 높은 곳에서 떨어져서 다쳤어요.');
+	// };
 
-	const handleCorrectAnswer = () => {
-		setText('친구가 높은 곳에서 떨어져서 다쳤어요.');
-	};
-
-	const handleNarr = () => {
-		socket?.send(JSON.stringify({ type: 'narr', content: 4 }));
-	};
+	// const handleNarr = () => {
+	// 	socket?.send(JSON.stringify({ type: 'narr', content: 4 }));
+	// };
 
 	return (
 		<Scene1Wrapper>
-			<Button onClick={handleNarr}>나레이션</Button>
+			{/* <Button onClick={handleNarr}>나레이션</Button> */}
+			{/* <Button onClick={handleClickSetText}>오답 한번 보내보자.</Button> */}
+			{/* <Button onClick={handleCorrectAnswer}>정답 한번 보내보자.</Button> */}
 			<Button onClick={handleLeft}>왼쪽</Button>
 			<Button onClick={handleRight}>오른쪽</Button>
-			<Button onClick={handleClickSetText}>오답 한번 보내보자.</Button>
-			<Button onClick={handleCorrectAnswer}>정답 한번 보내보자.</Button>
 			{showAlert && (
 				<div className="alert-container">
 					<Alert>
