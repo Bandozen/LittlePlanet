@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { Alert, Typography } from '@material-tailwind/react';
+import { Alert, Typography, Button } from '@material-tailwind/react';
 import { PhoneArrowUpRightIcon, SparklesIcon } from '@heroicons/react/24/outline';
 import { useRecoilValue } from 'recoil';
 import api from '../../../api';
@@ -7,6 +7,7 @@ import { CallGPT } from '../gpt/gpt';
 import { userEmail } from '../../../store/RecoilState';
 import { Scene1Wrapper } from './style';
 import SimulationChat from '../SimulationChat/index';
+import CharacterDisplay from '../../CharacterDisplay/index';
 
 type Content = {
 	contentsUrlName: string;
@@ -33,6 +34,11 @@ function Scene1page() {
 	// 지시문 Alert 5초 타이머 걸기 위함
 	const [showAlert, setShowAlert] = useState(true);
 
+	// 캐릭터 이동시키기
+	const [left, setLeft] = useState(500);
+	const handleLeft = () => setLeft((prevLeft) => prevLeft - 1);
+	const handleRight = () => setLeft((prevLeft) => prevLeft + 1);
+
 	// 2. 소켓
 	// 소켓 통신을 위한 메일 받아오고, 소켓 관련 초기 설정하기
 	const memberEmail = useRecoilValue(userEmail);
@@ -55,6 +61,7 @@ function Scene1page() {
 
 		// 소켓 연결
 		const newSocket = new WebSocket('wss://k9c203.p.ssafy.io:17777');
+		// const newSocket = new WebSocket('ws://localhost:7777');
 
 		// 소켓 열리면
 		newSocket.onopen = () => {
@@ -69,7 +76,6 @@ function Scene1page() {
 
 		// 소켓에 메시지 들어오면
 		newSocket.onmessage = (event) => {
-			console.log(event.data);
 			const eventMessage = JSON.parse(event.data);
 			// 타입 확인 후 setText
 			if (eventMessage.type === 'text1') {
@@ -77,6 +83,13 @@ function Scene1page() {
 			}
 			if (eventMessage.type === 'wrong') {
 				setWrongSignal(true);
+			}
+			if (eventMessage.type === 'HW') {
+				if (eventMessage.content === 'left') {
+					handleLeft();
+				} else if (eventMessage.content === 'right') {
+					handleRight();
+				}
 			}
 		};
 
@@ -99,36 +112,52 @@ function Scene1page() {
 	}, []);
 
 	// 3.GPT
-	// 만일 text가 바뀌면 gpt에 요청을 보내야 함.
+	// 만일 text가 바뀌면 gpt에 요청을 보내야 함. 그리고 text 바뀌면 화면에 띄울 시간 필요함 (3초)
+
+	function handleTimer(time: number) {
+		return new Promise((resolve) => {
+			setTimeout(() => {
+				resolve(true);
+			}, time);
+		});
+	}
 	useEffect(() => {
-		console.log('텍스트 변경');
-		console.log('여기', text);
-		if (text) {
-			const prompt = {
-				role: 'user',
-				content: `1. [GOAL] : Let the firefighters know that your friend is injured. 2. [FIREFIGHTER'S QUESTION] : 네, 119입니다. 무슨 일이시죠? 3. [CHILD'S ANSWER] : ${text} ## Use the output in the JSON format. ##`,
-			};
-			CallGPT(prompt)
-				.then((isCorrect) => {
-					if (isCorrect) {
-						const message = {
-							type: 'page',
-							content: 2,
-						};
-						socket?.send(JSON.stringify(message));
-					} else {
-						const message = {
-							type: 'wrong',
-						};
-						setIsWrong(true);
-						setText('');
-						socket?.send(JSON.stringify(message));
+		async function handleAsyncOperations() {
+			if (text) {
+				const prompt = {
+					role: 'user',
+					content: `1. [GOAL] : Let the firefighters know that your friend is injured. 2. [FIREFIGHTER'S QUESTION] : 네, 119입니다. 무슨 일이시죠? 3. [CHILD'S ANSWER] : ${text} ## Use the output in the JSON format. ##`,
+				};
+
+				const textLength = text.length;
+				const animationTime = textLength * 0.05 * 1000 + 2500;
+				console.log('여기 시간', animationTime);
+
+				try {
+					const [timerResult, isCorrect] = await Promise.all([
+						handleTimer(animationTime), // 글자 수에 맞춰서 타이머 설정
+						CallGPT(prompt), // CallGPT 호출
+					]);
+
+					if (timerResult) {
+						if (isCorrect) {
+							const message = {
+								type: 'page',
+								content: 2,
+							};
+							socket?.send(JSON.stringify(message));
+						} else {
+							setIsWrong(true);
+							setText('');
+						}
 					}
-				})
-				.catch((error) => {
+				} catch (error) {
 					console.log(error);
-				});
+				}
+			}
 		}
+
+		handleAsyncOperations();
 	}, [text]);
 
 	// 4. 오답 가이드라인 alert 타이머 추가
@@ -137,16 +166,13 @@ function Scene1page() {
 		if (isWrong) {
 			alertTimer = setTimeout(() => {
 				setIsWrong(false);
-			}, 3000);
+				socket?.send(JSON.stringify({ type: 'wrong' }));
+			}, 5000);
 		}
 		return () => {
 			if (alertTimer) clearTimeout(alertTimer);
 		};
 	}, [isWrong]);
-
-	// const handleClickWrongAnswer = () => {
-	// 	setIsWrong((prev) => !prev);
-	// };
 
 	// const handleClickSetText = () => {
 	// 	setText('선생님이 다쳤어요.');
@@ -163,9 +189,10 @@ function Scene1page() {
 	return (
 		<Scene1Wrapper>
 			{/* <Button onClick={handleNarr}>나레이션</Button> */}
-			{/* <Button onClick={handleClickWrongAnswer}>오답</Button> */}
 			{/* <Button onClick={handleClickSetText}>오답 한번 보내보자.</Button> */}
 			{/* <Button onClick={handleCorrectAnswer}>정답 한번 보내보자.</Button> */}
+			<Button onClick={handleLeft}>왼쪽</Button>
+			<Button onClick={handleRight}>오른쪽</Button>
 			{showAlert && (
 				<div className="alert-container">
 					<Alert>
@@ -195,6 +222,9 @@ function Scene1page() {
 			{!showAlert && !isWrong && wrongSignal && (
 				<SimulationChat chatNumber={text ? 2 : 1} text={text || '다시 한번 얘기해줄래요?'} />
 			)}
+			<div style={{ position: 'absolute', left: `${left}px` }}>
+				<CharacterDisplay />
+			</div>
 		</Scene1Wrapper>
 	);
 }
