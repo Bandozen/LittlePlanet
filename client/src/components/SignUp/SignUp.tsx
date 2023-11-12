@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
-// import { SignUpWrapper } from './style';
-import { Input, Button, Card, CardBody, Typography } from '@material-tailwind/react';
+import { Input, Button, Typography } from '@material-tailwind/react';
+import { SignUpWrapper } from './style';
 import api from '../../api';
 
 type SignUpProps = {
@@ -107,103 +107,87 @@ function SignUp({ setCondition }: SignUpProps) {
 			});
 	}
 	return (
-		<Card>
-			<CardBody className="p-3">
-				<div>
-					<div className="space-y-5">
-						<div className="flex items-center space-x-5">
-							<Input
-								type="email"
-								value={email}
-								placeholder="이메일"
-								onChange={(e) => setEmail(e.target.value)}
-								color="blue" // 추가
-								crossOrigin=""
-								disabled={verifying || emailPass}
-							/>
-							{!verifying && (
-								<Button
-									// className="mx-2"
-									size="sm"
-									color="gray"
-									onClick={() => {
-										verifyEmail();
-									}}
-									// width="w-full" // block 대신 width를 사용
-									hidden={emailPass}
-								>
-									인증 요청
-								</Button>
-							)}
-						</div>
-						{verifying && (
-							<div className="flex items-center space-x-5">
-								<Input
-									type="text"
-									value={verifyNumber}
-									placeholder="인증번호"
-									onChange={(e) => setVerifyNumber(e.target.value)}
-									color="blue" // 추가
-									crossOrigin=""
-								/>
-								<Button
-									color="blue"
-									onClick={() => {
-										verifyNumberCheck();
-									}}
-									// width="w-full" // block 대신 width를 사용
-								>
-									인증
-								</Button>
-							</div>
+		<SignUpWrapper>
+			<div className="signup-form">
+				<Typography variant="h5" className="form-title mb-3">
+					소행성의 탐험에 함께해주세요!
+				</Typography>
+				<div className="form-group">
+					<div className="input-button-group">
+						<Input
+							type="email"
+							label="이메일"
+							value={email}
+							onChange={(e) => setEmail(e.target.value)}
+							crossOrigin=""
+							disabled={verifying || emailPass}
+						/>
+						{!verifying && (
+							<Button
+								color="gray"
+								size="sm"
+								onClick={() => {
+									verifyEmail();
+								}}
+								hidden={emailPass}
+								className="btn-verify"
+							>
+								인증요청
+							</Button>
 						)}
-						{emailPass && <Typography color="green">이메일 인증이 완료되었습니다.</Typography>}
-						<div className="flex items-center space-x-5">
-							<Input
-								type="text"
-								value={school}
-								placeholder="학교명"
-								onChange={(e) => setSchool(e.target.value)}
-								color="blue" // 추가
-								crossOrigin=""
-							/>
-						</div>
-						<div className="flex items-center space-x-5">
-							<Input
-								type="password"
-								value={password}
-								placeholder="비밀번호"
-								onChange={(e) => setPassword(e.target.value)}
-								color="blue" // 추가
-								crossOrigin=""
-							/>
-						</div>
-						<Typography color="gray">
-							비밀번호는 영문(대,소문자 구분), 숫자, 특수문자을 조합 8~20자 이내로 설정해 주세요.
-						</Typography>
-						<div className="flex items-center space-x-5">
-							<Input
-								type="password"
-								value={confirmPassword}
-								placeholder="비밀번호 확인"
-								onChange={(e) => setConfirmPassword(e.target.value)}
-								color="blue" // 추가
-								crossOrigin=""
-							/>
-						</div>
-						<Button
-							color="gray"
-							onClick={() => {
-								signupClick();
-							}}
-							// width="w-full" // block 대신 width를 사용
-						>
-							가입하기
-						</Button>
 					</div>
 				</div>
-			</CardBody>
-		</Card>
+				{verifying && (
+					<div className="form-group">
+						<Input
+							type="text"
+							value={verifyNumber}
+							label="인증번호"
+							onChange={(e) => setVerifyNumber(e.target.value)}
+							crossOrigin=""
+						/>
+						<Button
+							color="blue"
+							onClick={() => {
+								verifyNumberCheck();
+							}}
+						>
+							인증
+						</Button>
+					</div>
+				)}
+				{emailPass && <Typography color="green">이메일 인증이 완료되었습니다.</Typography>}
+				<Input type="text" value={school} label="학교명" onChange={(e) => setSchool(e.target.value)} crossOrigin="" />
+				<Input
+					type="password"
+					value={password}
+					label="비밀번호"
+					onChange={(e) => setPassword(e.target.value)}
+					crossOrigin=""
+				/>
+				<div className="password-info">
+					<Typography color="gray" style={{ fontSize: '0.7rem' }}>
+						비밀번호는 영문(대,소문자 구분), 숫자, 특수문자를 조합하여 8~20자 이내로 설정해 주세요.
+					</Typography>
+				</div>
+				<Input
+					type="password"
+					value={confirmPassword}
+					label="비밀번호 확인"
+					onChange={(e) => setConfirmPassword(e.target.value)}
+					crossOrigin=""
+				/>
+				<Button
+					style={{ backgroundColor: '#188eb7' }}
+					color="gray"
+					onClick={() => {
+						signupClick();
+					}}
+				>
+					가입하기
+				</Button>
+			</div>
+		</SignUpWrapper>
 	);
 }
 
