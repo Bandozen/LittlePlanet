@@ -15,6 +15,7 @@ const LoginBg = styled.div`
 		background-repeat: no-repeat;
 		display: flex;
 		justify-content: center;
+		padding-left: 50%; // 오른쪽 중앙 쯤 위치시키기 위한 패딩
 		align-items: center; // 세로 중앙 정렬을 위해 추가
 		flex-direction: column; // 내부 요소를 세로로 배치
 		overflow: hidden; // 스크롤바 숨김
@@ -22,7 +23,7 @@ const LoginBg = styled.div`
 	.page-box {
 		background-color: white;
 		width: 500px;
-		height: 500px;
+		height: 450px;
 		opacity: 0.9;
 		border-radius: 15px;
 	}
