@@ -106,6 +106,6 @@ export const SimulationChatWrapper = styled.div`
 		display: inline-block;
 		opacity: 0;
 		transform: translateY(-10px);
-		animation: ${popIn} 3s forwards;
+		animation: ${popIn} 2s forwards;
 	}
 `;

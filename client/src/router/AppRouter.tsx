@@ -24,6 +24,16 @@ function ProtectedRoute() {
 	return email ? <Outlet /> : <Navigate to="/" />;
 }
 
+function ProtectedConnectRoute() {
+	const email = useRecoilValue(userEmail);
+	return email ? <Outlet /> : <Navigate to="/main" />;
+}
+
+function LoginProtectedRoute() {
+	const email = useRecoilValue(userEmail);
+	return email ? <Navigate to="/main" /> : <Outlet />;
+}
+
 function AppRouter() {
 	return (
 		<RecoilRoot>
@@ -33,7 +43,9 @@ function AppRouter() {
 				<BrowserRouter>
 					<ScrollToTop />
 					<Routes>
-						<Route path="/" element={<LoginPage />} />
+						<Route element={<LoginProtectedRoute />}>
+							<Route path="/" element={<LoginPage />} />
+						</Route>
 						<Route path="/main" element={<MainPage />} />
 						<Route element={<ProtectedRoute />}>
 							<Route path="/simulationlist" element={<SimulationListPage />} />
@@ -41,10 +53,12 @@ function AppRouter() {
 							<Route path="/gamelist" element={<GameListPage />} />
 							<Route path="/gamedetail/:gameId" element={<GameDetailPage />} />
 							<Route path="/mypage" element={<MyPage />} />
-							<Route path="/simulationmachine" element={<SimulationMachinePage />} />
-							<Route path="/machineconfirm" element={<MachineConfirmPage />} />
-							<Route path="/simulation/test" element={<EmergencyCall />} />
-							<Route path="/redistest" element={<RedisTestPage />} />
+							<Route element={<ProtectedConnectRoute />}>
+								<Route path="/simulationmachine" element={<SimulationMachinePage />} />
+								<Route path="/machineconfirm" element={<MachineConfirmPage />} />
+								<Route path="/simulation/test" element={<EmergencyCall />} />
+								<Route path="/redistest" element={<RedisTestPage />} />
+							</Route>
 						</Route>
 					</Routes>
 				</BrowserRouter>

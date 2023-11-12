@@ -1,21 +1,22 @@
 import React, { useState, useEffect } from 'react';
 import { Alert, Button, Typography } from '@material-tailwind/react';
-import { Scene3Wrapper } from './style3';
-// import { PhoneArrowUpRightIcon, SparklesIcon } from '@heroicons/react/24/outline';
-import api from '../../../api';
+import { PhoneArrowUpRightIcon, SparklesIcon } from '@heroicons/react/24/outline';
+import { useRecoilValue } from 'recoil';
+// import api from '../../../api';
 import { CallGPT } from '../gpt/gpt';
+import { userEmail } from '../../../store/RecoilState';
+import { Scene3Wrapper } from './style3';
 import SimulationChat from '../SimulationChat/index';
 
-type Content = {
-	contentsUrlName: string;
-	contentsUrlAddress: string;
-	contentsUrlType: number;
-	contentsUrlNum: number;
-};
+// type Content = {
+// 	contentsUrlName: string;
+// 	contentsUrlAddress: string;
+// 	contentsUrlType: number;
+// 	contentsUrlNum: number;
+// };
 
 // 다리를 다쳐서 피가 나요.
 function Scene3page() {
-	const [contentsData, setContentsData] = useState<Content[]>([]);
 	// 화면 첫번째 나레이션을 나타내고 없애주기 위한 변수
 	const [firstNarr, setFirstNarr] = useState(true);
 	// 친구에게 도달했을 때 상황을 나타내기 위한 변수
@@ -29,16 +30,17 @@ function Scene3page() {
 	// const answer = '다리를 다쳐서 피가 많이 나요.';
 	// 답변이 틀렸다는 것을 나타내기 위한 변수
 	const [isWrong, setIsWrong] = useState(false);
+	const memberEmail = useRecoilValue(userEmail);
 	const [socket, setSocket] = useState<WebSocket | null>(null);
-	const fetchData = async () => {
-		try {
-			const contentsResponse = await api.get('/contents?type=11&num=3');
-			setContentsData(contentsResponse.data);
-			console.log(contentsResponse.data);
-		} catch (e) {
-			console.log(e);
-		}
-	};
+	// const fetchData = async () => {
+	// 	try {
+	// 		const contentsResponse = await api.get('/contents?type=11&num=3');
+	// 		setContentsData(contentsResponse.data);
+	// 		console.log(contentsResponse.data);
+	// 	} catch (e) {
+	// 		console.log(e);
+	// 	}
+	// };
 	// 웹소켓에서 메세지를 받고 그 메세지 값에 따라 다르게 실행하는 함수 설정
 	function getMessage(message: string) {
 		// 메세지를 mes 변수에 JSON 파싱한것을 변환
@@ -50,22 +52,24 @@ function Scene3page() {
 		if (mes.type === 'narr' && mes.content === 'first') {
 			setFirstNarr(false);
 		}
-		if (mes.type === 'arrive' && mes.content === 'friend') {
-			// 친구 화면 확대
-			setZoom(true);
-			setTimeout(() => {
-				// 3초뒤 확대 해제, 두번째 나레이션(친구가 어디가 다쳤는지 알려주기) 표시
-				setZoom(false);
-				setArrived(true);
-			}, 3000);
-		}
-		if (mes.type === 'text') {
+		// if (mes.type === 'arrive' && mes.content === 'friend') {
+		// 	// 친구 화면 확대
+		// 	setZoom(true);
+		// 	setTimeout(() => {
+		// 		//  두번째 나레이션(친구가 어디가 다쳤는지 알려주기) 표시
+		// 		setArrived(true);
+		// 	}, 3000);
+		// }
+		if (mes.type === 'text3') {
 			setText(mes.content);
+		}
+		if (mes.type === 'wrong') {
+			setIsWrong(true);
 		}
 	}
 
 	useEffect(() => {
-		fetchData();
+		// fetchData();
 
 		const newSocket = new WebSocket('wss://k9c203.p.ssafy.io:17777');
 		// const newSocket = new WebSocket('ws://192.168.100.38:7777');
@@ -98,8 +102,7 @@ function Scene3page() {
 			// 핸드세이크 메세지 설정 후 JSON 변환 후 보내기
 			const handshakemessage = {
 				type: 'web',
-				// 후에 이메일 recoil로 받아오는 작업 필요
-				content: 'test@ssafy.com',
+				email: memberEmail,
 			};
 
 			socket.send(JSON.stringify(handshakemessage));
@@ -116,8 +119,9 @@ function Scene3page() {
 					if (isCorrect) {
 						const message = {
 							type: 'page',
-							content: 3,
+							content: 4,
 						};
+						// setIsWrong(false);
 						socket?.send(JSON.stringify(message));
 					} else {
 						const message = {
@@ -133,30 +137,29 @@ function Scene3page() {
 				});
 		}
 	}, [text]);
-	useEffect(() => {
-		if (arrived) {
-			setTimeout(() => {
-				setArrived(false);
-				setFirefighter(true);
-			}, 3000);
-		}
-	}, [arrived]);
+	// 친구에게 도달했을 때 실행되는 함수
 	const arrive = () => {
-		if (socket) {
-			const message = { type: 'arrive', content: 'friend' };
-			socket.send(JSON.stringify(message));
-		}
+		// 확대하기
+		setZoom(true);
+		// alert 띄우기
+		setArrived(true);
+		setTimeout(() => {
+			// alert 끄기
+			setArrived(false);
+			// 소켓 있다면
+			if (socket) {
+				const message = { type: 'narr', content: '3' };
+				// 3번 장면 소방관 나레이션 재생을 위해 앱으로 메세지 보내기
+				socket.send(JSON.stringify(message));
+				// 소방관 대화창 띄우기
+				setFirefighter(true);
+			}
+		}, 3000);
 	};
 
-	// const firstNarrEnd = () => {
-	// 	if (socket) {
-	// 		const message = { type: 'narr', content: 'first' };
-	// 		socket.send(JSON.stringify(message));
-	// 	}
-	// };
 	return (
 		<Scene3Wrapper>
-			<div className={`${zoom ? 'background-image2 zoomed' : 'background-image'}`}>
+			<div className={`${zoom ? 'background-zoomed' : 'background-image'}`}>
 				<Button
 					type="button"
 					onClick={() => {
@@ -169,8 +172,8 @@ function Scene3page() {
 					type="button"
 					onClick={() => {
 						setText('친구 다리에 피가 나요');
-						const nextPage = { type: 'page', content: 4 };
-						socket?.send(JSON.stringify(nextPage));
+						// const nextPage = { type: 'page', content: 4 };
+						// socket?.send(JSON.stringify(nextPage));
 					}}
 				>
 					정답
@@ -185,10 +188,13 @@ function Scene3page() {
 				</Button>
 
 				{firstNarr && (
-					<Alert variant="outlined">
-						{contentsData[0] ? contentsData[0].contentsUrlName : '...loading'}
-						이제 소방관에게 친구가 어디를 다쳤는지 알려줘야 해. 친구에게 다가가 볼까?
-					</Alert>
+					<div className="alert-container">
+						<Alert>
+							<Typography variant="h3">
+								이제 소방관에게 친구가 어디를 다쳤는지 알려줘야 해. 친구에게 다가가 볼까?
+							</Typography>
+						</Alert>
+					</div>
 				)}
 				{/* 구조물 터치하면 구조물 확대하고 터치된 구조물 seq로 touched 변경 */}
 				{/* <Alert open={isTouched}> */}
@@ -197,15 +203,25 @@ function Scene3page() {
 						<Typography variant="h3">친구가 어디를 다쳤는지 소방관에게 설명해줘!</Typography>
 					</Alert>
 				)}
-				{firefighter && <SimulationChat chatNumber={text ? 2 : 1} text={text || '친구가 어디를 다쳤나요?'} />}
+				{firefighter && !isWrong && (
+					<SimulationChat chatNumber={text ? 2 : 1} text={text || '친구가 어디를 다쳤나요?'} />
+				)}
+				{firefighter && isWrong && <SimulationChat chatNumber={text ? 2 : 1} text={text || '다시 한번 말해줄래요?'} />}
 				{/* 소켓에서 받아온 메시지에 따라 isWrong 설정하고 스크립트 보여주기 */}
-				{/* <Alert className="flex justify-center" variant="gradient" open={isWrong} onClose={() => setIsWrong(false)}>
-					<div className="flex flex-row m-3">
-						<SparklesIcon className="w-10 h-10 mr-2" color="yellow" />
-						<Typography variant="h3">이렇게 말해볼까?</Typography>
+				{isWrong && (
+					<div className="wrong-container">
+						<Alert className="flex justify-center" variant="gradient" open={isWrong} onClose={() => setIsWrong(false)}>
+							<div className="flex flex-row m-3">
+								<SparklesIcon className="w-10 h-10 mr-2" color="yellow" />
+								<Typography variant="h3">이렇게 말해볼까?</Typography>
+							</div>
+							<div className="flex flex-row items-center m-2">
+								<PhoneArrowUpRightIcon className="w-5 h-5 mr-2" />
+								<Typography variant="h3">친구 다리에 피가 나요.</Typography>
+							</div>
+						</Alert>
 					</div>
-				</Alert> */}
-				<Alert>{isWrong}</Alert>
+				)}
 			</div>
 		</Scene3Wrapper>
 	);
