@@ -197,16 +197,9 @@ function Login() {
 				<Alert className="p-2 m-3" open={loginFailed} variant="outlined" color="red">
 					로그인 실패
 				</Alert>
-				<div className="btn-login">
-					<Button
-						className="p-3 m-3"
-						disabled={!isFormValid()}
-						onClick={handleLogin}
-						style={{ backgroundColor: '#188eb7', width: '100px' }}
-					>
-						로그인
-					</Button>
-				</div>
+				<Button disabled={!isFormValid()} onClick={handleLogin} style={{ backgroundColor: '#188eb7' }}>
+					로그인
+				</Button>
 				<Button
 					className="forget-btn"
 					onClick={handleOpen}

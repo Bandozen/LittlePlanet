@@ -7,7 +7,6 @@ export const SignUpWrapper = styled.div`
 		flex-direction: column;
 		gap: 10px;
 		padding: 20px;
-		min-height: 500px;
 	}
 	.form-group {
 		align-items: center;
