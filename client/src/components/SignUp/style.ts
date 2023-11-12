@@ -2,40 +2,25 @@
 import styled from 'styled-components';
 
 export const SignUpWrapper = styled.div`
-	.signup-div {
-		font-weight: bold;
-		color: white;
-	}
-	.signup-box {
-		height: 100%;
+	.signup-form {
 		display: flex;
 		flex-direction: column;
-		justify-content: space-between;
+		gap: 10px;
+		padding: 20px;
 	}
-	.pass-sentence {
-		color: green;
+	.form-group {
+		align-items: center;
 	}
-	.password-inform {
-		color: gray;
-		font-size: 12px;
-	}
-	.input-line {
+	.input-button-group {
 		display: flex;
-		justify-content: space-between;
+		align-items: center;
+		column-gap: 10px; /* 열 사이의 간격 */
 	}
-	.input-position {
-		display: flex;
-		justify-content: space-between;
-		width: 75%;
-	}
-	.input-css {
-		border: none;
-		background-color: lightgray;
-		border-radius: 5px;
-		font-size: 18px;
-	}
-	.input-title {
-		font-weight: bold;
-		font-size: 18px;
+
+	.input-button-group .btn-verify {
+		border-radius: 10px;
+		white-space: nowrap;
+		padding: 10px;
+		background-color: #188eb7;
 	}
 `;
