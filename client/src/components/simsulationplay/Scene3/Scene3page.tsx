@@ -33,7 +33,7 @@ function Scene3page() {
 	const [rightHandY, setRightHandY] = useState(0);
 	// const [leftHandX, setLeftHandX] = useState(0);
 	// const [leftHandY, setLeftHandY] = useState(0);
-	const friendLocation = [500, 200];
+	// const friendLocation = [500, 200];
 	// 웹소켓에서 메세지를 받고 그 메세지 값에 따라 다르게 실행하는 함수 설정
 	function getMessage(message: string) {
 		// 메세지를 mes 변수에 JSON 파싱한것을 변환
@@ -262,7 +262,7 @@ function Scene3page() {
 						height: '150px',
 						backgroundColor: 'green',
 					}}
-				></div>
+				>zz</div>
 			</div>
 		</Scene3Wrapper>
 	);
