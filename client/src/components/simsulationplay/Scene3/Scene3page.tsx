@@ -5,7 +5,7 @@ import { useRecoilValue } from 'recoil';
 // import api from '../../../api';
 import { CallGPT } from '../gpt/gpt';
 import { userEmail } from '../../../store/RecoilState';
-import CharacterDisplay from '../../../components/CharacterDisplay';
+import CharacterDisplay from '../../CharacterDisplay';
 import { Scene3Wrapper } from './style3';
 import SimulationChat from '../SimulationChat/index';
 
