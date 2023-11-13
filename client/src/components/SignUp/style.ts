@@ -20,6 +20,7 @@ export const SignUpWrapper = styled.div`
 	.input-button-group .btn-verify {
 		border-radius: 10px;
 		white-space: nowrap;
+		text-align: center;
 		padding: 10px;
 		background-color: #188eb7;
 	}
