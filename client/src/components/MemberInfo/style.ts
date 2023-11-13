@@ -5,27 +5,25 @@ import memberBg from '../../assets/member_image.png';
 export const MemberInfoWrapper = styled.div`
 	display: flex;
 	flex-flow: row wrap;
+	justify-content: center;
 	height: 80vh;
 	width: 100vw;
 
 	.memberinfoimg {
 		background-image: url(${memberBg});
-		background-color: black;
 		background-size: contain;
 		background-repeat: no-repeat;
 		background-position: center;
 		height: 30%;
-		width: 50%;
+		width: 30%;
 	}
 
 	.memberinfo {
-		background-color: yellow;
 		height: 30%;
 		width: 50%;
 	}
 
 	.studentsinfo {
-		background-color: yellowgreen;
-		width: 100%;
+		width: 85%;
 	}
 `;
