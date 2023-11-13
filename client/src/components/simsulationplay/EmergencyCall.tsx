@@ -19,8 +19,7 @@ function EmergencyCall() {
 	// 인트로 불러오기.
 	const fetchData = async () => {
 		try {
-			const contentsResponse = await api.get('/contents?type=11&num=0');
-			console.log(contentsResponse.data);
+			await api.get('/contents?type=11&num=0');
 		} catch (e) {
 			console.log(e);
 		}
@@ -49,10 +48,8 @@ function EmergencyCall() {
 		// 소켓에서 이벤트 발생 시 event.data.type이 page라면 페이지 넘기라는 신호
 		newSocket.onmessage = (event) => {
 			const eventMessage = JSON.parse(event.data);
-			console.log(eventMessage);
 			if (eventMessage.type === 'page') {
 				setStatus(eventMessage.content);
-				console.log(status);
 			}
 		};
 
@@ -105,17 +102,6 @@ function EmergencyCall() {
 			socket.send(JSON.stringify(message));
 		}
 	};
-
-	if (socket) {
-		socket.onmessage = (event) => {
-			const eventMessage = JSON.parse(event.data);
-			console.log(eventMessage);
-			if (eventMessage.type === 'page') {
-				setStatus(eventMessage.content);
-				console.log(status);
-			}
-		};
-	}
 
 	return (
 		<>
