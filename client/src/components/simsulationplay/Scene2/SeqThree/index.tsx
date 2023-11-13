@@ -46,7 +46,11 @@ function SeqThree(props: ISeqThreeProps) {
 
 		// 받아온 메시지는 사용자 답변의 정답 여부
 		newSocket.onmessage = (event) => {
+			const eventMessage = JSON.parse(event.data);
 			console.log(event.data);
+			if (eventMessage.type === 'text2') {
+				setText(eventMessage.content);
+			}
 		};
 
 		newSocket.onclose = () => {
