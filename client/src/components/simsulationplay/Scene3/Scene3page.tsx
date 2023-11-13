@@ -1,11 +1,11 @@
 import React, { useState, useEffect } from 'react';
-import CharacterDisplay from '../../../components/CharacterDisplay';
 import { Alert, Button, Typography } from '@material-tailwind/react';
 import { PhoneArrowUpRightIcon, SparklesIcon } from '@heroicons/react/24/outline';
 import { useRecoilValue } from 'recoil';
 // import api from '../../../api';
 import { CallGPT } from '../gpt/gpt';
 import { userEmail } from '../../../store/RecoilState';
+import CharacterDisplay from '../../../components/CharacterDisplay';
 import { Scene3Wrapper } from './style3';
 import SimulationChat from '../SimulationChat/index';
 
@@ -49,7 +49,6 @@ function Scene3page() {
 	}
 
 	useEffect(() => {
-
 		const newSocket = new WebSocket('wss://k9c203.p.ssafy.io:17777');
 		// const newSocket = new WebSocket('ws://192.168.100.38:7777');
 		// const newSocket = new WebSocket('ws://localhost:7777');
