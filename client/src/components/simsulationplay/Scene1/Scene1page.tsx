@@ -5,7 +5,7 @@ import { useRecoilValue } from 'recoil';
 import api from '../../../api';
 import { CallGPT } from '../gpt/gpt';
 import { userEmail } from '../../../store/RecoilState';
-import { Scene1Wrapper } from './style';
+import { Scene1Wrapper, WrongWrapper } from './style';
 import SimulationChat from '../SimulationChat/index';
 import CharacterDisplay from '../../CharacterDisplay/index';
 
@@ -47,8 +47,9 @@ function Scene1page() {
 	// 소켓 통해 app에서 받아오는 사용자 음성 저장하기
 	const [text, setText] = useState('');
 
-	// 오답 시 alert 띄우고, 정답 script 보여주기.
+	// 오답 시 배경 바꾸고, alert 띄우고, 정답 script 보여주기.
 	const [isWrong, setIsWrong] = useState(false);
+	const [wrongAlert, setWrongAlert] = useState(false);
 	const answer = '친구가 높은 곳에서 뛰어내려서 많이 다쳤어요.';
 
 	// 오답이라면 소방관과의 대화도 변경되어야 함.
@@ -61,7 +62,6 @@ function Scene1page() {
 
 		// 소켓 연결
 		const newSocket = new WebSocket('wss://k9c203.p.ssafy.io:17777');
-		// const newSocket = new WebSocket('ws://localhost:7777');
 
 		// 소켓 열리면
 		newSocket.onopen = () => {
@@ -84,17 +84,37 @@ function Scene1page() {
 			if (eventMessage.type === 'wrong') {
 				setWrongSignal(true);
 			}
+		};
+
+		// 소켓 닫히면
+		newSocket.onclose = () => {
+			console.log('WebSocket connection closed.');
+		};
+
+		const newSocket2 = new WebSocket('wss://k9c203.p.ssafy.io:17776');
+
+		newSocket2.onopen = () => {
+			console.log('WebSocket connection established.');
+
+			const handShake = {
+				type: 'HW',
+				email: memberEmail,
+			};
+			newSocket2.send(JSON.stringify(handShake));
+		};
+
+		newSocket2.onmessage = (event) => {
+			const eventMessage = JSON.parse(event.data);
 			if (eventMessage.type === 'HW') {
-				if (eventMessage.content === 'left') {
+				if (eventMessage.movedir === 'left') {
 					handleLeft();
-				} else if (eventMessage.content === 'right') {
+				} else if (eventMessage.movedir === 'right') {
 					handleRight();
 				}
 			}
 		};
 
-		// 소켓 닫히면
-		newSocket.onclose = () => {
+		newSocket2.onclose = () => {
 			console.log('WebSocket connection closed.');
 		};
 
@@ -107,12 +127,13 @@ function Scene1page() {
 		// 컴포넌트 닫히면 소켓, 타이머 초기화
 		return () => {
 			newSocket.close();
+			newSocket2.close();
 			clearTimeout(timer);
 		};
 	}, []);
 
 	// 3.GPT
-	// 만일 text가 바뀌면 gpt에 요청을 보내야 함. 그리고 text 바뀌면 화면에 띄울 시간 필요함 (3초)
+	// 만일 text가 바뀌면 gpt에 요청을 보내야 함. 그리고 text 바뀌면 화면에 띄울 시간 필요함 (글자 수에 맞춰서 애니메이션 타임 계산)
 
 	function handleTimer(time: number) {
 		return new Promise((resolve) => {
@@ -121,6 +142,7 @@ function Scene1page() {
 			}, time);
 		});
 	}
+
 	useEffect(() => {
 		async function handleAsyncOperations() {
 			if (text) {
@@ -130,8 +152,7 @@ function Scene1page() {
 				};
 
 				const textLength = text.length;
-				const animationTime = textLength * 0.05 * 1000 + 2500;
-				console.log('여기 시간', animationTime);
+				const animationTime = textLength * 0.05 * 1000 + 2000;
 
 				try {
 					const [timerResult, isCorrect] = await Promise.all([
@@ -149,6 +170,9 @@ function Scene1page() {
 						} else {
 							setIsWrong(true);
 							setText('');
+							setTimeout(() => {
+								socket?.send(JSON.stringify({ type: 'wrong' }));
+							}, 3000);
 						}
 					}
 				} catch (error) {
@@ -163,64 +187,59 @@ function Scene1page() {
 	// 4. 오답 가이드라인 alert 타이머 추가
 	useEffect(() => {
 		let alertTimer: any;
+
 		if (isWrong) {
 			alertTimer = setTimeout(() => {
-				setIsWrong(false);
-				socket?.send(JSON.stringify({ type: 'wrong' }));
-			}, 5000);
+				setWrongAlert(true);
+			}, 500);
 		}
+
 		return () => {
 			if (alertTimer) clearTimeout(alertTimer);
 		};
 	}, [isWrong]);
 
-	// const handleClickSetText = () => {
-	// 	setText('선생님이 다쳤어요.');
-	// };
+	const handleClickSetText = () => {
+		setText('선생님이 다쳤어요.');
+	};
 
-	// const handleCorrectAnswer = () => {
-	// 	setText('친구가 높은 곳에서 떨어져서 다쳤어요.');
-	// };
+	const handleCorrectAnswer = () => {
+		setText('친구가 높은 곳에서 떨어져서 다쳤어요.');
+	};
 
-	// const handleNarr = () => {
-	// 	socket?.send(JSON.stringify({ type: 'narr', content: 4 }));
-	// };
-
-	return (
+	return isWrong ? (
+		<WrongWrapper>
+			<div className="wrong-container">
+				<Alert className="flex justify-center" variant="gradient" open={wrongAlert && !text}>
+					<div className="flex flex-row items-center m-2">
+						<SparklesIcon className="w-5 h-5 mr-2" color="yellow" />
+						<Typography variant="h4" color="yellow">
+							이렇게 말해볼까?
+						</Typography>
+					</div>
+					<div className="flex flex-row items-center m-2">
+						<PhoneArrowUpRightIcon className="w-5 h-5 mr-2" />
+						<Typography variant="h3">{answer}</Typography>
+					</div>
+				</Alert>
+			</div>
+			{wrongSignal && <SimulationChat chatNumber={text ? 2 : 3} text={text || '다시 한번 말해볼래요?'} />}
+		</WrongWrapper>
+	) : (
 		<Scene1Wrapper>
 			{/* <Button onClick={handleNarr}>나레이션</Button> */}
-			{/* <Button onClick={handleClickSetText}>오답 한번 보내보자.</Button> */}
-			{/* <Button onClick={handleCorrectAnswer}>정답 한번 보내보자.</Button> */}
+			<Button onClick={handleClickSetText}>오답 한번 보내보자.</Button>
+			<Button onClick={handleCorrectAnswer}>정답 한번 보내보자.</Button>
 			<Button onClick={handleLeft}>왼쪽</Button>
 			<Button onClick={handleRight}>오른쪽</Button>
-			{showAlert && (
+			{showAlert ? (
 				<div className="alert-container">
 					<Alert>
 						<Typography variant="h3">다친 친구가 있다는 사실을 소방관에게 알려줘!</Typography>
 					</Alert>
 				</div>
-			)}
-			{!showAlert && !isWrong && !wrongSignal && (
+			) : (
 				<SimulationChat chatNumber={text ? 2 : 1} text={text || '네, 119입니다. 무슨 일이시죠?'} />
-			)}
-			{isWrong && (
-				<div className="wrong-container">
-					<Alert className="flex justify-center" variant="gradient" open={isWrong} onClose={() => setIsWrong(false)}>
-						<div className="flex flex-row items-center m-2">
-							<SparklesIcon className="w-5 h-5 mr-2" color="yellow" />
-							<Typography variant="h4" color="yellow">
-								이렇게 말해볼까?
-							</Typography>
-						</div>
-						<div className="flex flex-row items-center m-2">
-							<PhoneArrowUpRightIcon className="w-5 h-5 mr-2" />
-							<Typography variant="h3">{answer}</Typography>
-						</div>
-					</Alert>
-				</div>
-			)}
-			{!showAlert && !isWrong && wrongSignal && (
-				<SimulationChat chatNumber={text ? 2 : 1} text={text || '다시 한번 얘기해줄래요?'} />
 			)}
 			<div style={{ position: 'absolute', left: `${left}px` }}>
 				<CharacterDisplay />
