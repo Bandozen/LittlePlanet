@@ -262,7 +262,9 @@ function Scene3page() {
 						height: '150px',
 						backgroundColor: 'green',
 					}}
-				>zz</div>
+				>
+					zz
+				</div>
 			</div>
 		</Scene3Wrapper>
 	);
