@@ -36,6 +36,16 @@ export const SimulationChatWrapper = styled.div`
 		margin-right: 5rem;
 	}
 
+	.ch3 {
+		display: flex;
+		justify-content: center;
+		align-items: center;
+		position: fixed;
+		bottom: 0;
+		width: 100%;
+		padding: 20px;
+	}
+
 	.icon {
 		position: relative;
 		overflow: hidden;
@@ -100,6 +110,12 @@ export const SimulationChatWrapper = styled.div`
 		right: -15px;
 		content: '▶';
 		color: #f9eb54;
+	}
+
+	.ch3 .textbox {
+		margin-left: 20px;
+		background-color: white;
+		animation: ${fadeIn} 1s ease-out;
 	}
 
 	.letter {

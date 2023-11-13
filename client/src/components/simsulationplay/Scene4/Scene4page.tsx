@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { Alert, Typography, Button } from '@material-tailwind/react';
+import { Alert, Typography } from '@material-tailwind/react';
 import { PhoneArrowUpRightIcon, SparklesIcon } from '@heroicons/react/24/outline';
 import { useRecoilValue } from 'recoil';
 import { userEmail, studentName } from '../../../store/RecoilState';
@@ -98,35 +98,55 @@ function Scene4page() {
 	}, []);
 
 	// 3.GPT
-	// 만일 text가 바뀌면 gpt에 요청을 보내야 함.
+	// 만일 text가 바뀌면 gpt에 요청을 보내야 함. 그리고 text 바뀌면 화면에 띄울 시간 필요함 (글자 수에 맞춰서 애니메이션 타임 계산)
+
+	function handleTimer(time: number) {
+		return new Promise((resolve) => {
+			setTimeout(() => {
+				resolve(true);
+			}, time);
+		});
+	}
 	useEffect(() => {
-		console.log('텍스트 변경');
-		if (text) {
-			const prompt = {
-				role: 'user',
-				content: `1. [GOAL] : Child must must explain to the firefighters about their identity(the answer is ${answer}.) in case the phone is disconnected. If the child's answer does not match the answer, return false. 2. [FIREFIGHTER'S QUESTION] : 전화하고 있는 학생 이름을 말해줄래요? 3. [CHILD'S ANSWER] : ${text} ## Use the output in the JSON format. ##`,
-			};
-			CallGPT(prompt)
-				.then((isCorrect) => {
-					if (isCorrect) {
-						const message = {
-							type: 'page',
-							content: 5,
-						};
-						socket?.send(JSON.stringify(message));
-					} else {
-						const message = {
-							type: 'wrong',
-						};
-						setIsWrong(true);
-						setText('');
-						socket?.send(JSON.stringify(message));
+		async function handleAsyncOperations() {
+			if (text) {
+				const prompt = {
+					role: 'user',
+					content: `1. [GOAL] : Child must must explain to the firefighters about their identity(the answer is ${answer}.) in case the phone is disconnected. If the child's answer does not match the answer, return false. 2. [FIREFIGHTER'S QUESTION] : 전화하고 있는 학생 이름을 말해줄래요? 3. [CHILD'S ANSWER] : ${text} ## Use the output in the JSON format. ##`,
+				};
+
+				const textLength = text.length;
+				const animationTime = textLength * 0.05 * 1000 + 2500;
+				console.log('여기 시간', animationTime);
+
+				try {
+					const [timerResult, isCorrect] = await Promise.all([
+						handleTimer(animationTime), // 글자 수에 맞춰서 타이머 설정
+						CallGPT(prompt), // CallGPT 호출
+					]);
+
+					if (timerResult) {
+						if (isCorrect) {
+							const message = {
+								type: 'page',
+								content: 5,
+							};
+							socket?.send(JSON.stringify(message));
+						} else {
+							setIsWrong(true);
+							setText('');
+							setTimeout(() => {
+								socket?.send(JSON.stringify({ type: 'wrong' }));
+							}, 3000);
+						}
 					}
-				})
-				.catch((error) => {
+				} catch (error) {
 					console.log(error);
-				});
+				}
+			}
 		}
+
+		handleAsyncOperations();
 	}, [text]);
 
 	// 4. 오답 가이드라인 alert 타이머 추가
@@ -142,28 +162,28 @@ function Scene4page() {
 		};
 	}, [isWrong]);
 
-	const handleClickWrongAnswer = () => {
-		setIsWrong((prev) => !prev);
-	};
+	// const handleClickWrongAnswer = () => {
+	// 	setIsWrong((prev) => !prev);
+	// };
 
-	const handleClickSetText = () => {
-		setText('박코딩입니다.');
-	};
+	// const handleClickSetText = () => {
+	// 	setText('박코딩입니다.');
+	// };
 
-	const handleCorrectAnswer = () => {
-		setText(`${answer}이에요.`);
-	};
+	// const handleCorrectAnswer = () => {
+	// 	setText(`${answer}이에요.`);
+	// };
 
-	const handleNarr = () => {
-		socket?.send(JSON.stringify({ type: 'narr', content: 7 }));
-	};
+	// const handleNarr = () => {
+	// 	socket?.send(JSON.stringify({ type: 'narr', content: 7 }));
+	// };
 
 	return (
 		<Scene4Wrapper>
-			<Button onClick={handleNarr}>나레이션</Button>
-			<Button onClick={handleClickWrongAnswer}>오답</Button>
-			<Button onClick={handleClickSetText}>오답 한번 보내보자.</Button>
-			<Button onClick={handleCorrectAnswer}>정답 한번 보내보자.</Button>
+			{/* <Button onClick={handleNarr}>나레이션</Button> */}
+			{/* <Button onClick={handleClickWrongAnswer}>오답</Button> */}
+			{/* <Button onClick={handleClickSetText}>오답 한번 보내보자.</Button> */}
+			{/* <Button onClick={handleCorrectAnswer}>정답 한번 보내보자.</Button> */}
 			{showAlert && (
 				<div className="alert-container">
 					<Alert>

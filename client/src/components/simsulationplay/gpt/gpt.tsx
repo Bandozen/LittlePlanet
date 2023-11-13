@@ -55,11 +55,10 @@ export const CallGPT = async (prompt: object) => {
 			},
 		});
 
-		const responseData = response.data;
-		console.log(response);
-
-		const lastMessage = responseData.choices[0].message.content;
+		const lastMessage = response.data.choices[0].message.content;
 		const parsedMessage = JSON.parse(lastMessage);
+		console.log(lastMessage);
+		console.log(parsedMessage);
 
 		return parsedMessage.success;
 	} catch (error) {

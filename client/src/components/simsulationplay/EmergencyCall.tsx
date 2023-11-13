@@ -20,8 +20,7 @@ function EmergencyCall() {
 	// 인트로 불러오기.
 	const fetchData = async () => {
 		try {
-			const contentsResponse = await api.get('/contents?type=11&num=0');
-			console.log(contentsResponse.data);
+			await api.get('/contents?type=11&num=0');
 		} catch (e) {
 			console.log(e);
 		}
@@ -50,10 +49,8 @@ function EmergencyCall() {
 		// 소켓에서 이벤트 발생 시 event.data.type이 page라면 페이지 넘기라는 신호
 		newSocket.onmessage = (event) => {
 			const eventMessage = JSON.parse(event.data);
-			console.log(eventMessage);
 			if (eventMessage.type === 'page') {
 				setStatus(eventMessage.content);
-				console.log(status);
 			}
 		};
 
@@ -107,24 +104,13 @@ function EmergencyCall() {
 		}
 	};
 
-	if (socket) {
-		socket.onmessage = (event) => {
-			const eventMessage = JSON.parse(event.data);
-			console.log(eventMessage);
-			if (eventMessage.type === 'page') {
-				setStatus(eventMessage.content);
-				console.log(status);
-			}
-		};
-	}
-
 	return (
 		<>
 			<Button onClick={sendNextPageMessage}> 다음 페이지 이동 </Button>
 			<Button onClick={sendKeypadMessage}> 인트로 끝남 </Button>
 			{/* 1번부터 5번씬 차례대로 status에 따라 */}
 			{status === 1 && <Scene1page />}
-			{status === 2 && <Scene2page />}
+			{status === 2 && <Scene2page setStatus={setStatus} />}
 			{status === 3 && <Scene3page />}
 			{status === 4 && <Scene4page />}
 			{status === 5 && <Scene5page />}
