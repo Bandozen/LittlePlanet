@@ -45,8 +45,10 @@ function StepThree(props: IStepThreeProps) {
 				<CheckStep activeStep={activeStep} checkNum={5} message="시작하기!" />
 			</div>
 			{CamDisplay ? (
-				<div className="loading">
-					<CamDisplay />
+				<div className="image-wrapper">
+					<div className="loading">
+						<CamDisplay />
+					</div>
 				</div>
 			) : (
 				<img className="loading" src={loadingImage} alt="" />
