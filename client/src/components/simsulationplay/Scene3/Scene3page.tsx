@@ -77,7 +77,7 @@ function Scene3page() {
 		moveSocket.onopen = () => {
 			console.log('WebSocket connection established.');
 			setSocket(moveSocket);
-			console.log(socket);
+			// console.log(socket);
 
 			// 소켓 열릴 때, 이메일 보내기
 			const handShake = {
@@ -90,18 +90,18 @@ function Scene3page() {
 		// 소켓에 메시지 들어오면
 		moveSocket.onmessage = (event) => {
 			const eventMessage = JSON.parse(event.data);
-			console.log(eventMessage.righthandX);
-			console.log(eventMessage.righthandY);
+			console.log(`inrhx : ${eventMessage.righthandX}`);
+			console.log(`inrhy : ${eventMessage.righthandY}`);
+			// console.log(`rhx : ${rightHandX}`);
+			// console.log(`rhy : ${rightHandY}`);
 			if (eventMessage.type === 'HW') {
 				if (eventMessage.movedir === 'left') {
 					handleLeft();
-					setRightHandX(left + Number(eventMessage.righthandX) / 2);
-					setRightHandY(340 - Number(eventMessage.righthandY) / 2);
 				} else if (eventMessage.movedir === 'right') {
 					handleRight();
-					setRightHandX(left + eventMessage.righthandX / 2);
-					setRightHandY(340 - eventMessage.righthandY / 2);
 				}
+				setRightHandX(left + Number(eventMessage.lefthandX) / 2);
+				setRightHandY(340 - Number(eventMessage.lefthandY) / 2);
 			}
 		};
 
@@ -179,10 +179,11 @@ function Scene3page() {
 		}, 3000);
 	};
 	useEffect(() => {
-		console.log(left);
-		console.log(rightHandX, rightHandY);
-		if (rightHandX >= 800 && rightHandX <= 900 && rightHandY >= 100 && rightHandY <= 310) {
+		// console.log(left);
+		console.log(left, rightHandX, rightHandY);
+		if (rightHandX >= 720 && rightHandX <= 900 && rightHandY >= 100 && rightHandY <= 310) {
 			console.log('친구 터치로 보이려나?');
+			arrive();
 		}
 	}, [rightHandX, rightHandY]);
 	return (
