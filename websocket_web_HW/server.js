@@ -7,7 +7,14 @@ const server_port = process.env.SERVER_PORT;
 
 // HTTP 서버 생성
 const server = http.createServer((req, res) => {
-  res.setHeader("Access-Control-Allow-Origin", "http://localhost:3000", "http://k9c203.p.ssafy.io:3000", "https://k9c203.p.ssafy.io", "http://littleplanet.kids:3000", "https://littleplanet.kids");
+  res.setHeader(
+    "Access-Control-Allow-Origin",
+    "http://localhost:3000",
+    "http://k9c203.p.ssafy.io:3000",
+    "https://k9c203.p.ssafy.io",
+    "http://littleplanet.kids:3000",
+    "https://littleplanet.kids"
+  );
   res.setHeader(
     "Access-Control-Allow-Headers",
     "Origin, X-Requested-With, Content-Type, Accept"
@@ -64,7 +71,9 @@ wss.on("connection", (ws, req) => {
   // 클라이언트로부터 메시지를 수신할 때 실행될 콜백
   ws.on("message", async (message) => {
     const mes = JSON.parse(message);
-    console.log(mes);    
+    console.log(mes);
+    let pastposition = ['0'];
+    let pastdir = 'none';
     if (mes.type === "HW" && mes.email) {
       ws.email = mes.email;
       while (true) {
@@ -76,29 +85,31 @@ wss.on("connection", (ws, req) => {
         if (len === 28) {
           const coordinate = await redisClientCoordinate.lRange(
             ws.email,
-            0,
-            27
+            12,
+            15
           );
           const move = await redisClientMove.get(ws.email);
+          if (JSON.stringify(pastposition) === JSON.stringify(coordinate) && JSON.stringify(pastdir) === JSON.stringify(move)) continue;
+          pastposition = coordinate;
+          pastdir = move;
           msg = {
             type: "HW",
-            lefthandX: coordinate[12],
-            lefthandY: coordinate[13],
-            righthandX: coordinate[14],
-            righthandY: coordinate[15],
+            lefthandX: coordinate[3],
+            lefthandY: coordinate[2],
+            righthandX: coordinate[0],
+            righthandY: coordinate[1],
             movedir: move,
+            // move = left, right, center
           };
           ws.send(JSON.stringify(msg));
         }
       }
-    }    
+    }
   });
 
   // 클라이언트와 연결이 끊겼을 때 실행될 콜백
   ws.on("close", () => {
     console.log("Client disconnected");
-    // 현재 클라이언트들 담은 배열에서 해당 클라이언트 제거
-    clients = clients.filter((client) => client !== ws);
   });
 });
 

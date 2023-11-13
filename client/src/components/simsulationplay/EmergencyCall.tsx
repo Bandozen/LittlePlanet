@@ -7,6 +7,7 @@ import Scene2page from './Scene2/Scene2page';
 import Scene3page from './Scene3/Scene3page';
 import Scene4page from './Scene4/Scene4page';
 import { userEmail } from '../../store/RecoilState';
+import bgMusic from '../../assets/music/simulation_music.mp3';
 
 function EmergencyCall() {
 	// 시뮬레이션 씬 저장하기
@@ -60,6 +61,25 @@ function EmergencyCall() {
 			newSocket.close();
 		};
 	}, []);
+
+	useEffect(() => {
+		// 오디오 객체 생성
+		const audio = new Audio(bgMusic);
+
+		// status 값에 따라 음악 재생 제어
+		if (status >= 1 && status <= 4) {
+			audio.play().catch((error) => console.log('자동 재생 실패:', error));
+		} else {
+			audio.pause();
+			audio.currentTime = 0; // 재생 위치를 처음으로 되돌림
+		}
+
+		// 컴포넌트 언마운트 시 오디오 정지
+		return () => {
+			audio.pause();
+			audio.currentTime = 0;
+		};
+	}, [status]); // 의존성 배열에 status 추가
 
 	// 인트로 끝나면 앱에 키패드 띄우라는 신호 보내기
 	const sendKeypadMessage = () => {
