@@ -6,7 +6,7 @@ function MyPage() {
 	return (
 		<div>
 			<NavBar />
-			<h1>마이페이지</h1>
+			<hr />
 			<MemberInfo />
 		</div>
 	);

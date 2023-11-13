@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-// import { Button } from '@material-tailwind/react';
+import { Button } from '@material-tailwind/react';
 import { useRecoilValue } from 'recoil';
 import api from '../../api';
 import Scene1page from './Scene1/Scene1page';
@@ -18,8 +18,7 @@ function EmergencyCall() {
 	// 인트로 불러오기.
 	const fetchData = async () => {
 		try {
-			const contentsResponse = await api.get('/contents?type=11&num=0');
-			console.log(contentsResponse.data);
+			await api.get('/contents?type=11&num=0');
 		} catch (e) {
 			console.log(e);
 		}
@@ -48,10 +47,8 @@ function EmergencyCall() {
 		// 소켓에서 이벤트 발생 시 event.data.type이 page라면 페이지 넘기라는 신호
 		newSocket.onmessage = (event) => {
 			const eventMessage = JSON.parse(event.data);
-			console.log(eventMessage);
 			if (eventMessage.type === 'page') {
 				setStatus(eventMessage.content);
-				console.log(status);
 			}
 		};
 
@@ -65,42 +62,31 @@ function EmergencyCall() {
 	}, []);
 
 	// 인트로 끝나면 앱에 키패드 띄우라는 신호 보내기
-	// const sendKeypadMessage = () => {
-	// 	const message = {
-	// 		type: 'narr',
-	// 		content: 0,
-	// 	};
-	// 	if (socket) {
-	// 		socket.send(JSON.stringify(message));
-	// 	}
-	// };
+	const sendKeypadMessage = () => {
+		const message = {
+			type: 'narr',
+			content: 0,
+		};
+		if (socket) {
+			socket.send(JSON.stringify(message));
+		}
+	};
 
 	// 페이지 이동 버튼 나중에 삭제
-	// const sendNextPageMessage = () => {
-	// 	const message = {
-	// 		type: 'page',
-	// 		content: status + 1,
-	// 	};
-	// 	if (socket) {
-	// 		socket.send(JSON.stringify(message));
-	// 	}
-	// };
-
-	if (socket) {
-		socket.onmessage = (event) => {
-			const eventMessage = JSON.parse(event.data);
-			console.log(eventMessage);
-			if (eventMessage.type === 'page') {
-				setStatus(eventMessage.content);
-				console.log(status);
-			}
+	const sendNextPageMessage = () => {
+		const message = {
+			type: 'page',
+			content: status + 1,
 		};
-	}
+		if (socket) {
+			socket.send(JSON.stringify(message));
+		}
+	};
 
 	return (
 		<>
-			{/* <Button onClick={sendNextPageMessage}> 다음 페이지 이동 </Button> */}
-			{/* <Button onClick={sendKeypadMessage}> 인트로 끝남 </Button> */}
+			<Button onClick={sendNextPageMessage}> 다음 페이지 이동 </Button>
+			<Button onClick={sendKeypadMessage}> 인트로 끝남 </Button>
 			{/* 1번부터 5번씬 차례대로 status에 따라 */}
 			{status === 1 && <Scene1page />}
 			{status === 2 && <Scene2page />}
