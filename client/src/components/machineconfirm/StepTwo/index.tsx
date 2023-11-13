@@ -60,13 +60,17 @@ function StepTwo(props: IStepTwoProps) {
 			<div>
 				{num === 0 ? (
 					<div className="image-wrapper">
-						<img src={manImage} alt="남자이미지" />
-						<Button text="다음" handleClick={() => changeClick()} />
+						<img className="loading" src={manImage} alt="남자이미지" />
+						<div className="change-caracter">
+							<Button text="캐릭터 변경" handleClick={() => changeClick()} />
+						</div>
 					</div>
 				) : (
 					<div className="image-wrapper">
-						<img src={womanImage} alt="여자이미지" />
-						<Button text="다음" handleClick={() => changeClick()} />
+						<img className="loading" src={womanImage} alt="여자이미지" />
+						<div className="change-caracter">
+							<Button text="캐릭터 변경" handleClick={() => changeClick()} />
+						</div>
 					</div>
 				)}
 			</div>

@@ -9,7 +9,7 @@ export const Wrapper = styled.div`
 		color: #188eb7;
 	}
 
-	img {
+	/* img {
 		margin: 10px;
-	}
+	} */
 `;
