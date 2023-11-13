@@ -5,8 +5,8 @@ import WindModal from 'components/common/Modal/WindModal';
 import useMovePage from 'hooks/useMovePage';
 // import { Alert } from '@material-tailwind/react';
 import api from 'api';
-import { useRecoilValue } from 'recoil';
-import { userEmail } from '../../../store/RecoilState';
+import { useRecoilValue, useSetRecoilState } from 'recoil';
+import { userEmail, deviceStatus } from '../../../store/RecoilState';
 import { Wrapper } from './style';
 
 interface TimerProps {
@@ -58,6 +58,7 @@ function OpenModal() {
 	// const [confirmOpen, setConfirmOpen] = React.useState(false);
 	const [movepage] = useMovePage();
 	const userMail = useRecoilValue(userEmail);
+	const setDeviceStatus = useSetRecoilState(deviceStatus);
 
 	async function getApiNumber() {
 		await api
@@ -81,6 +82,7 @@ function OpenModal() {
 						memberEmail: userMail,
 						memberCommand: 'ready',
 					});
+					setDeviceStatus(userMail);
 					movepage('/machineconfirm');
 				}
 			})
