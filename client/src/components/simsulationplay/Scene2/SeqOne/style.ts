@@ -40,4 +40,14 @@ export const SeqOneWrapper = styled.div`
 		transform: scale(1);
 		transition: transform 1s;
 	}
+
+	.left-point {
+		padding-top: 270px;
+		padding-left: 1050px;
+	}
+
+	.right-point {
+		padding-top: 90px;
+		padding-left: 210px;
+	}
 `;
