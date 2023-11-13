@@ -1,15 +1,14 @@
 import React from 'react';
-import Lottie, { Options } from 'react-lottie';
+import Lottie from 'lottie-react';
 import CompleteAnimation from './lottie.json';
 
 function ShineLottie() {
-	const defaultOptions: Options = {
-		loop: true,
-		autoplay: true,
-		animationData: CompleteAnimation,
+	const style = {
+		width: 50,
+		height: 50,
 	};
 
-	return <Lottie options={defaultOptions} width={50} height={50} isClickToPauseDisabled />;
+	return <Lottie animationData={CompleteAnimation} style={style} />;
 }
 
 export default ShineLottie;
