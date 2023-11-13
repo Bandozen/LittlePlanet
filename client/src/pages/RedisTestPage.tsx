@@ -11,8 +11,8 @@ function RedisTestPage() {
 	const [socket, setSocket] = useState<WebSocket | null>(null);
 	// 캐릭터 이동시키기
 	const [left, setLeft] = useState(500);
-	const handleLeft = () => setLeft((prevLeft) => prevLeft - 1);
-	const handleRight = () => setLeft((prevLeft) => prevLeft + 1);
+	const handleLeft = () => setLeft((prevLeft) => prevLeft - 5);
+	const handleRight = () => setLeft((prevLeft) => prevLeft + 5);
 	const [movePage] = useMovePage();
 
 	const handleclick = async () => {
@@ -64,7 +64,7 @@ function RedisTestPage() {
 
 	return (
 		<div>
-			<div style={{ position: 'absolute', left: `${left}px` }}>
+			<div style={{ position: 'absolute', left: `${left}px`, width: '320px', height: '240px' }}>
 				<CharacterDisplay />
 			</div>
 			<Button onClick={handleclick}>메인페이지가기</Button>

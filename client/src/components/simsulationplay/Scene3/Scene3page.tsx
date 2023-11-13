@@ -5,15 +5,9 @@ import { useRecoilValue } from 'recoil';
 // import api from '../../../api';
 import { CallGPT } from '../gpt/gpt';
 import { userEmail } from '../../../store/RecoilState';
+import CharacterDisplay from '../../CharacterDisplay';
 import { Scene3Wrapper } from './style3';
 import SimulationChat from '../SimulationChat/index';
-
-// type Content = {
-// 	contentsUrlName: string;
-// 	contentsUrlAddress: string;
-// 	contentsUrlType: number;
-// 	contentsUrlNum: number;
-// };
 
 // 다리를 다쳐서 피가 나요.
 function Scene3page() {
@@ -32,15 +26,9 @@ function Scene3page() {
 	const [isWrong, setIsWrong] = useState(false);
 	const memberEmail = useRecoilValue(userEmail);
 	const [socket, setSocket] = useState<WebSocket | null>(null);
-	// const fetchData = async () => {
-	// 	try {
-	// 		const contentsResponse = await api.get('/contents?type=11&num=3');
-	// 		setContentsData(contentsResponse.data);
-	// 		console.log(contentsResponse.data);
-	// 	} catch (e) {
-	// 		console.log(e);
-	// 	}
-	// };
+	const [left, setLeft] = useState(500);
+	const handleLeft = () => setLeft((prevLeft) => prevLeft - 5);
+	const handleRight = () => setLeft((prevLeft) => prevLeft + 5);
 	// 웹소켓에서 메세지를 받고 그 메세지 값에 따라 다르게 실행하는 함수 설정
 	function getMessage(message: string) {
 		// 메세지를 mes 변수에 JSON 파싱한것을 변환
@@ -52,14 +40,6 @@ function Scene3page() {
 		if (mes.type === 'narr' && mes.content === 'first') {
 			setFirstNarr(false);
 		}
-		// if (mes.type === 'arrive' && mes.content === 'friend') {
-		// 	// 친구 화면 확대
-		// 	setZoom(true);
-		// 	setTimeout(() => {
-		// 		//  두번째 나레이션(친구가 어디가 다쳤는지 알려주기) 표시
-		// 		setArrived(true);
-		// 	}, 3000);
-		// }
 		if (mes.type === 'text3') {
 			setText(mes.content);
 		}
@@ -69,8 +49,6 @@ function Scene3page() {
 	}
 
 	useEffect(() => {
-		// fetchData();
-
 		const newSocket = new WebSocket('wss://k9c203.p.ssafy.io:17777');
 		// const newSocket = new WebSocket('ws://192.168.100.38:7777');
 		// const newSocket = new WebSocket('ws://localhost:7777');
@@ -87,12 +65,46 @@ function Scene3page() {
 		newSocket.onclose = () => {
 			console.log('WebSocket connection closed.');
 		};
+
+		const moveSocket = new WebSocket('wss://k9c203.p.ssafy.io:17776');
+		// const moveSocket = new WebSocket('ws://localhost:7776');
+
+		moveSocket.onopen = () => {
+			console.log('WebSocket connection established.');
+			setSocket(moveSocket);
+			console.log(socket);
+
+			// 소켓 열릴 때, 이메일 보내기
+			const handShake = {
+				type: 'HW',
+				email: memberEmail,
+			};
+			moveSocket.send(JSON.stringify(handShake));
+		};
+
+		// 소켓에 메시지 들어오면
+		moveSocket.onmessage = (event) => {
+			const eventMessage = JSON.parse(event.data);
+			console.log(eventMessage);
+			if (eventMessage.type === 'HW') {
+				if (eventMessage.movedir === 'left') {
+					handleLeft();
+				} else if (eventMessage.movedir === 'right') {
+					handleRight();
+				}
+			}
+		};
+
+		moveSocket.onclose = () => {
+			console.log('WebSocket connection closed.');
+		};
 		// 컴포넌트가 렌더링되고 3초 뒤 첫번째 나레이션 자동으로 사라지게 하기
 		setTimeout(() => {
 			setFirstNarr(false);
 		}, 3000);
 		return () => {
 			newSocket.close();
+			moveSocket.close();
 		};
 	}, []);
 	// 소켓이 등록되고 난 뒤 useEffect
@@ -222,6 +234,9 @@ function Scene3page() {
 						</Alert>
 					</div>
 				)}
+				<div style={{ position: 'absolute', left: `${left}px` }}>
+					<CharacterDisplay />
+				</div>
 			</div>
 		</Scene3Wrapper>
 	);
