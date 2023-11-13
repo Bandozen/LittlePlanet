@@ -1,7 +1,5 @@
 import React, { Dispatch, SetStateAction, useEffect, useState } from 'react';
 import { Alert, Typography } from '@material-tailwind/react';
-import SimulationChat from 'components/simsulationplay/SimulationChat';
-import Button from 'components/common/Button';
 import { SeqOneWrapper } from './style';
 
 interface ISeqOneProps {
@@ -12,17 +10,18 @@ function SeqOne(props: ISeqOneProps) {
 	const [showNarr, setShowNarr] = useState(true);
 	const { setStep } = props;
 
-	const testClick = () => {
-		setStep(1);
-	};
-
 	useEffect(() => {
 		const timer = setTimeout(() => {
 			setShowNarr(false);
-		}, 5000);
+		}, 3000);
+
+		const nextSeqTimer = setTimeout(() => {
+			setStep(1);
+		}, 15000);
 
 		return () => {
 			clearTimeout(timer);
+			clearTimeout(nextSeqTimer);
 		};
 	}, []);
 
@@ -35,11 +34,8 @@ function SeqOne(props: ISeqOneProps) {
 					</Alert>
 				</div>
 			) : (
-				<div className="simulation-container">
-					<SimulationChat chatNumber={1} text="거기 위치가 어디인가요?" />
-				</div>
+				<div className="background-image zoom left-right original" />
 			)}
-			<Button text="테스트버튼입니다." handleClick={() => testClick()} />
 		</SeqOneWrapper>
 	);
 }
