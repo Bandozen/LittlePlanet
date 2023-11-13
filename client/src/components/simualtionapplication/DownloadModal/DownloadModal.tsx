@@ -2,13 +2,13 @@ import React from 'react';
 import useOpenModal from 'hooks/useModalOpen';
 import Button from 'components/common/Button';
 import WindModal from 'components/common/Modal/WindModal';
-import tempQR from 'assets/images/temp_qr.png';
+import appQR from 'assets/images/app_qr.png';
 import { DownloadModalWrapper } from './style';
 
 const modalContent = (
 	<div className="flex flex-column-reverse flex-wrap justify-center">
 		<p>QR코드를 스캔하여 앱을 다운받아보세요!</p>
-		<img src={tempQR} alt="큐알이에요" style={{ width: '70%', marginBottom: '20px' }} />
+		<img src={appQR} alt="큐알이에요" style={{ width: '70%', marginBottom: '20px' }} />
 	</div>
 );
 function OpenModal() {

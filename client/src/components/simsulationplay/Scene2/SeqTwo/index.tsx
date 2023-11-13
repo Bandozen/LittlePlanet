@@ -2,6 +2,9 @@ import React, { Dispatch, SetStateAction, useState } from 'react';
 import { Button } from '@material-tailwind/react';
 import Button1 from 'components/common/Button';
 import CharacterDisplay from 'components/CharacterDisplay';
+import ShineLottie from 'components/Lottie/ShineLottie';
+import PointRightLottie from 'components/Lottie/PointRightLottie';
+import PointLeftLottie from 'components/Lottie/PointLeftLottie';
 import { SeqTwoWrapper } from './style';
 
 interface ISeqTwoProps {
@@ -28,6 +31,15 @@ function SeqTwo(props: ISeqTwoProps) {
 			<Button1 text="테스트버튼입니다." handleClick={() => testClick()} />
 			<div style={{ position: 'absolute', left: `${left}px` }}>
 				<CharacterDisplay />
+			</div>
+			<div style={{ position: 'absolute' }}>
+				<ShineLottie />
+			</div>
+			<div style={{ position: 'absolute' }} className="left-point">
+				<PointLeftLottie />
+			</div>
+			<div style={{ position: 'absolute' }} className="right-point">
+				<PointRightLottie />
 			</div>
 		</SeqTwoWrapper>
 	);

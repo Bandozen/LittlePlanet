@@ -6,6 +6,7 @@ import Scene1page from './Scene1/Scene1page';
 import Scene2page from './Scene2/Scene2page';
 import Scene3page from './Scene3/Scene3page';
 import Scene4page from './Scene4/Scene4page';
+import Scene5page from './Scene5/Scene5page';
 import { userEmail } from '../../store/RecoilState';
 import bgMusic from '../../assets/music/simulation_music.mp3';
 
@@ -112,6 +113,7 @@ function EmergencyCall() {
 			{status === 2 && <Scene2page setStatus={setStatus} />}
 			{status === 3 && <Scene3page />}
 			{status === 4 && <Scene4page />}
+			{status === 5 && <Scene5page />}
 		</>
 	);
 }
