@@ -31,8 +31,8 @@ function Scene3page() {
 	const handleRight = () => setLeft((prevLeft) => prevLeft + 10);
 	const [rightHandX, setRightHandX] = useState(0);
 	const [rightHandY, setRightHandY] = useState(0);
-	const [leftHandX, setLeftHandX] = useState(0);
-	const [leftHandY, setLeftHandY] = useState(0);
+	// const [leftHandX, setLeftHandX] = useState(0);
+	// const [leftHandY, setLeftHandY] = useState(0);
 	const friendLocation = [500, 200];
 	// 웹소켓에서 메세지를 받고 그 메세지 값에 따라 다르게 실행하는 함수 설정
 	function getMessage(message: string) {
@@ -181,8 +181,8 @@ function Scene3page() {
 	useEffect(() => {
 		console.log(left);
 		console.log(rightHandX, rightHandY);
-		if ( rightHandX >= 800 && rightHandX <= 900 && rightHandY >= 100 && rightHandY <= 310) {
-			console.log('친구 터치로 보이려나?')
+		if (rightHandX >= 800 && rightHandX <= 900 && rightHandY >= 100 && rightHandY <= 310) {
+			console.log('친구 터치로 보이려나?');
 		}
 	}, [rightHandX, rightHandY]);
 	return (
@@ -253,8 +253,16 @@ function Scene3page() {
 				<div style={{ position: 'absolute', left: `${left}px`, bottom: '100px', width: '320px', height: '240px' }}>
 					<CharacterDisplay />
 				</div>
-				<div style={{ position: 'absolute', left: `880px`, bottom: '160px', width: '100px', height: '150px', backgroundColor: 'green' }}>
-				</div>
+				<div
+					style={{
+						position: 'absolute',
+						left: `880px`,
+						bottom: '160px',
+						width: '100px',
+						height: '150px',
+						backgroundColor: 'green',
+					}}
+				></div>
 			</div>
 		</Scene3Wrapper>
 	);
