@@ -94,8 +94,8 @@ wss.on("connection", (ws, req) => {
           pastdir = move;
           msg = {
             type: "HW",
-            lefthandX: coordinate[3],
-            lefthandY: coordinate[2],
+            lefthandX: coordinate[2],
+            lefthandY: coordinate[3],
             righthandX: coordinate[0],
             righthandY: coordinate[1],
             movedir: move,
