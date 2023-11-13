@@ -28,7 +28,7 @@ export const WrongWrapper = styled.div`
 
 	.wrong-container {
 		position: absolute;
-		top: 10%;
+		top: 12%;
 		left: 25%;
 		transform: translate(-50%, -50%);
 	}
