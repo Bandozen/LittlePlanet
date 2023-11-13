@@ -14,7 +14,7 @@ interface TimerProps {
 }
 
 export const Timer: React.FC<TimerProps> = memo(({ onTimerEnd }) => {
-	const MINUTES_IN_MS = 1 * 30 * 1000;
+	const MINUTES_IN_MS = 3 * 60 * 1000;
 	const INTERVAL = 1000;
 	const [timeLeft, setTimeLeft] = useState<number>(MINUTES_IN_MS);
 
