@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, Dispatch, SetStateAction } from 'react';
 import { useRecoilValue } from 'recoil';
 import { userEmail } from 'store/RecoilState';
 import { Scene2Wrapper } from './style';
@@ -7,8 +7,13 @@ import SeqTwo from './SeqTwo';
 import SeqThree from './SeqThree';
 import Scene2Layout from './Scene2Layout';
 
+interface IScene2pageProps {
+	setStatus: Dispatch<SetStateAction<number>>;
+}
+
 // #Scene2. <여기 위치는요>
-function Scene2page() {
+function Scene2page(props: IScene2pageProps) {
+	const { setStatus } = props;
 	// 시퀀스별 초기 설정
 	const [step, setStep] = useState(0);
 	const [stepView, setStepView] = useState(<div />);
@@ -25,7 +30,7 @@ function Scene2page() {
 				break;
 			}
 			case 2: {
-				setStepView(<SeqThree setStep={setStep} />);
+				setStepView(<SeqThree setStep={setStep} setStatus={setStatus} />);
 				break;
 			}
 			default: {
