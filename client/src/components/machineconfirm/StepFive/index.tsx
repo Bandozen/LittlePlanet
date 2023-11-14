@@ -47,7 +47,7 @@ function StepFive(props: IStepFiveProps) {
 				<CheckStep activeStep={activeStep} checkNum={5} message="시작하기!" />
 			</div>
 			<div className="image-wrapper">
-				<img className="loading" src={loadingImage} alt="이미지 없음." />
+				<img src={loadingImage} alt="이미지 없음." />
 			</div>
 			<Button text="다음" handleClick={() => testClick()} />
 		</Wrapper>

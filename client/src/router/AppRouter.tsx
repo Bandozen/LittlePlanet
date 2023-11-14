@@ -1,6 +1,6 @@
 import React from 'react';
 import { RecoilRoot, useRecoilValue } from 'recoil';
-import { userEmail } from 'store/RecoilState';
+import { userEmail, deviceStatus } from 'store/RecoilState';
 import { GlobalFonts } from 'styles/GlobalFonts';
 import { GlobalStyles } from 'styles/GlobalStyles';
 import { BrowserRouter, Route, Routes, Navigate, Outlet } from 'react-router-dom';
@@ -25,8 +25,8 @@ function ProtectedRoute() {
 }
 
 function ProtectedConnectRoute() {
-	const email = useRecoilValue(userEmail);
-	return email ? <Outlet /> : <Navigate to="/main" />;
+	const status = useRecoilValue(deviceStatus);
+	return status ? <Outlet /> : <Navigate to="/simulationmachine" />;
 }
 
 function LoginProtectedRoute() {
@@ -53,10 +53,10 @@ function AppRouter() {
 							<Route path="/gamelist" element={<GameListPage />} />
 							<Route path="/gamedetail/:gameId" element={<GameDetailPage />} />
 							<Route path="/mypage" element={<MyPage />} />
+							<Route path="/simulationmachine" element={<SimulationMachinePage />} />
+							<Route path="/simulation/test" element={<EmergencyCall />} />
 							<Route element={<ProtectedConnectRoute />}>
-								<Route path="/simulationmachine" element={<SimulationMachinePage />} />
 								<Route path="/machineconfirm" element={<MachineConfirmPage />} />
-								<Route path="/simulation/test" element={<EmergencyCall />} />
 								<Route path="/redistest" element={<RedisTestPage />} />
 							</Route>
 						</Route>

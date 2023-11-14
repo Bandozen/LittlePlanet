@@ -38,9 +38,7 @@ function StepFour(props: IStepFourProps) {
 			</div>
 			{CharacterDisplay ? (
 				<div className="image-wrapper">
-					<div className="loading">
-						<CharacterDisplay />
-					</div>
+					<CharacterDisplay />
 				</div>
 			) : (
 				<img className="loading" src={loadingImage} alt="" />
