@@ -1,26 +1,47 @@
 import React, { useState, useEffect } from 'react';
-import styled from 'styled-components';
+import styled, { keyframes } from 'styled-components';
 import Login from '../components/Login/Login';
 import SignUp from '../components/SignUp/SignUp';
-import loginBg from '../assets/login_image.png';
+// import loginBg from '../assets/login_image.png';
+// import MovingBg from '../assets/movingbg.gif';
 import loginMusic from '../assets/music/login_music.mp3';
+
+const fadeIn = keyframes`
+  from {
+    opacity: 0.65;
+  }
+  to {
+    opacity: 0.9;
+  }
+`;
+
+// const zoomAnimation = keyframes`
+//   from {
+//     background-size: 115%;
+//   }
+//   to {
+//     background-size: 100%;
+//   }
+// `;
+// animation: ${zoomAnimation} 10s ease-out;
 
 const LoginBg = styled.div`
 	.bgimage {
-		background-image: url(${loginBg});
+		background-image: url(https://littleplanet.s3.ap-northeast-2.amazonaws.com/image/movingbg.gif);
 		width: 100vw;
 		height: 100vh;
 		background-size: cover;
 		background-position: center;
 		background-repeat: no-repeat;
 		display: flex;
-		justify-content: center;
-		padding-left: 50%; // 오른쪽 중앙 쯤 위치시키기 위한 패딩
-		align-items: center; // 세로 중앙 정렬을 위해 추가
-		flex-direction: column; // 내부 요소를 세로로 배치
+		justify-content: space-between;
+		padding-left: 60%;
+		padding-top: 7%;
+		flex-direction: row; // 내부 요소를 세로로 배치
 		overflow: hidden; // 스크롤바 숨김
 	}
 	.page-box {
+		animation: ${fadeIn} 2s ease-out;
 		background-color: white;
 		width: 500px;
 		height: 450px;
