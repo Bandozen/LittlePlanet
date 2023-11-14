@@ -107,12 +107,10 @@ function EmergencyCall() {
 			{/* <Button onClick={sendKeypadMessage}> 인트로 끝남 </Button> */}
 			{/* 1번부터 5번씬 차례대로 status에 따라 */}
 			{status === 0 && (
-				<div className="flex justify-center">
-					<video className="max-h-screen rounded-lg" controls autoPlay onEnded={sendKeypadMessage}>
-						<source src={Intro} type="video/mp4" />
-						<track kind="captions" />
-					</video>
-				</div>
+				<video width="100%" height="auto" autoPlay onEnded={sendKeypadMessage}>
+					<source src={Intro} type="video/mp4" />
+					<track kind="captions" />
+				</video>
 			)}
 			{status === 1 && <Scene1page />}
 			{status === 2 && <Scene2page setStatus={setStatus} />}
