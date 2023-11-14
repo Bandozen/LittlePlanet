@@ -44,6 +44,11 @@ function NavBar() {
 				</div> */}
 				<ul>
 					<li>
+						<NavBarLink to="/teaminfo" className={({ isActive }) => (isActive ? 'active' : '')}>
+							팀 소개
+						</NavBarLink>
+					</li>
+					<li>
 						<NavBarLink to="/simulationlist" className={({ isActive }) => (isActive ? 'active' : '')}>
 							시뮬레이션
 						</NavBarLink>
