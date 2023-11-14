@@ -3,7 +3,7 @@ import { Link } from 'react-router-dom';
 import { useRecoilValue, useSetRecoilState } from 'recoil';
 import logo from 'assets/images/logo.png';
 // import logo2 from 'assets/images/logo2.png';
-import { userEmail, studentName } from 'store/RecoilState';
+import { userEmail, studentName, deviceStatus } from 'store/RecoilState';
 import api from '../../../api';
 import { NavBarWrapper, NavBarLink } from './style';
 
@@ -11,6 +11,7 @@ function NavBar() {
 	const userMail = useRecoilValue(userEmail);
 	const setUserMail = useSetRecoilState(userEmail);
 	const setStudentName = useSetRecoilState(studentName);
+	const setDeviceStatus = useSetRecoilState(deviceStatus);
 
 	const handleLogout = async () => {
 		try {
@@ -20,6 +21,7 @@ function NavBar() {
 			});
 			setUserMail('');
 			setStudentName('');
+			setDeviceStatus('');
 			const response = await api.post('/member/logout');
 			// resetUserEmail();
 			console.log(response);

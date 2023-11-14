@@ -7,6 +7,9 @@ import api from '../../../api';
 import { Scene4Wrapper } from './style';
 import { CallGPT } from '../gpt/gpt';
 import SimulationChat from '../SimulationChat/index';
+import CharacterDisplay from '../../CharacterDisplay/index';
+import narr from '../../../assets/music/narr_4.mp3';
+import wrongNarr from '../../../assets/music/narr_6.mp3';
 
 type Content = {
 	contentsUrlName: string;
@@ -17,6 +20,9 @@ type Content = {
 
 // 이름 말하기.
 function Scene4page() {
+	const [narrAudio] = useState(new Audio(narr));
+	const [wrongNarrAudio] = useState(new Audio(wrongNarr));
+
 	// 1.화면
 	// asset 불러오기.
 	const [contentsData, setContentsData] = useState<Content[]>([]);
@@ -32,6 +38,11 @@ function Scene4page() {
 
 	// 지시문 Alert 5초 타이머 걸기 위함
 	const [showAlert, setShowAlert] = useState(true);
+
+	// 캐릭터 이동시키기
+	const [left, setLeft] = useState(500);
+	const handleLeft = () => setLeft((prevLeft) => prevLeft - 5);
+	const handleRight = () => setLeft((prevLeft) => prevLeft + 5);
 
 	// 2. 소켓
 	// 소켓 통신을 위한 메일 받아오고, 소켓 관련 초기 설정하기
@@ -53,11 +64,6 @@ function Scene4page() {
 		// asset 불러오고
 		fetchData();
 
-		// 3초 타이머 설정해서 Alert
-		const timer = setTimeout(() => {
-			setShowAlert(false);
-		}, 3000);
-
 		// 소켓 연결
 		const newSocket = new WebSocket('wss://k9c203.p.ssafy.io:17777');
 
@@ -77,11 +83,15 @@ function Scene4page() {
 			console.log(event.data);
 			const eventMessage = JSON.parse(event.data);
 			// 타입 확인 후 setText
-			if (eventMessage.type === 'text7') {
+			if (eventMessage.type === 'text4') {
 				setText(eventMessage.content);
 			}
 			if (eventMessage.type === 'wrong') {
 				setWrongSignal(true);
+				wrongNarrAudio.play().catch((error) => console.log('자동 재생 실패:', error));
+			}
+			if (eventMessage.type === 'narr') {
+				narrAudio.play().catch((error) => console.log('자동 재생 실패:', error));
 			}
 		};
 
@@ -89,6 +99,39 @@ function Scene4page() {
 		newSocket.onclose = () => {
 			console.log('WebSocket connection closed.');
 		};
+
+		const moveSocket = new WebSocket('wss://k9c203.p.ssafy.io:17776');
+
+		moveSocket.onopen = () => {
+			console.log('WebSocket connection established.');
+
+			const handShake = {
+				type: 'HW',
+				email: memberEmail,
+			};
+			moveSocket.send(JSON.stringify(handShake));
+		};
+
+		moveSocket.onmessage = (event) => {
+			const eventMessage = JSON.parse(event.data);
+			if (eventMessage.type === 'HW') {
+				if (eventMessage.movedir === 'left') {
+					handleLeft();
+				} else if (eventMessage.movedir === 'right') {
+					handleRight();
+				}
+			}
+		};
+
+		moveSocket.onclose = () => {
+			console.log('WebSocket connection closed.');
+		};
+
+		// 3초 타이머 설정해서 Alert
+		const timer = setTimeout(() => {
+			setShowAlert(false);
+			newSocket.send(JSON.stringify({ type: 'narr', content: 4 }));
+		}, 3000);
 
 		// 컴포넌트 닫히면 소켓 닫기
 		return () => {
@@ -112,6 +155,7 @@ function Scene4page() {
 			}, time);
 		});
 	}
+
 	useEffect(() => {
 		async function handleAsyncOperations() {
 			if (text) {
@@ -121,7 +165,7 @@ function Scene4page() {
 				};
 
 				const textLength = text.length;
-				const animationTime = textLength * 0.05 * 1000 + 2500;
+				const animationTime = textLength * 0.05 * 1000 + 2000;
 				console.log('여기 시간', animationTime);
 
 				try {
@@ -167,28 +211,8 @@ function Scene4page() {
 		};
 	}, [isWrong]);
 
-	// const handleClickWrongAnswer = () => {
-	// 	setIsWrong((prev) => !prev);
-	// };
-
-	// const handleClickSetText = () => {
-	// 	setText('박코딩입니다.');
-	// };
-
-	// const handleCorrectAnswer = () => {
-	// 	setText(`${answer}이에요.`);
-	// };
-
-	// const handleNarr = () => {
-	// 	socket?.send(JSON.stringify({ type: 'narr', content: 7 }));
-	// };
-
 	return (
 		<Scene4Wrapper>
-			{/* <Button onClick={handleNarr}>나레이션</Button> */}
-			{/* <Button onClick={handleClickWrongAnswer}>오답</Button> */}
-			{/* <Button onClick={handleClickSetText}>오답 한번 보내보자.</Button> */}
-			{/* <Button onClick={handleCorrectAnswer}>정답 한번 보내보자.</Button> */}
 			{showAlert && (
 				<div className="alert-container">
 					<Alert>
@@ -197,7 +221,7 @@ function Scene4page() {
 				</div>
 			)}
 			{!showAlert && !isWrong && !wrongSignal && (
-				<SimulationChat chatNumber={text ? 2 : 1} text={text || '전화하고 있는 학생 이름을 말해줄래요?'} />
+				<SimulationChat chatNumber={text ? 2 : 1} text={text || '전화하고 있는 친구 이름을 말해줄래요?'} />
 			)}
 			{isWrong && (
 				<div className="wrong-container">
@@ -214,8 +238,11 @@ function Scene4page() {
 				</div>
 			)}
 			{!showAlert && !isWrong && wrongSignal && (
-				<SimulationChat chatNumber={text ? 2 : 1} text={text || '다시 한번 얘기해줄래요?'} />
+				<SimulationChat chatNumber={text ? 2 : 1} text={text || '다시 한번 얘기해볼래요?'} />
 			)}
+			<div style={{ position: 'absolute', left: `${left}px`, bottom: '25px' }}>
+				<CharacterDisplay />
+			</div>
 		</Scene4Wrapper>
 	);
 }

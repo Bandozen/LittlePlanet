@@ -2,20 +2,20 @@ import styled, { keyframes } from 'styled-components';
 
 const loop = keyframes`    
 	0%{
-        transform: scale(1.6);
+        transform: scale(1.5);
         transition: transform 1s;
 		top:0px;
-		left:-400px;
+		left:-380px;
 	}
 	50%{
-        transform: scale(1.6);
+        transform: scale(1.5);
 		top:0px;
-		left:400px;
+		left:380px;
 	}
 	100%{
-        transform: scale(1.6);
+        transform: scale(1.5);
 		top:0px;
-		left:-400px;    
+		left:-380px;    
 	}
 `;
 

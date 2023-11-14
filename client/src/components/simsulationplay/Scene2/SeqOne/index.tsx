@@ -7,6 +7,7 @@ interface ISeqOneProps {
 }
 
 function SeqOne(props: ISeqOneProps) {
+	document.body.style.overflow = 'hidden';
 	const [showNarr, setShowNarr] = useState(true);
 	const { setStep } = props;
 
@@ -34,7 +35,7 @@ function SeqOne(props: ISeqOneProps) {
 					</Alert>
 				</div>
 			) : (
-				<div className="background-image zoom left-right original" />
+				<div className="background-image left-right original" />
 			)}
 		</SeqOneWrapper>
 	);

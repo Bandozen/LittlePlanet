@@ -1,5 +1,5 @@
 import React from 'react';
-// import api from 'api';
+import api from 'api';
 import styled from 'styled-components';
 import { useRecoilValue } from 'recoil';
 import DownloadModal from 'components/simualtionapplication/DownloadModal/DownloadModal';
@@ -19,15 +19,16 @@ const MainContents = styled.div`
 `;
 
 function MainPage() {
-	// const userMail = useRecoilValue(userEmail);
-
-	// api.post('/member/command', {
-	// 	memberEmail: userMail,
-	// 	memberCommand: 'ready',
-	// });
-
+	document.body.style.overflowX = 'hidden';
 	const userMail = useRecoilValue(userEmail);
 	const student = useRecoilValue(studentName);
+
+	if (userMail !== '') {
+		api.post('/member/command', {
+			memberEmail: userMail,
+			memberCommand: 'ready',
+		});
+	}
 
 	console.log(userMail, student);
 

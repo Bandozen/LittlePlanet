@@ -22,7 +22,10 @@ function SeqThree(props: ISeqThreeProps) {
 
 	// 사용자 음성 받아오기
 	const [text, setText] = useState('');
+
+	// 사용자의 음성이 틀렸을 경우
 	const [isWrong, setIsWrong] = useState(false);
+	const [wrongSeq, setWrongSeq] = useState(false);
 
 	const [location, setLocation] = useState(true);
 
@@ -47,9 +50,11 @@ function SeqThree(props: ISeqThreeProps) {
 		// 받아온 메시지는 사용자 답변의 정답 여부
 		newSocket.onmessage = (event) => {
 			const eventMessage = JSON.parse(event.data);
-			console.log(event.data);
 			if (eventMessage.type === 'text2') {
 				setText(eventMessage.content);
+			}
+			if (eventMessage.type === 'wrong') {
+				setWrongSeq(true);
 			}
 		};
 
@@ -68,39 +73,53 @@ function SeqThree(props: ISeqThreeProps) {
 		};
 	}, []);
 
+	// 3. GPT
+	// 응답 시 화면에 띄워지는 시간
+	function handleTimer(time: number) {
+		return new Promise((resolve) => {
+			setTimeout(() => {
+				resolve(true);
+			}, time);
+		});
+	}
+
 	useEffect(() => {
-		console.log('GPT의 텍스트가 변경됬습니다.');
-		if (text) {
-			const prompt = {
-				role: 'user',
-				content: `1. [GOAL] : Let the firefighters know where you are. 2. [FIREFIGTER'S QUESTION] : 학생, 지금 어디에요? 3. [CHILD'S ANSWER] : ${text} ## Use the output in the JSON format. ##`,
-			};
-			CallGPT(prompt)
-				.then((isAnswer) => {
-					if (isAnswer) {
-						const message = {
-							type: 'page',
-							content: 3,
-						};
-						socket?.send(JSON.stringify(message));
-					} else {
-						const message = {
-							type: 'wrong',
-						};
-						setIsWrong(true);
-						setText('');
-						socket?.send(JSON.stringify(message));
+		async function handleAsyncOperations() {
+			if (text) {
+				const prompt = {
+					role: 'user',
+					content: `1. [GOAL] : Let the firefighters know where you are. 2. [FIREFIGTER'S QUESTION] : 학생, 지금 어디에요? 3. [CHILD'S ANSWER] : ${text} ## Use the output in the JSON format. ##`,
+				};
+
+				const textLength = text.length;
+				const animationTime = textLength * 0.05 * 1000 + 2000;
+
+				try {
+					const [timerResult, isCorrect] = await Promise.all([handleTimer(animationTime), CallGPT(prompt)]);
+
+					if (timerResult) {
+						if (isCorrect) {
+							const message = {
+								type: 'page',
+								content: 3,
+							};
+							socket?.send(JSON.stringify(message));
+						} else {
+							setIsWrong(true);
+							setText('');
+							setTimeout(() => {
+								socket?.send(JSON.stringify({ type: 'wrong' }));
+							}, 3000);
+						}
 					}
-				})
-				.catch((e) => {
+				} catch (e) {
 					console.log(e);
-				});
+				}
+			}
 		}
+
+		handleAsyncOperations();
 	}, [text]);
-
-	console.log(text);
-
-	console.log(isWrong);
 
 	const testClick = () => {
 		setStatus(3);
@@ -110,6 +129,19 @@ function SeqThree(props: ISeqThreeProps) {
 	const changeLocation = () => {
 		setLocation((prev) => !prev);
 	};
+
+	useEffect(() => {
+		let alertTimer: any;
+
+		if (isWrong) {
+			alertTimer = setTimeout(() => {
+				setIsWrong(false);
+			}, 3000);
+		}
+		return () => {
+			if (alertTimer) clearTimeout(alertTimer);
+		};
+	}, [isWrong]);
 
 	return (
 		<SeqThreeWrapper>
@@ -122,7 +154,9 @@ function SeqThree(props: ISeqThreeProps) {
 					</Alert>
 				</div>
 			)}
-			{!alert && !isWrong && <SimulationChat chatNumber={text ? 2 : 1} text={text || '거기 위치가 어디인가요?'} />}
+			{!alert && !isWrong && !wrongSeq && (
+				<SimulationChat chatNumber={text ? 2 : 1} text={text || '거기 위치가 어디인가요?'} />
+			)}
 			{isWrong && (
 				<div className="wrong-container">
 					<Alert className="flex justify-center" variant="gradient" open={isWrong} onClose={() => setIsWrong(false)}>
@@ -143,6 +177,9 @@ function SeqThree(props: ISeqThreeProps) {
 						)}
 					</Alert>
 				</div>
+			)}
+			{!alert && !isWrong && wrongSeq && (
+				<SimulationChat chatNumber={text ? 2 : 1} text={text || '다시 한번 얘기해줄래요?'} />
 			)}
 		</SeqThreeWrapper>
 	);

@@ -27,7 +27,7 @@ function StepFive(props: IStepFiveProps) {
 			// 	memberEmail: userMail,
 			// 	memberCommand: 'ready',
 			// });
-			movePage('/redistest');
+			movePage('/simulation/test');
 		}
 	};
 
