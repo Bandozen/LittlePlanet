@@ -1,12 +1,24 @@
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import axios from 'axios';
 import { Button } from '@material-tailwind/react';
+import useMovePage from 'hooks/useMovePage';
+
 import { useRecoilValue } from 'recoil';
 import { studentName } from '../../../store/RecoilState';
 import { Scene5Wrapper } from './style';
 import SimulationChat from '../SimulationChat/index';
+import outroSound from '../../../assets/music/outro_sound.mp3';
+import outroVoice from '../../../assets/music/outro_voice.mp3';
+import edMusic from '../../../assets/music/ending_music.mp3';
 
 function Scene5Page() {
+	const [movePage] = useMovePage();
+	const [outroAudio] = useState(new Audio(outroSound));
+	const [outrovoiceAudio] = useState(new Audio(outroVoice));
+	const [edAudio] = useState(new Audio(edMusic));
+	// SimulationChat 컴포넌트 표시 여부를 제어하는 상태
+	const [showSimulationChat, setShowSimulationChat] = useState(false);
+
 	const studentname = useRecoilValue(studentName);
 
 	const convertToSpeech = async (name: string) => {
@@ -31,6 +43,10 @@ function Scene5Page() {
 			// TTS 음성 재생
 			const ttsAudio = new Audio(audioURL);
 			ttsAudio.play();
+			setShowSimulationChat(true);
+			ttsAudio.onended = () => {
+				movePage('/main');
+			};
 		} catch (error) {
 			console.error('Error:', error);
 		}
@@ -39,14 +55,42 @@ function Scene5Page() {
 	const handleTTS = async () => {
 		await convertToSpeech(studentname);
 	};
+	const playEdMusic = () => {
+		edAudio.volume = 0.5;
+		edAudio.play().catch((error) => console.log('자동 재생 실패:', error));
+		edAudio.onended = () => {
+			edAudio.pause();
+			edAudio.currentTime = 0;
+			movePage('/main');
+		};
+	};
+
+	const playOutroVoiceOrTTS = () => {
+		if (studentname === '조찬익') {
+			outrovoiceAudio.play().catch((error) => console.log('자동 재생 실패:', error));
+			setShowSimulationChat(true);
+			outrovoiceAudio.onended = playEdMusic;
+		} else {
+			handleTTS();
+		}
+	};
+	useEffect(() => {
+		// 아웃트로 사운드 재생
+		outroAudio.play().catch((error) => console.log('자동 재생 실패:', error));
+		outroAudio.onended = playOutroVoiceOrTTS;
+	}, [outroAudio, outrovoiceAudio, edAudio, studentname]);
 
 	return (
 		<Scene5Wrapper>
-			<Button onClick={handleTTS}>TTS음성</Button>
-			<SimulationChat
-				chatNumber={3}
-				text={`${studentname} 친구야, 고마워! 덕분에 아픈 친구를 무사히 구조할 수 있었어!`}
-			/>
+			<Button className="btn-style" onClick={handleTTS}>
+				TTS음성
+			</Button>
+			{showSimulationChat && (
+				<SimulationChat
+					chatNumber={3}
+					text={`${studentname} 친구야, 고마워! 덕분에 아픈 친구를 무사히 구조할 수 있었어!`}
+				/>
+			)}
 		</Scene5Wrapper>
 	);
 }
