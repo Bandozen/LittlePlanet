@@ -15,6 +15,8 @@ interface ISeqTwoProps {
 }
 
 function SeqTwo(props: ISeqTwoProps) {
+	document.body.style.overflow = 'hidden';
+
 	const { setStep, setAddress } = props;
 
 	const [socket, setSocket] = useState<WebSocket | null>(null);

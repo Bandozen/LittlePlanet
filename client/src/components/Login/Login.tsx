@@ -8,6 +8,7 @@ import { LoginWrapper } from './style';
 import api from '../../api';
 
 function Login() {
+	document.body.style.overflow = 'hidden';
 	const navigate = useNavigate();
 
 	// 로그인
@@ -67,6 +68,8 @@ function Login() {
 				memberCommand: 'ready',
 			});
 			console.log(loginResponse);
+			document.body.style.overflow = 'auto';
+			document.body.style.overflowX = 'hidden';
 			setLoginFailed(false);
 			setUserMail(email);
 			navigate('/main');
@@ -159,6 +162,8 @@ function Login() {
 		}
 	};
 
+	const [isHovered, setHovered] = useState(false);
+
 	return (
 		<LoginWrapper>
 			<div className="login-form">
@@ -193,10 +198,10 @@ function Login() {
 					}}
 				/>
 				{passwordError && <p className="text-red-500 text-xs ml-2">{passwordError}</p>}
-				<Alert className="p-2 m-3" open={loginFailed} variant="outlined" color="red">
+				<Alert className="p-2" open={loginFailed} variant="outlined" color="red">
 					로그인 실패
 				</Alert>
-				<Button disabled={!isFormValid()} onClick={handleLogin} style={{ backgroundColor: '#188eb7' }}>
+				<Button disabled={!isFormValid()} onClick={handleLogin} style={{ backgroundColor: '#188eb7', fontSize: 15 }}>
 					로그인
 				</Button>
 				<Button
@@ -284,6 +289,24 @@ function Login() {
 						</CardBody>
 					</Card>
 				</Dialog>
+				<Button
+					onClick={() => {
+						navigate('/main');
+					}}
+					style={{
+						backgroundColor: '#188eb7',
+						color: 'white',
+						fontSize: 15,
+						width: '300px',
+						marginLeft: '80px',
+						opacity: isHovered ? 1 : 0.5,
+						transition: 'opacity 0.3s ease',
+					}}
+					onMouseEnter={() => setHovered(true)} // 호버 시작 시
+					onMouseLeave={() => setHovered(false)} // 호버 끝날 시
+				>
+					소행성 둘러보기
+				</Button>
 			</div>
 		</LoginWrapper>
 	);
