@@ -8,6 +8,8 @@ import { userEmail } from '../../../store/RecoilState';
 import { Scene1Wrapper, WrongWrapper } from './style';
 import SimulationChat from '../SimulationChat/index';
 import CharacterDisplay from '../../CharacterDisplay/index';
+import narr from '../../../assets/music/narr_1.mp3';
+import wrongNarr from '../../../assets/music/narr_6.mp3';
 
 type Content = {
 	contentsUrlName: string;
@@ -18,6 +20,9 @@ type Content = {
 
 // 친구가 다쳤어요.
 function Scene1page() {
+	const [narrAudio] = useState(new Audio(narr));
+	const [wrongNarrAudio] = useState(new Audio(wrongNarr));
+
 	// 1. 화면
 	// asset 불러오기.
 	const [contentsData, setContentsData] = useState<Content[]>([]);
@@ -36,8 +41,8 @@ function Scene1page() {
 
 	// 캐릭터 이동시키기
 	const [left, setLeft] = useState(500);
-	const handleLeft = () => setLeft((prevLeft) => prevLeft - 1);
-	const handleRight = () => setLeft((prevLeft) => prevLeft + 1);
+	const handleLeft = () => setLeft((prevLeft) => prevLeft - 5);
+	const handleRight = () => setLeft((prevLeft) => prevLeft + 5);
 
 	// 2. 소켓
 	// 소켓 통신을 위한 메일 받아오고, 소켓 관련 초기 설정하기
@@ -83,6 +88,10 @@ function Scene1page() {
 			}
 			if (eventMessage.type === 'wrong') {
 				setWrongSignal(true);
+				wrongNarrAudio.play().catch((error) => console.log('자동 재생 실패:', error));
+			}
+			if (eventMessage.type === 'narr') {
+				narrAudio.play().catch((error) => console.log('자동 재생 실패:', error));
 			}
 		};
 
@@ -227,7 +236,6 @@ function Scene1page() {
 		</WrongWrapper>
 	) : (
 		<Scene1Wrapper>
-			{/* <Button onClick={handleNarr}>나레이션</Button> */}
 			<Button onClick={handleClickSetText}>오답 한번 보내보자.</Button>
 			<Button onClick={handleCorrectAnswer}>정답 한번 보내보자.</Button>
 			<Button onClick={handleLeft}>왼쪽</Button>
@@ -239,9 +247,9 @@ function Scene1page() {
 					</Alert>
 				</div>
 			) : (
-				<SimulationChat chatNumber={text ? 2 : 1} text={text || '네, 119입니다. 무슨 일이시죠?'} />
+				<SimulationChat chatNumber={text ? 2 : 1} text={text || '네, 119입니다. 무슨 일이세요?'} />
 			)}
-			<div style={{ position: 'absolute', left: `${left}px` }}>
+			<div style={{ position: 'absolute', left: `${left}px`, bottom: '25px' }}>
 				<CharacterDisplay />
 			</div>
 		</Scene1Wrapper>
