@@ -55,8 +55,8 @@ function AppRouter() {
 							<Route path="/mypage" element={<MyPage />} />
 							<Route path="/simulationmachine" element={<SimulationMachinePage />} />
 							<Route path="/simulation/test" element={<EmergencyCall />} />
+							<Route path="/machineconfirm" element={<MachineConfirmPage />} />
 							<Route element={<ProtectedConnectRoute />}>
-								<Route path="/machineconfirm" element={<MachineConfirmPage />} />
 								<Route path="/redistest" element={<RedisTestPage />} />
 							</Route>
 						</Route>

@@ -9,6 +9,7 @@ import Scene4page from './Scene4/Scene4page';
 import Scene5page from './Scene5/Scene5page';
 import { userEmail } from '../../store/RecoilState';
 import bgMusic from '../../assets/music/simulation_music.mp3';
+// import edMusic from '../../assets/music/ending_music.mp3';
 
 function EmergencyCall() {
 	// 시뮬레이션 씬 저장하기

@@ -92,6 +92,11 @@ function Scene4page() {
 
 		// 컴포넌트 닫히면 소켓 닫기
 		return () => {
+			setSocket(newSocket);
+			const endmessage = {
+				type: 'end',
+			};
+			newSocket.send(JSON.stringify(endmessage));
 			newSocket.close();
 			clearTimeout(timer);
 		};
