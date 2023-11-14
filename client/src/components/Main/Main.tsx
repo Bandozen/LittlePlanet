@@ -14,7 +14,7 @@ function Main() {
 						<PlayButton text="체험하기" />
 					</NavBarLink>
 
-					<div>
+					<div style={{ marginTop: '20px' }}>
 						<p>
 							※ 체험하기를 누르시면 대표컨텐츠인 <strong>119에 신고해요</strong>로 연결됩니다.
 						</p>
