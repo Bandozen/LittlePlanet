@@ -1,7 +1,7 @@
 import React from 'react';
 import DetailButton from 'components/Button/DetailButton';
 import { NavBarLink } from 'components/common/NavBar/style';
-
+import { Typography } from '@material-tailwind/react';
 import { GameMainWrapper, GameLink } from './style';
 import games from '../../dummys/games';
 
@@ -31,6 +31,9 @@ function Game() {
 										src={game.imageUrl}
 										alt={game.name}
 									/>
+									<Typography variant="h5" color="blue-gray" className="mt-3 text-center">
+										{game.name}
+									</Typography>
 								</GameLink>
 							</div>
 						</div>
