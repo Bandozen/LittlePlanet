@@ -5,6 +5,5 @@ export const SeqTwoWrapper = styled.div`
 		position: absolute;
 		bottom: 65%;
 		right: 30%;
-		z-index: 1;
 	}
 `;
