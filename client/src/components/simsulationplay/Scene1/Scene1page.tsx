@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { Alert, Typography, Button } from '@material-tailwind/react';
+import { Alert, Typography } from '@material-tailwind/react';
 import { PhoneArrowUpRightIcon, SparklesIcon } from '@heroicons/react/24/outline';
 import { useRecoilValue } from 'recoil';
 import api from '../../../api';
@@ -100,19 +100,19 @@ function Scene1page() {
 			console.log('WebSocket connection closed.');
 		};
 
-		const newSocket2 = new WebSocket('wss://k9c203.p.ssafy.io:17776');
+		const moveSocket = new WebSocket('wss://k9c203.p.ssafy.io:17776');
 
-		newSocket2.onopen = () => {
+		moveSocket.onopen = () => {
 			console.log('WebSocket connection established.');
 
 			const handShake = {
 				type: 'HW',
 				email: memberEmail,
 			};
-			newSocket2.send(JSON.stringify(handShake));
+			moveSocket.send(JSON.stringify(handShake));
 		};
 
-		newSocket2.onmessage = (event) => {
+		moveSocket.onmessage = (event) => {
 			const eventMessage = JSON.parse(event.data);
 			if (eventMessage.type === 'HW') {
 				if (eventMessage.movedir === 'left') {
@@ -123,7 +123,7 @@ function Scene1page() {
 			}
 		};
 
-		newSocket2.onclose = () => {
+		moveSocket.onclose = () => {
 			console.log('WebSocket connection closed.');
 		};
 
@@ -136,7 +136,7 @@ function Scene1page() {
 		// 컴포넌트 닫히면 소켓, 타이머 초기화
 		return () => {
 			newSocket.close();
-			newSocket2.close();
+			moveSocket.close();
 			clearTimeout(timer);
 		};
 	}, []);
@@ -208,13 +208,13 @@ function Scene1page() {
 		};
 	}, [isWrong]);
 
-	const handleClickSetText = () => {
-		setText('선생님이 다쳤어요.');
-	};
+	// const handleClickSetText = () => {
+	// 	setText('선생님이 다쳤어요.');
+	// };
 
-	const handleCorrectAnswer = () => {
-		setText('친구가 높은 곳에서 떨어져서 다쳤어요.');
-	};
+	// const handleCorrectAnswer = () => {
+	// 	setText('친구가 높은 곳에서 떨어져서 다쳤어요.');
+	// };
 
 	return isWrong ? (
 		<WrongWrapper>
@@ -236,10 +236,10 @@ function Scene1page() {
 		</WrongWrapper>
 	) : (
 		<Scene1Wrapper>
-			<Button onClick={handleClickSetText}>오답 한번 보내보자.</Button>
+			{/* <Button onClick={handleClickSetText}>오답 한번 보내보자.</Button>
 			<Button onClick={handleCorrectAnswer}>정답 한번 보내보자.</Button>
 			<Button onClick={handleLeft}>왼쪽</Button>
-			<Button onClick={handleRight}>오른쪽</Button>
+			<Button onClick={handleRight}>오른쪽</Button> */}
 			{showAlert ? (
 				<div className="alert-container">
 					<Alert>
