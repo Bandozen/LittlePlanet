@@ -5,10 +5,10 @@ import wrongbackground from '../../../assets/images/wrongbackground.png';
 
 export const Scene1Wrapper = styled.div`
 	background-image: url(${background});
-	background-size: 100%;
+	background-size: cover;
 	background-position: center;
 	background-repeat: no-repeat;
-	width: 100vw;
+	width: 100%;
 	height: 100vh;
 
 	.alert-container {
