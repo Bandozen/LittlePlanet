@@ -10,8 +10,10 @@ import Scene5page from './Scene5/Scene5page';
 import Intro from '../../assets/intro.mp4';
 import { userEmail } from '../../store/RecoilState';
 import bgMusic from '../../assets/music/simulation_music.mp3';
+// import edMusic from '../../assets/music/ending_music.mp3';
 
 function EmergencyCall() {
+	document.body.style.overflow = 'hidden';
 	// 시뮬레이션 씬 저장하기
 	const [status, setStatus] = useState(0);
 
@@ -100,7 +102,9 @@ function EmergencyCall() {
 
 	return (
 		<>
-			<Button onClick={sendNextPageMessage}> 다음 페이지 이동 </Button>
+			<div style={{ position: 'absolute', zIndex: '9999' }}>
+				<Button onClick={sendNextPageMessage}> 다음 페이지 이동 </Button>
+			</div>
 			{/* <Button onClick={sendKeypadMessage}> 인트로 끝남 </Button> */}
 			{/* 1번부터 5번씬 차례대로 status에 따라 */}
 			{status === 0 && (

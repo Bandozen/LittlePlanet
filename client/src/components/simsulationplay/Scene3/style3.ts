@@ -7,7 +7,7 @@ import background3 from '../../../assets/images/backgroundzoomed.jpg';
 export const Scene3Wrapper = styled.div`
 	.background-image {
 		background-image: url(${background});
-		background-size: 100%;
+		background-size: cover;
 		background-position: center;
 		background-repeat: no-repeat;
 		width: 100vw;
@@ -15,7 +15,7 @@ export const Scene3Wrapper = styled.div`
 	}
 	.background-image2 {
 		background-image: url(${background2});
-		background-size: 100%;
+		background-size: cover;
 		background-position: center;
 		background-repeat: no-repeat;
 		width: 100vw;
@@ -23,7 +23,7 @@ export const Scene3Wrapper = styled.div`
 	}
 	.background-zoomed {
 		background-image: url(${background3});
-		background-size: 100%;
+		background-size: cover;
 		background-position: center;
 		background-repeat: no-repeat;
 		width: 100vw;

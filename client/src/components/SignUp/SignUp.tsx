@@ -25,7 +25,6 @@ function SignUp({ setCondition }: SignUpProps) {
 	}
 	// 입력된 이메일을 통해 이메일 인증 요청을 보내는 함수
 	async function verifyEmail() {
-		console.log(email);
 		// 이메일 형식에 위배된 경우
 		if (isValidEmail(email) === false) {
 			alert('이메일 형식을 지켜주세요.');
@@ -55,7 +54,6 @@ function SignUp({ setCondition }: SignUpProps) {
 	// 인증번호가 유효한지 검사하는 함수
 	async function verifyNumberCheck() {
 		// 인증번호가 이메일로 등록된 레디스의 값에 해당한다면
-		console.log(verifyNumber);
 		await api
 			.post('/member/verify', { emailAddress: email, authCode: verifyNumber })
 			.then((response) => {
@@ -69,7 +67,6 @@ function SignUp({ setCondition }: SignUpProps) {
 			});
 	}
 	async function signupClick() {
-		console.log(email, password, confirmPassword, school);
 		if (emailPass === false) {
 			alert('이메일 인증을 완료해 주세요.');
 			return;

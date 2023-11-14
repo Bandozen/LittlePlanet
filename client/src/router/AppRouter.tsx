@@ -29,6 +29,11 @@ function ProtectedConnectRoute() {
 	return status ? <Outlet /> : <Navigate to="/simulationmachine" />;
 }
 
+function ProtectedReverseConnectRoute() {
+	const status = useRecoilValue(deviceStatus);
+	return status ? <Navigate to="/machineconfirm" /> : <Outlet />;
+}
+
 function LoginProtectedRoute() {
 	const email = useRecoilValue(userEmail);
 	return email ? <Navigate to="/main" /> : <Outlet />;
@@ -53,10 +58,12 @@ function AppRouter() {
 							<Route path="/gamelist" element={<GameListPage />} />
 							<Route path="/gamedetail/:gameId" element={<GameDetailPage />} />
 							<Route path="/mypage" element={<MyPage />} />
-							<Route path="/simulationmachine" element={<SimulationMachinePage />} />
-							<Route path="/simulation/test" element={<EmergencyCall />} />
+							<Route element={<ProtectedReverseConnectRoute />}>
+								<Route path="/simulationmachine" element={<SimulationMachinePage />} />
+							</Route>
 							<Route element={<ProtectedConnectRoute />}>
 								<Route path="/machineconfirm" element={<MachineConfirmPage />} />
+								<Route path="/simulation/test" element={<EmergencyCall />} />
 								<Route path="/redistest" element={<RedisTestPage />} />
 							</Route>
 						</Route>

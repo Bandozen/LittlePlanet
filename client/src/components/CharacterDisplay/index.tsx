@@ -20,7 +20,6 @@ function CharacterDisplay() {
 
 		socket.on('image', (data) => {
 			setImage(data.url);
-			// console.log(data);
 		});
 
 		return () => {
