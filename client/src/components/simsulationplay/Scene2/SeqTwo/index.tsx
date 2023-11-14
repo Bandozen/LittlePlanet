@@ -1,6 +1,6 @@
 import React, { Dispatch, SetStateAction, useState, useEffect } from 'react';
 import { useRecoilValue } from 'recoil';
-import { Alert, Button, Typography } from '@material-tailwind/react';
+import { Alert, Typography } from '@material-tailwind/react';
 import { InformationCircleIcon } from '@heroicons/react/24/outline';
 import CharacterDisplay from 'components/CharacterDisplay';
 import { userEmail } from 'store/RecoilState';
@@ -121,19 +121,22 @@ function SeqTwo(props: ISeqTwoProps) {
 
 	return (
 		<SeqTwoWrapper>
-			<Button onClick={littlePlanet}>소행성로</Button>
-			<Button onClick={samsungBuilding}>삼성빌딩</Button>
+			{/* <Button onClick={littlePlanet}>소행성로</Button>
+			<Button onClick={samsungBuilding}>삼성빌딩</Button> */}
 			<div style={{ position: 'absolute', left: `${left}px`, bottom: '100px', width: '320px', height: '240px' }}>
 				<CharacterDisplay />
 			</div>
-			<div style={{ position: 'absolute' }}>
+			<div style={{ position: 'absolute', top: '150px', left: '50px' }}>
 				<ShineLottie />
 			</div>
-			<div style={{ position: 'absolute' }} className="left-point">
-				<PointLeftLottie />
-			</div>
-			<div style={{ position: 'absolute' }} className="right-point">
+			<div style={{ position: 'absolute', top: '165px', left: '180px' }}>
 				<PointRightLottie />
+			</div>
+			<div style={{ position: 'absolute', top: '350px', left: '1350px' }}>
+				<ShineLottie />
+			</div>
+			<div style={{ position: 'absolute', top: '380px', left: '1260px' }}>
+				<PointLeftLottie />
 			</div>
 			<div
 				style={{
@@ -142,17 +145,17 @@ function SeqTwo(props: ISeqTwoProps) {
 					bottom: '180px',
 					width: '100px',
 					height: '180px',
-					backgroundColor: 'rgba( 255, 255, 255, 0.5 )',
+					backgroundColor: 'rgba( 255, 255, 255, 0 )',
 				}}
 			/>
 			<div
 				style={{
 					position: 'absolute',
-					left: `250px`,
+					left: `200px`,
 					bottom: '180px',
 					width: '100px',
 					height: '180px',
-					backgroundColor: 'rgba( 255, 255, 255, 0.5 )',
+					backgroundColor: 'rgba( 255, 255, 255, 0 )',
 				}}
 			/>
 			{littleplanetInfo && (
