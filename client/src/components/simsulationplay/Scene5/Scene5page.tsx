@@ -4,17 +4,17 @@ import { Button } from '@material-tailwind/react';
 import { useRecoilValue } from 'recoil';
 import { studentName } from '../../../store/RecoilState';
 import { Scene5Wrapper } from './style';
+import SimulationChat from '../SimulationChat/index';
 
 function Scene5Page() {
 	const studentname = useRecoilValue(studentName);
 
-	// };
 	const convertToSpeech = async (name: string) => {
 		try {
 			const apiKey = process.env.REACT_APP_GOOGLE_CLOUD_TTS_API_KEY;
 			const response = await axios.post(`https://texttospeech.googleapis.com/v1/text:synthesize?key=${apiKey}`, {
-				input: { text: name },
-				voice: { languageCode: 'ko-KR', name: 'ko-KR-Neural2-c', ssmlGender: 'MALE' },
+				input: { text: `${name}친구야, 고마워! 덕분에 아픈 친구를 무사히 구조할 수 있었어!` },
+				voice: { languageCode: 'ko-KR', name: 'ko-KR-Standard-D', ssmlGender: 'MALE' },
 				audioConfig: { audioEncoding: 'MP3' },
 			});
 			console.log('응답 데이터', response.data); // 응답 데이터 확인
@@ -43,6 +43,10 @@ function Scene5Page() {
 	return (
 		<Scene5Wrapper>
 			<Button onClick={handleTTS}>TTS음성</Button>
+			<SimulationChat
+				chatNumber={3}
+				text={`${studentname} 친구야, 고마워! 덕분에 아픈 친구를 무사히 구조할 수 있었어!`}
+			/>
 		</Scene5Wrapper>
 	);
 }

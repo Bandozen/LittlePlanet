@@ -1,10 +1,10 @@
 /* eslint-disable import/prefer-default-export */
 import styled from 'styled-components';
-import mainBg from 'assets/images/main_image.png';
+// import mainBg from 'assets/images/main_image.png';
 
 export const MainWrapper = styled.div`
 	.bgimage {
-		background-image: url(${mainBg});
+		background-image: url(https://littleplanet.s3.ap-northeast-2.amazonaws.com/image/maingif.gif);
 		height: 500px;
 		background-size: cover;
 		background-position: center;
