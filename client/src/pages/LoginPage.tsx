@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import styled, { keyframes } from 'styled-components';
 import Login from '../components/Login/Login';
 import SignUp from '../components/SignUp/SignUp';
@@ -63,17 +63,36 @@ const LoginBg = styled.div`
 function LoginPage() {
 	document.body.style.overflow = 'hidden';
 	const [condition, setCondition] = useState<'login' | 'signup'>('login');
+	const audioRef = useRef<HTMLAudioElement | null>(null);
 	useEffect(() => {
-		// 오디오 파일 생성 및 재생
-		const audio = new Audio(loginMusic);
-		audio.play().catch((error) => console.log('자동 재생 실패:', error));
+		const audio = audioRef.current;
 
-		// 컴포넌트 언마운트 시 오디오 정지
-		return () => {
-			audio.pause();
-			audio.currentTime = 0; // 재생 위치를 처음으로 되돌림
-		};
-	}, []);
+		if (audio) {
+			const playAudio = () => {
+				audio.play().catch((error) => console.log('자동재생 실패 : ', error));
+			};
+
+			const handleInteraction = () => {
+				playAudio();
+			};
+
+			document.addEventListener('click', handleInteraction);
+			audio.addEventListener('ended', () => {
+				audio.currentTime = 0;
+				playAudio();
+			});
+
+			return () => {
+				document.removeEventListener('click', handleInteraction);
+				audio.removeEventListener('ended', () => {
+					audio.currentTime = 0;
+					playAudio();
+				});
+			};
+		}
+
+		return () => {};
+	}, [audioRef]);
 
 	// 키보드 이벤트 처리 함수
 	const handleKeyDown = (e: React.KeyboardEvent<HTMLDivElement>, newCondition: 'login' | 'signup') => {
@@ -87,6 +106,8 @@ function LoginPage() {
 			<div className="bgimage">
 				<div className="page-box">
 					<div className="change-bar">
+						{/* eslint-disable-next-line jsx-a11y/media-has-caption */}
+						<audio ref={audioRef} controls={false} src={loginMusic} />
 						<div
 							className={`button-div ${condition === 'signup' ? 'no-select' : ''}`}
 							onClick={() => setCondition('login')}
