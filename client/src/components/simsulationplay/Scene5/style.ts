@@ -1,9 +1,9 @@
 /* eslint-disable import/prefer-default-export */
 import styled from 'styled-components';
-import background from '../../../assets/images/background.png';
+import outrobgimg from '../../../assets/images/outrobackground.png';
 
 export const Scene5Wrapper = styled.div`
-	background-image: url(${background});
+	background-image: url(${outrobgimg});
 	background-size: 100%;
 	background-position: center;
 	background-repeat: no-repeat;

@@ -10,6 +10,7 @@ import Scene5page from './Scene5/Scene5page';
 import Intro from '../../assets/intro.mp4';
 import { userEmail } from '../../store/RecoilState';
 import bgMusic from '../../assets/music/simulation_music.mp3';
+// import edMusic from '../../assets/music/ending_music.mp3';
 
 function EmergencyCall() {
 	document.body.style.overflow = 'hidden';
