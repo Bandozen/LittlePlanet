@@ -26,4 +26,15 @@ export const MemberInfoWrapper = styled.div`
 	.studentsinfo {
 		width: 85%;
 	}
+
+	.student-item {
+		display: flex;
+		justify-content: center;
+		align-items: center;
+	}
+
+	.student-item div {
+		flex: 1;
+		text-align: center;
+	}
 `;
