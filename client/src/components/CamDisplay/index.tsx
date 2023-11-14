@@ -7,7 +7,6 @@ function CamDisplay() {
 	const [image, setImage] = useState('0');
 	const userMail = useRecoilValue(userEmail);
 	const websocketHw: string = process.env.REACT_APP_WEBSOCKET_HW!;
-	console.log(userMail);
 
 	useEffect(() => {
 		const socket = io(websocketHw, {
@@ -20,7 +19,6 @@ function CamDisplay() {
 
 		socket.on('image', (data) => {
 			setImage(data.url);
-			console.log(data);
 		});
 
 		return () => {

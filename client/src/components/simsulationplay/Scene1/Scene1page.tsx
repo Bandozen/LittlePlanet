@@ -20,6 +20,7 @@ type Content = {
 
 // 친구가 다쳤어요.
 function Scene1page() {
+	document.body.style.overflow = 'hidden';
 	const [narrAudio] = useState(new Audio(narr));
 	const [wrongNarrAudio] = useState(new Audio(wrongNarr));
 
