@@ -193,7 +193,7 @@ function Login() {
 					}}
 				/>
 				{passwordError && <p className="text-red-500 text-xs ml-2">{passwordError}</p>}
-				<Alert className="p-2 m-3" open={loginFailed} variant="outlined" color="red">
+				<Alert className="p-2" open={loginFailed} variant="outlined" color="red">
 					로그인 실패
 				</Alert>
 				<Button disabled={!isFormValid()} onClick={handleLogin} style={{ backgroundColor: '#188eb7' }}>
