@@ -73,7 +73,7 @@ export const SimulationChatWrapper = styled.div`
 		display: inline-block;
 		max-width: calc(100% - 70px);
 		padding: 20px;
-		font-size: 40px;
+		font-size: 35px;
 		border-radius: 10px;
 	}
 

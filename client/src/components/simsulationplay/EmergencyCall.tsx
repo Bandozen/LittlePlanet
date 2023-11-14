@@ -7,6 +7,7 @@ import Scene2page from './Scene2/Scene2page';
 import Scene3page from './Scene3/Scene3page';
 import Scene4page from './Scene4/Scene4page';
 import Scene5page from './Scene5/Scene5page';
+import Intro from '../../assets/intro.mp4';
 import { userEmail } from '../../store/RecoilState';
 import bgMusic from '../../assets/music/simulation_music.mp3';
 
@@ -63,26 +64,20 @@ function EmergencyCall() {
 		};
 	}, []);
 
-	useEffect(() => {
-		// 오디오 객체 생성
-		const audio = new Audio(bgMusic);
+	// Audio 객체를 상태로 관리
+	const [audio] = useState(new Audio(bgMusic));
 
+	useEffect(() => {
 		// status 값에 따라 음악 재생 제어
-		if (status >= 1 && status <= 4) {
+		if (status >= 0 && status <= 4) {
+			audio.volume = 0.5;
 			audio.play().catch((error) => console.log('자동 재생 실패:', error));
 		} else {
 			audio.pause();
 			audio.currentTime = 0; // 재생 위치를 처음으로 되돌림
 		}
+	}, [status, audio]);
 
-		// 컴포넌트 언마운트 시 오디오 정지
-		return () => {
-			audio.pause();
-			audio.currentTime = 0;
-		};
-	}, [status]); // 의존성 배열에 status 추가
-
-	// 인트로 끝나면 앱에 키패드 띄우라는 신호 보내기
 	const sendKeypadMessage = () => {
 		const message = {
 			type: 'narr',
@@ -93,7 +88,6 @@ function EmergencyCall() {
 		}
 	};
 
-	// 페이지 이동 버튼 나중에 삭제
 	const sendNextPageMessage = () => {
 		const message = {
 			type: 'page',
@@ -107,8 +101,16 @@ function EmergencyCall() {
 	return (
 		<>
 			<Button onClick={sendNextPageMessage}> 다음 페이지 이동 </Button>
-			<Button onClick={sendKeypadMessage}> 인트로 끝남 </Button>
+			{/* <Button onClick={sendKeypadMessage}> 인트로 끝남 </Button> */}
 			{/* 1번부터 5번씬 차례대로 status에 따라 */}
+			{status === 0 && (
+				<div className="flex justify-center">
+					<video className="max-h-screen rounded-lg" controls autoPlay onEnded={sendKeypadMessage}>
+						<source src={Intro} type="video/mp4" />
+						<track kind="captions" />
+					</video>
+				</div>
+			)}
 			{status === 1 && <Scene1page />}
 			{status === 2 && <Scene2page setStatus={setStatus} />}
 			{status === 3 && <Scene3page />}
