@@ -5,16 +5,24 @@ import Button1 from 'components/common/Button';
 import SimulationChat from 'components/simsulationplay/SimulationChat';
 import { useRecoilValue } from 'recoil';
 import { userEmail } from 'store/RecoilState';
+import narration from 'assets/music/narr_2.mp3';
+import wrongNarration from 'assets/music/narr_6.mp3';
 import { CallGPT } from '../../gpt/gpt';
 import { SeqThreeWrapper } from './style';
 
 interface ISeqThreeProps {
 	setStep: Dispatch<SetStateAction<number>>;
 	setStatus: Dispatch<SetStateAction<number>>;
+	address: string;
 }
 
 function SeqThree(props: ISeqThreeProps) {
-	const { setStep, setStatus } = props;
+	const { address, setStep, setStatus } = props;
+
+	console.log(address);
+
+	const [narrAudio] = useState(new Audio(narration));
+	const [wrongNarrAudio] = useState(new Audio(wrongNarration));
 
 	const [socket, setSocket] = useState<WebSocket | null>(null);
 
@@ -28,6 +36,8 @@ function SeqThree(props: ISeqThreeProps) {
 	const [wrongSeq, setWrongSeq] = useState(false);
 
 	const [location, setLocation] = useState(true);
+
+	// const [address, setAddress] = useState('');
 
 	const memberEmail = useRecoilValue(userEmail);
 
@@ -55,6 +65,13 @@ function SeqThree(props: ISeqThreeProps) {
 			}
 			if (eventMessage.type === 'wrong') {
 				setWrongSeq(true);
+				wrongNarrAudio.play().catch((error) => console.log('자동 재생 실패:', error));
+			}
+			if (eventMessage.type === 'narr') {
+				narrAudio.play().catch((error) => console.log('자동 재생 실패:', error));
+			}
+			if (eventMessage.type === 'address') {
+				console.log(eventMessage.content);
 			}
 		};
 
@@ -88,7 +105,7 @@ function SeqThree(props: ISeqThreeProps) {
 			if (text) {
 				const prompt = {
 					role: 'user',
-					content: `1. [GOAL] : Let the firefighters know where you are. 2. [FIREFIGTER'S QUESTION] : 학생, 지금 어디에요? 3. [CHILD'S ANSWER] : ${text} ## Use the output in the JSON format. ##`,
+					content: `1. [GOAL] : Let the firefighters know where you are. (the answer is ${address}) 2. [FIREFIGTER'S QUESTION] : 학생, 지금 어디에요? 3. [CHILD'S ANSWER] : ${text} ## Use the output in the JSON format. ##`,
 				};
 
 				const textLength = text.length;
@@ -155,7 +172,7 @@ function SeqThree(props: ISeqThreeProps) {
 				</div>
 			)}
 			{!alert && !isWrong && !wrongSeq && (
-				<SimulationChat chatNumber={text ? 2 : 1} text={text || '거기 위치가 어디인가요?'} />
+				<SimulationChat chatNumber={text ? 2 : 1} text={text || '다친 친구가 있는 주소를 알려줄래요?'} />
 			)}
 			{isWrong && (
 				<div className="wrong-container">
@@ -179,7 +196,7 @@ function SeqThree(props: ISeqThreeProps) {
 				</div>
 			)}
 			{!alert && !isWrong && wrongSeq && (
-				<SimulationChat chatNumber={text ? 2 : 1} text={text || '다시 한번 얘기해줄래요?'} />
+				<SimulationChat chatNumber={text ? 2 : 1} text={text || '다시 한번 말해볼래요?'} />
 			)}
 		</SeqThreeWrapper>
 	);
