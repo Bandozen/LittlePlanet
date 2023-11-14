@@ -8,6 +8,7 @@ type SignUpProps = {
 };
 
 function SignUp({ setCondition }: SignUpProps) {
+	document.body.style.overflow = 'hidden';
 	// 각 입력이 발생함에 따라 상태 변수값을 바꿔주기 위해 설정
 	const [email, setEmail] = useState('');
 	const [password, setPassword] = useState('');
@@ -136,21 +137,25 @@ function SignUp({ setCondition }: SignUpProps) {
 				</div>
 				{verifying && (
 					<div className="form-group">
-						<Input
-							type="text"
-							value={verifyNumber}
-							label="인증번호"
-							onChange={(e) => setVerifyNumber(e.target.value)}
-							crossOrigin=""
-						/>
-						<Button
-							color="blue"
-							onClick={() => {
-								verifyNumberCheck();
-							}}
-						>
-							인증
-						</Button>
+						<div className="input-button-group">
+							<Input
+								type="text"
+								value={verifyNumber}
+								label="인증번호"
+								onChange={(e) => setVerifyNumber(e.target.value)}
+								crossOrigin=""
+							/>
+							<Button
+								color="gray"
+								size="sm"
+								className="btn-verify"
+								onClick={() => {
+									verifyNumberCheck();
+								}}
+							>
+								인증
+							</Button>
+						</div>
 					</div>
 				)}
 				{emailPass && <Typography color="green">이메일 인증이 완료되었습니다.</Typography>}
@@ -175,7 +180,7 @@ function SignUp({ setCondition }: SignUpProps) {
 					crossOrigin=""
 				/>
 				<Button
-					style={{ backgroundColor: '#188eb7' }}
+					style={{ backgroundColor: '#188eb7', fontSize: 15 }}
 					color="gray"
 					onClick={() => {
 						signupClick();

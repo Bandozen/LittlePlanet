@@ -20,6 +20,8 @@ type Content = {
 
 // 이름 말하기.
 function Scene4page() {
+	document.body.style.overflow = 'hidden';
+
 	const [narrAudio] = useState(new Audio(narr));
 	const [wrongNarrAudio] = useState(new Audio(wrongNarr));
 
