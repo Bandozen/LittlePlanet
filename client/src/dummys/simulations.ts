@@ -24,7 +24,7 @@ const simulations: Simulation[] = [
 		description: '집에서 가스냄새가 나면, 어떻게 해야 할까요?',
 		need: '준비물 : 신고를 도와줄 스마트폰',
 		imageUrl:
-			'https://littleplanet.s3.ap-northeast-2.amazonaws.com/image/%EA%B0%80%EC%8A%A4%EB%83%84%EC%83%88%EA%B0%80+%EB%82%98%EC%9A%94.png',
+			'https://littleplanet.s3.ap-northeast-2.amazonaws.com/image/%EA%B0%80%EC%8A%A4%EB%83%84%EC%83%88%EA%B0%80%EB%82%98%EC%9A%94(new).png',
 	},
 ];
 
