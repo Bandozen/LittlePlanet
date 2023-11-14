@@ -13,6 +13,8 @@ interface IScene2pageProps {
 
 // #Scene2. <여기 위치는요>
 function Scene2page(props: IScene2pageProps) {
+	document.body.style.overflow = 'hidden';
+
 	const { setStatus } = props;
 	// 시퀀스별 초기 설정
 	const [step, setStep] = useState(0);

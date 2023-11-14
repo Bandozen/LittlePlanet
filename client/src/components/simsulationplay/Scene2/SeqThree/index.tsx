@@ -17,6 +17,8 @@ interface ISeqThreeProps {
 }
 
 function SeqThree(props: ISeqThreeProps) {
+	document.body.style.overflow = 'hidden';
+
 	const { address, setStep, setStatus } = props;
 
 	console.log(address);
