@@ -2,6 +2,7 @@ import React from 'react';
 import { Link } from 'react-router-dom';
 import { useRecoilValue, useSetRecoilState } from 'recoil';
 import logo from 'assets/images/logo.png';
+// import logo2 from 'assets/images/logo2.png';
 import { userEmail, studentName } from 'store/RecoilState';
 import api from '../../../api';
 import { NavBarWrapper, NavBarLink } from './style';
@@ -34,6 +35,11 @@ function NavBar() {
 						<img src={logo} alt="" />
 					</Link>
 				</div>
+				{/* <div className="main_logo">
+					<Link to="/main">
+						<img src={logo2} alt="" />
+					</Link>
+				</div> */}
 				<ul>
 					<li>
 						<NavBarLink to="/simulationlist" className={({ isActive }) => (isActive ? 'active' : '')}>

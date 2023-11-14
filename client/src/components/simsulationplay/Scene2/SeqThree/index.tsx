@@ -2,6 +2,7 @@ import React, { Dispatch, SetStateAction, useEffect, useState } from 'react';
 import { Typography, Button, Alert } from '@material-tailwind/react';
 import { PhoneArrowUpRightIcon, SparklesIcon } from '@heroicons/react/24/outline';
 import Button1 from 'components/common/Button';
+import SimulationChat from 'components/simsulationplay/SimulationChat';
 import { useRecoilValue } from 'recoil';
 import { userEmail } from 'store/RecoilState';
 import { CallGPT } from '../../gpt/gpt';
@@ -9,12 +10,15 @@ import { SeqThreeWrapper } from './style';
 
 interface ISeqThreeProps {
 	setStep: Dispatch<SetStateAction<number>>;
+	setStatus: Dispatch<SetStateAction<number>>;
 }
 
 function SeqThree(props: ISeqThreeProps) {
-	const { setStep } = props;
+	const { setStep, setStatus } = props;
 
 	const [socket, setSocket] = useState<WebSocket | null>(null);
+
+	const [alert, setAlert] = useState(true);
 
 	// 사용자 음성 받아오기
 	const [text, setText] = useState('');
@@ -42,7 +46,11 @@ function SeqThree(props: ISeqThreeProps) {
 
 		// 받아온 메시지는 사용자 답변의 정답 여부
 		newSocket.onmessage = (event) => {
+			const eventMessage = JSON.parse(event.data);
 			console.log(event.data);
+			if (eventMessage.type === 'text2') {
+				setText(eventMessage.content);
+			}
 		};
 
 		newSocket.onclose = () => {
@@ -50,6 +58,7 @@ function SeqThree(props: ISeqThreeProps) {
 		};
 
 		const narr = setTimeout(() => {
+			setAlert(false);
 			newSocket.send(JSON.stringify({ type: 'narr', content: 2 }));
 		}, 3000);
 
@@ -94,7 +103,8 @@ function SeqThree(props: ISeqThreeProps) {
 	console.log(isWrong);
 
 	const testClick = () => {
-		setStep(3);
+		setStatus(3);
+		setStep(4);
 	};
 
 	const changeLocation = () => {
@@ -105,25 +115,35 @@ function SeqThree(props: ISeqThreeProps) {
 		<SeqThreeWrapper>
 			<Button onClick={changeLocation}>장소바꾸기</Button>
 			<Button1 text="테스트버튼입니다." handleClick={() => testClick()} />
-			<div className="wrong-container">
-				<Alert className="flex justify-center" variant="gradient" open={isWrong} onClose={() => setIsWrong(false)}>
-					<div className="flex flex-row m-3">
-						<SparklesIcon className="w-10 h-10 mr-2" color="yellow" />
-						<Typography variant="h3">이렇게 말해볼까?</Typography>
-					</div>
-					{location ? (
-						<div className="flex flex-row items-center">
-							<PhoneArrowUpRightIcon className="w-5 h-5 mr-2" />
-							<Typography variant="h5">여기는 소행성로 203 근처에요.</Typography>
+			{alert && (
+				<div className="alert-container">
+					<Alert>
+						<Typography variant="h3">확인한 위치를 소방관에게 알려줘!</Typography>
+					</Alert>
+				</div>
+			)}
+			{!alert && !isWrong && <SimulationChat chatNumber={text ? 2 : 1} text={text || '거기 위치가 어디인가요?'} />}
+			{isWrong && (
+				<div className="wrong-container">
+					<Alert className="flex justify-center" variant="gradient" open={isWrong} onClose={() => setIsWrong(false)}>
+						<div className="flex flex-row m-3">
+							<SparklesIcon className="w-10 h-10 mr-2" color="yellow" />
+							<Typography variant="h3">이렇게 말해볼까?</Typography>
 						</div>
-					) : (
-						<div className="flex flex-row items-center m-3">
-							<PhoneArrowUpRightIcon className="w-7 h-7 mr-2" />
-							<Typography variant="h5">여기는 삼성스토어 소행성지점 근처에요.</Typography>
-						</div>
-					)}
-				</Alert>
-			</div>
+						{location ? (
+							<div className="flex flex-row items-center">
+								<PhoneArrowUpRightIcon className="w-5 h-5 mr-2" />
+								<Typography variant="h5">여기는 소행성로 203 근처에요.</Typography>
+							</div>
+						) : (
+							<div className="flex flex-row items-center m-3">
+								<PhoneArrowUpRightIcon className="w-7 h-7 mr-2" />
+								<Typography variant="h5">여기는 삼성스토어 소행성지점 근처에요.</Typography>
+							</div>
+						)}
+					</Alert>
+				</div>
+			)}
 		</SeqThreeWrapper>
 	);
 }
