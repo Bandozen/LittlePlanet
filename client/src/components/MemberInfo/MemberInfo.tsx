@@ -216,20 +216,22 @@ function MemberInfo() {
 							<UserPlusIcon className="h-6 w-6" onClick={handleStudentOpen} />
 						</div>
 						<hr />
-						<div className="flex flex-row items-center justify-around m-3 text-center">
-							<p className="text-xl">이름</p>
-							<p className="text-xl">학년</p>
-							<p className="text-xl">반</p>
-							<p className="text-xl">삭제</p>
+						<div className="student-item p-3">
+							<div className="text-xl">이름</div>
+							<div className="text-xl">학년</div>
+							<div className="text-xl">반</div>
+							<div className="text-xl">삭제</div>
 						</div>
 						<hr />
 						<List>
 							{students.map((student) => (
-								<ListItem className="flex flex-row items-center justify-around text-black " key={student.studentSeq}>
-									<p>{student.studentName}</p>
-									<p>{student.studentGrade}</p>
-									<p>{student.studentClass}</p>
-									<TrashIcon className="h-5 w-5 ml-5" onClick={() => handleDelete(student.studentSeq)} />
+								<ListItem className="student-item" key={student.studentSeq}>
+									<div>{student.studentName}</div>
+									<div>{student.studentGrade}</div>
+									<div>{student.studentClass}</div>
+									<div>
+										<TrashIcon className="h-5 w-5 ml-36" onClick={() => handleDelete(student.studentSeq)} />
+									</div>
 								</ListItem>
 							))}
 						</List>
