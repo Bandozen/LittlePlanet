@@ -91,10 +91,10 @@ const Call = ({navigation}: CallProps) => {
         />
         
       )}
-      <TouchableOpacity
+      {/* <TouchableOpacity
         onPress={() => navigation.navigate('Main')}>
         <Icon name="home" size={30} color="green" />
-      </TouchableOpacity>
+      </TouchableOpacity> */}
     </View>
   );
 };
