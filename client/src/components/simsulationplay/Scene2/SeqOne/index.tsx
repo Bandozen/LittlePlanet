@@ -1,7 +1,5 @@
 import React, { Dispatch, SetStateAction, useEffect, useState } from 'react';
 import { Alert, Typography } from '@material-tailwind/react';
-import PointLeftLottie from 'components/Lottie/PointLeftLottie';
-import PointRightLottie from 'components/Lottie/PointRightLottie';
 import { SeqOneWrapper } from './style';
 
 interface ISeqOneProps {
@@ -36,14 +34,7 @@ function SeqOne(props: ISeqOneProps) {
 					</Alert>
 				</div>
 			) : (
-				<div className="background-image left-right original">
-					<div style={{ position: 'absolute' }} className="left-point">
-						<PointLeftLottie />
-					</div>
-					<div style={{ position: 'absolute' }} className="right-point">
-						<PointRightLottie />
-					</div>
-				</div>
+				<div className="background-image left-right original" />
 			)}
 		</SeqOneWrapper>
 	);
