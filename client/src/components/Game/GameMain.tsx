@@ -26,7 +26,11 @@ function Game() {
 						<div key={game.id} className="game-item">
 							<div className="game-img">
 								<GameLink to={`/gamedetail/${game.id}`}>
-									<img src={game.imageUrl} alt={game.name} />
+									<img
+										className="h-96 w-full rounded-lg object-cover object-center shadow-md shadow-blue-gray-900/50 hover:scale-[1.02] focus:scale-[1.02] active:scale-100"
+										src={game.imageUrl}
+										alt={game.name}
+									/>
 								</GameLink>
 							</div>
 						</div>
