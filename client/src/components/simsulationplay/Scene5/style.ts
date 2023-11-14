@@ -9,4 +9,7 @@ export const Scene5Wrapper = styled.div`
 	background-repeat: no-repeat;
 	width: 100vw;
 	height: 100vh;
+	.btn-style {
+		margin-top: 50px;
+	}
 `;
