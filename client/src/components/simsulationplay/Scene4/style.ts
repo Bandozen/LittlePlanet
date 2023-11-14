@@ -4,10 +4,10 @@ import background from '../../../assets/images/background.png';
 
 export const Scene4Wrapper = styled.div`
 	background-image: url(${background});
-	background-size: 100%;
+	background-size: cover;
 	background-position: center;
 	background-repeat: no-repeat;
-	width: 100vw;
+	width: 100%;
 	height: 100vh;
 
 	.alert-container {
