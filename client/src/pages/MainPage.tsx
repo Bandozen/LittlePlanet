@@ -19,6 +19,7 @@ const MainContents = styled.div`
 `;
 
 function MainPage() {
+	document.body.style.overflowX = 'hidden';
 	const userMail = useRecoilValue(userEmail);
 	const student = useRecoilValue(studentName);
 
