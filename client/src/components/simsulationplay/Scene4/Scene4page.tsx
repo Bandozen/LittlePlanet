@@ -100,19 +100,19 @@ function Scene4page() {
 			console.log('WebSocket connection closed.');
 		};
 
-		const newSocket2 = new WebSocket('wss://k9c203.p.ssafy.io:17776');
+		const moveSocket = new WebSocket('wss://k9c203.p.ssafy.io:17776');
 
-		newSocket2.onopen = () => {
+		moveSocket.onopen = () => {
 			console.log('WebSocket connection established.');
 
 			const handShake = {
 				type: 'HW',
 				email: memberEmail,
 			};
-			newSocket2.send(JSON.stringify(handShake));
+			moveSocket.send(JSON.stringify(handShake));
 		};
 
-		newSocket2.onmessage = (event) => {
+		moveSocket.onmessage = (event) => {
 			const eventMessage = JSON.parse(event.data);
 			if (eventMessage.type === 'HW') {
 				if (eventMessage.movedir === 'left') {
@@ -123,7 +123,7 @@ function Scene4page() {
 			}
 		};
 
-		newSocket2.onclose = () => {
+		moveSocket.onclose = () => {
 			console.log('WebSocket connection closed.');
 		};
 
@@ -150,6 +150,7 @@ function Scene4page() {
 			}, time);
 		});
 	}
+
 	useEffect(() => {
 		async function handleAsyncOperations() {
 			if (text) {
