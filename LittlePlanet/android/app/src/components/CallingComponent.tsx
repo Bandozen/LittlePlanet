@@ -94,6 +94,7 @@ const CallingComponent: React.FC<CallingProps> = ({phoneNumber, onEndCall}) => {
           } else if (eventMessage.type === 'end') {
             console.log('엔드메세지 받고 웹소켓 종료됨');
             newSocket.close();
+            onEndCall();
           }
         };
         newSocket.onclose = () => {
@@ -196,12 +197,13 @@ const CallingComponent: React.FC<CallingProps> = ({phoneNumber, onEndCall}) => {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    justifyContent: 'space-between',
+    justifyContent: 'center',
     alignItems: 'center',
     padding: 20,
     backgroundColor: '#f5f5f5',
   },
   profileIconContainer: {
+    marginTop: 50,
     marginBottom: 20,
   },
   contactInfoContainer: {
@@ -215,7 +217,7 @@ const styles = StyleSheet.create({
   callStatus: {
     fontSize: 20,
     color: '#666',
-    marginTop: 8,
+    margin: 15,
     fontWeight: 'bold',
   },
   callActionContainer: {
@@ -226,7 +228,7 @@ const styles = StyleSheet.create({
     marginBottom: 20,
   },
   endCallButton: {
-    marginTop: 30,
+    margin: 30,
     paddingHorizontal: 30,
     height: 60,
     flexDirection: 'row',
@@ -265,15 +267,14 @@ const styles = StyleSheet.create({
     color: 'red',
   },
   activityIndicatorContainer: {
-    flexDirection: 'row',
-    marginTop: 10,
+    flexDirection: 'column',
+    margin: 10,
     justifyContent: 'center',
     alignItems: 'center',
   },
   listeningText: {
     fontSize: 18,
     color: '#555',
-    marginTop: 10,
   },
 });
 export default CallingComponent;
