@@ -182,7 +182,11 @@ function Scene4page() {
 								type: 'page',
 								content: 5,
 							};
+							const endmessage = {
+								type: 'end',
+							};
 							socket?.send(JSON.stringify(message));
+							socket?.send(JSON.stringify(endmessage));
 						} else {
 							setIsWrong(true);
 							setText('');
