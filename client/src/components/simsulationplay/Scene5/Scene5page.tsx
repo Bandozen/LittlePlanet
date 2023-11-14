@@ -7,6 +7,8 @@ import { Scene5Wrapper } from './style';
 import SimulationChat from '../SimulationChat/index';
 
 function Scene5Page() {
+	document.body.style.overflow = 'hidden';
+
 	const studentname = useRecoilValue(studentName);
 
 	const convertToSpeech = async (name: string) => {
