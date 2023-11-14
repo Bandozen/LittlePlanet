@@ -92,6 +92,22 @@ export const SimulationDetailWrapper = styled.div`
 `;
 
 export const SimulationMainWrapper = styled.div`
+	@keyframes marquee {
+		from {
+			transform: translateX(100%);
+		}
+		to {
+			transform: translateX(-100%);
+		}
+	}
+
+	.marquee {
+		animation: marquee 20s linear infinite;
+		transition: animation-play-state 1s ease;
+	}
+	.marquee:hover {
+		animation-play-state: paused;
+	}
 	.main-container {
 		margin: 40px 0px 40px 0px;
 	}
@@ -103,14 +119,18 @@ export const SimulationMainWrapper = styled.div`
 	.main-info p {
 		font-size: 2rem;
 		font-weight: bold;
-		padding: 0px 0px 0px 30px;
+		// padding: 30px 0px 0px 30px;
 	}
 	.main-sims {
 		display: flex;
+		white-space: nowrap;
+	}
+	.main-sims:hover .marquee {
+		animation-play-state: paused;
 	}
 	.main-simulation-item {
-		display: flex;
-		padding: 20px 20px;
+		flex-shrink: 0;
+		margin-right: 20px;
 	}
 	.main-simulation-img img {
 		width: 300px;
@@ -121,4 +141,25 @@ export const SimulationMainWrapper = styled.div`
 	.main-btn-div-detail {
 		margin: 10px;
 	}
+	// .main-simulation-img {
+	// 	position: relative;
+	// 	overflow: hidden;
+	// }
+
+	// .main-simulation-img:hover .overlay {
+	// 	display: block;
+	// }
+
+	// .overlay {
+	// 	position: absolute;
+	// 	top: 0;
+	// 	left: 0;
+	// 	right: 0;
+	// 	bottom: 0;
+	// 	background: rgba(0, 0, 0, 0.5);
+	// 	display: none;
+	// 	justify-content: center;
+	// 	align-items: center;
+	// 	color: white;
+	// }
 `;
