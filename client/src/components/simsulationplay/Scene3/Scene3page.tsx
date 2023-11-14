@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { Alert, Button, Typography } from '@material-tailwind/react';
+import { Alert, Typography } from '@material-tailwind/react';
 import { PhoneArrowUpRightIcon, SparklesIcon } from '@heroicons/react/24/outline';
 import { useRecoilValue } from 'recoil';
 // import api from '../../../api';
@@ -11,6 +11,7 @@ import SimulationChat from '../SimulationChat/index';
 
 // 다리를 다쳐서 피가 나요.
 function Scene3page() {
+	document.body.style.overflow = 'hidden';
 	// 화면 첫번째 나레이션을 나타내고 없애주기 위한 변수
 	const [firstNarr, setFirstNarr] = useState(true);
 	// 친구에게 도달했을 때 상황을 나타내기 위한 변수
@@ -26,14 +27,14 @@ function Scene3page() {
 	const [isWrong, setIsWrong] = useState(false);
 	const memberEmail = useRecoilValue(userEmail);
 	const [socket, setSocket] = useState<WebSocket | null>(null);
+	const [hwsocket, setHWSocket] = useState<WebSocket | null>(null);
 	const [left, setLeft] = useState(500);
-	const handleLeft = () => setLeft((prevLeft) => prevLeft - 10);
-	const handleRight = () => setLeft((prevLeft) => prevLeft + 10);
 	const [rightHandX, setRightHandX] = useState(0);
 	const [rightHandY, setRightHandY] = useState(0);
-	// const [leftHandX, setLeftHandX] = useState(0);
-	// const [leftHandY, setLeftHandY] = useState(0);
-	// const friendLocation = [500, 200];
+	const [leftHandX, setLeftHandX] = useState(0);
+	const [leftHandY, setLeftHandY] = useState(0);
+	let imgleft = 500;
+
 	// 웹소켓에서 메세지를 받고 그 메세지 값에 따라 다르게 실행하는 함수 설정
 	function getMessage(message: string) {
 		// 메세지를 mes 변수에 JSON 파싱한것을 변환
@@ -55,8 +56,6 @@ function Scene3page() {
 
 	useEffect(() => {
 		const newSocket = new WebSocket('wss://k9c203.p.ssafy.io:17777');
-		// const newSocket = new WebSocket('ws://192.168.100.38:7777');
-		// const newSocket = new WebSocket('ws://localhost:7777');
 
 		newSocket.onopen = () => {
 			console.log('WebSocket connection established.');
@@ -72,51 +71,45 @@ function Scene3page() {
 		};
 
 		const moveSocket = new WebSocket('wss://k9c203.p.ssafy.io:17776');
-		// const moveSocket = new WebSocket('ws://localhost:7776');
 
 		moveSocket.onopen = () => {
 			console.log('WebSocket connection established.');
-			setSocket(moveSocket);
-			// console.log(socket);
-
-			// 소켓 열릴 때, 이메일 보내기
-			const handShake = {
-				type: 'HW',
-				email: memberEmail,
-			};
-			moveSocket.send(JSON.stringify(handShake));
+			setHWSocket(moveSocket);
 		};
 
 		// 소켓에 메시지 들어오면
 		moveSocket.onmessage = (event) => {
 			const eventMessage = JSON.parse(event.data);
-			console.log(`inrhx : ${eventMessage.righthandX}`);
-			console.log(`inrhy : ${eventMessage.righthandY}`);
-			// console.log(`rhx : ${rightHandX}`);
-			// console.log(`rhy : ${rightHandY}`);
 			if (eventMessage.type === 'HW') {
 				if (eventMessage.movedir === 'left') {
-					handleLeft();
+					imgleft -= 10;
+					setLeft(imgleft);
 				} else if (eventMessage.movedir === 'right') {
-					handleRight();
+					imgleft += 10;
+					setLeft(imgleft);
 				}
-				setRightHandX(left + Number(eventMessage.lefthandX) / 2);
-				setRightHandY(340 - Number(eventMessage.lefthandY) / 2);
+				setRightHandX(Number(imgleft) + Number(eventMessage.righthandX / 2));
+				setRightHandY(340 - Number(eventMessage.righthandY / 2));
+				setLeftHandX(Number(imgleft) + Number(eventMessage.lefthandX / 2));
+				setLeftHandY(340 - Number(eventMessage.lefthandY / 2));
 			}
 		};
 
 		moveSocket.onclose = () => {
 			console.log('WebSocket connection closed.');
 		};
+
 		// 컴포넌트가 렌더링되고 3초 뒤 첫번째 나레이션 자동으로 사라지게 하기
 		setTimeout(() => {
 			setFirstNarr(false);
 		}, 3000);
+
 		return () => {
 			newSocket.close();
 			moveSocket.close();
 		};
 	}, []);
+
 	// 소켓이 등록되고 난 뒤 useEffect
 	useEffect(() => {
 		// 소켓이 있다면
@@ -130,6 +123,21 @@ function Scene3page() {
 			socket.send(JSON.stringify(handshakemessage));
 		}
 	}, [socket]); // socket가 변경될 때 : 즉 소켓에 설정한 링크로 변경 됐을 때 자동으로 실행
+
+	// 소켓이 등록되고 난 뒤 useEffect
+	useEffect(() => {
+		// 소켓이 있다면
+		if (hwsocket) {
+			// 핸드세이크 메세지 설정 후 JSON 변환 후 보내기
+			const handShake = {
+				type: 'HW',
+				email: memberEmail,
+			};
+
+			hwsocket.send(JSON.stringify(handShake));
+		}
+	}, [hwsocket]); // socket가 변경될 때 : 즉 소켓에 설정한 링크로 변경 됐을 때 자동으로 실행
+
 	useEffect(() => {
 		if (text) {
 			const prompt = {
@@ -159,6 +167,7 @@ function Scene3page() {
 				});
 		}
 	}, [text]);
+
 	// 친구에게 도달했을 때 실행되는 함수
 	const arrive = () => {
 		// 확대하기
@@ -178,18 +187,20 @@ function Scene3page() {
 			}
 		}, 3000);
 	};
+
 	useEffect(() => {
-		// console.log(left);
-		console.log(left, rightHandX, rightHandY);
-		if (rightHandX >= 720 && rightHandX <= 900 && rightHandY >= 100 && rightHandY <= 310) {
-			console.log('친구 터치로 보이려나?');
+		if (rightHandX >= 900 && rightHandX <= 1000 && rightHandY >= 100 && rightHandY <= 310 && !zoom) {
 			arrive();
 		}
-	}, [rightHandX, rightHandY]);
+		if (leftHandX >= 900 && leftHandX <= 1000 && leftHandY >= 100 && leftHandY <= 310 && !zoom) {
+			arrive();
+		}
+	}, [rightHandX, rightHandY, leftHandX, leftHandY]);
+
 	return (
 		<Scene3Wrapper>
 			<div className={`${zoom ? 'background-zoomed' : 'background-image'}`}>
-				<Button
+				{/* <Button
 					type="button"
 					onClick={() => {
 						setText('친구가 아픈척 해요!');
@@ -207,14 +218,16 @@ function Scene3page() {
 				>
 					정답
 				</Button>
-				<Button
-					type="button"
-					onClick={() => {
-						arrive();
-					}}
-				>
-					친구한테 도착했을 때
-				</Button>
+				<div style={{ position: 'absolute', left: '200px' }}>
+					<Button
+						type="button"
+						onClick={() => {
+							arrive();
+						}}
+					>
+						친구한테 도착했을 때
+					</Button>
+				</div> */}
 
 				{firstNarr && (
 					<div className="alert-container">
@@ -251,22 +264,30 @@ function Scene3page() {
 						</Alert>
 					</div>
 				)}
+			</div>
+			{zoom ? (
+				<div style={{ position: 'absolute', left: `${left}px`, bottom: '0px', width: '640px', height: '480px' }}>
+					<CharacterDisplay />
+				</div>
+			) : (
 				<div style={{ position: 'absolute', left: `${left}px`, bottom: '100px', width: '320px', height: '240px' }}>
 					<CharacterDisplay />
 				</div>
+			)}
+			{zoom ? (
+				<div />
+			) : (
 				<div
 					style={{
 						position: 'absolute',
-						left: `880px`,
-						bottom: '160px',
+						left: `900px`,
+						bottom: '180px',
 						width: '100px',
-						height: '150px',
-						backgroundColor: 'green',
+						height: '180px',
+						backgroundColor: 'rgba( 255, 255, 255, 0.5 )',
 					}}
-				>
-					zz
-				</div>
-			</div>
+				/>
+			)}
 		</Scene3Wrapper>
 	);
 }
