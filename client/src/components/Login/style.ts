@@ -16,4 +16,6 @@ export const LoginWrapper = styled.div`
 	.forget-btn {
 		box-shadow: none;
 	}
+
+	.
 `;

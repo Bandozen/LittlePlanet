@@ -15,16 +15,6 @@ const fadeIn = keyframes`
   }
 `;
 
-// const zoomAnimation = keyframes`
-//   from {
-//     background-size: 115%;
-//   }
-//   to {
-//     background-size: 100%;
-//   }
-// `;
-// animation: ${zoomAnimation} 10s ease-out;
-
 const LoginBg = styled.div`
 	.bgimage {
 		background-image: url(https://littleplanet.s3.ap-northeast-2.amazonaws.com/image/movingbg.gif);
@@ -71,6 +61,7 @@ const LoginBg = styled.div`
 `;
 
 function LoginPage() {
+	document.body.style.overflow = 'hidden';
 	const [condition, setCondition] = useState<'login' | 'signup'>('login');
 	const audioRef = useRef<HTMLAudioElement | null>(null);
 	useEffect(() => {

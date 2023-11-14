@@ -12,6 +12,7 @@ import outroVoice from '../../../assets/music/outro_voice.mp3';
 import edMusic from '../../../assets/music/ending_music.mp3';
 
 function Scene5Page() {
+	document.body.style.overflow = 'hidden';
 	const [movePage] = useMovePage();
 	const [outroAudio] = useState(new Audio(outroSound));
 	const [outrovoiceAudio] = useState(new Audio(outroVoice));
