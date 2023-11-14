@@ -22,12 +22,17 @@ export const CallGPT = async (prompt: object) => {
 			{
 				role: 'user',
 				content:
-					"1. [GOAL] : Child must convey their current location (삼성스토어 소행성 지점 or 소행성로 203) to the firefighters. 2. [FIREFIGHTER'S QUESTION] : 친구가 있는 위치를 말해주세요. 3. [CHILD'S ANSWER] : 소행성로 203이에요. ## Use the output in the following JSON format. { success : true ( boolean, whether the child's answer is appropriate or not)} ##",
+					"1. [GOAL] : Child must convey their current location (the answer is 소행성로 203) to the firefighters. 2. [FIREFIGHTER'S QUESTION] : 친구가 있는 위치를 말해주세요. 3. [CHILD'S ANSWER] : 소행성로 203이에요. ## Use the output in the following JSON format. { success : true ( boolean, whether the child's answer is appropriate or not)} ##",
 			},
 			{
 				role: 'user',
 				content:
-					"1. [GOAL] : Child must convey their current location (삼성스토어 소행성 지점 or 소행성로 203) to the firefighters. 2. [FIREFIGHTER'S QUESTION] : 친구가 있는 위치를 말해주세요. 3. [CHILD'S ANSWER] : 삼성스토어 소행성지점이에요. ## Use the output in the following JSON format. { success : true ( boolean, whether the child's answer is appropriate or not)} ##",
+					"1. [GOAL] : Child must convey their current location (the answer is 삼성스토어 소행성지점) to the firefighters. 2. [FIREFIGHTER'S QUESTION] : 친구가 있는 위치를 말해주세요. 3. [CHILD'S ANSWER] : 삼성스토어 소행성지점이에요. ## Use the output in the following JSON format. { success : true ( boolean, whether the child's answer is appropriate or not)} ##",
+			},
+			{
+				role: 'user',
+				content:
+					"1. [GOAL] : Child must convey their current location (the answer is 삼성스토어 소행성지점) to the firefighters. 2. [FIREFIGHTER'S QUESTION] : 친구가 있는 위치를 말해주세요. 3. [CHILD'S ANSWER] : 소행성로 203이에요. ## Use the output in the following JSON format. { success : false ( boolean, whether the child's answer is appropriate or not)} ##",
 			},
 			{
 				role: 'user',

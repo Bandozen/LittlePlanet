@@ -18,6 +18,8 @@ function Scene2page(props: IScene2pageProps) {
 	const [step, setStep] = useState(0);
 	const [stepView, setStepView] = useState(<div />);
 
+	const [address, setAddress] = useState('');
+
 	// useEffect를 통해 switch문으로 각 컴포넌트를 보여준다.
 	useEffect(() => {
 		switch (step) {
@@ -26,11 +28,11 @@ function Scene2page(props: IScene2pageProps) {
 				break;
 			}
 			case 1: {
-				setStepView(<SeqTwo setStep={setStep} />);
+				setStepView(<SeqTwo setStep={setStep} setAddress={setAddress} />);
 				break;
 			}
 			case 2: {
-				setStepView(<SeqThree setStep={setStep} setStatus={setStatus} />);
+				setStepView(<SeqThree setStep={setStep} setStatus={setStatus} address={address} />);
 				break;
 			}
 			default: {
@@ -63,7 +65,10 @@ function Scene2page(props: IScene2pageProps) {
 
 		// 받아온 메시지는 사용자 답변의 정답 여부
 		newSocket.onmessage = (event) => {
-			console.log(event.data);
+			const eventMessage = JSON.parse(event.data);
+			if (eventMessage.type === 'address') {
+				setAddress(eventMessage.content);
+			}
 		};
 
 		newSocket.onclose = () => {
