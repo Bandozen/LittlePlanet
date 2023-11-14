@@ -68,7 +68,6 @@ function Login() {
 			});
 			console.log(loginResponse);
 			setLoginFailed(false);
-			console.log(email);
 			setUserMail(email);
 			navigate('/main');
 		} catch (error) {

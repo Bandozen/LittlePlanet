@@ -7,6 +7,7 @@ interface ISeqOneProps {
 }
 
 function SeqOne(props: ISeqOneProps) {
+	document.body.style.overflow = 'hidden';
 	const [showNarr, setShowNarr] = useState(true);
 	const { setStep } = props;
 
