@@ -250,7 +250,7 @@ function Scene1page() {
 			) : (
 				<SimulationChat chatNumber={text ? 2 : 1} text={text || '네, 119입니다. 무슨 일이세요?'} />
 			)}
-			<div style={{ position: 'absolute', left: `${left}px`, bottom: '25px' }}>
+			<div style={{ position: 'absolute', left: `${left}px`, bottom: '25px', width: '480px', height: '360px' }}>
 				<CharacterDisplay />
 			</div>
 		</Scene1Wrapper>
