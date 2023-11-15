@@ -92,6 +92,9 @@ export const SimulationDetailWrapper = styled.div`
 	.detail-text {
 		margin: 10px;
 	}
+	detail-img {
+		margintop: 50px;
+	}
 `;
 
 export const SimulationMainWrapper = styled.div`
