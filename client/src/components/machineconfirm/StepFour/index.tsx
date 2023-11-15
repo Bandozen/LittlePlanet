@@ -36,13 +36,16 @@ function StepFour(props: IStepFourProps) {
 				<CheckStep activeStep={activeStep} checkNum={4} message="캐릭터 연동 확인" />
 				<CheckStep activeStep={activeStep} checkNum={5} message="시작하기!" />
 			</div>
-			{CharacterDisplay ? (
-				<div className="image-wrapper">
-					<CharacterDisplay />
-				</div>
-			) : (
+			<div className="cam-wrapper">
 				<img className="loading" src={loadingImage} alt="" />
-			)}
+				{CharacterDisplay ? (
+					<div className="image-wrapper">
+						<CharacterDisplay />
+					</div>
+				) : (
+					<img className="loading" src={loadingImage} alt="" />
+				)}
+			</div>
 			<Button text="다음" handleClick={() => testClick()} />
 		</Wrapper>
 	);
