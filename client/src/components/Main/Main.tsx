@@ -10,7 +10,7 @@ function Main() {
 				<div className="main-div">
 					<div className="sub-text">작은 행동으로 성장할 수 있습니다.</div>
 					<div className="main-text">소 행 성</div>
-					<NavBarLink to="simulationdetail/1">
+					<NavBarLink to="/simulationdetail/1">
 						<PlayButton text="체험하기" />
 					</NavBarLink>
 
