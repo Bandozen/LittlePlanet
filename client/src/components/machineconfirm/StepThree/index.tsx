@@ -44,15 +44,16 @@ function StepThree(props: IStepThreeProps) {
 				<CheckStep activeStep={activeStep} checkNum={4} message="캐릭터 연동 확인" />
 				<CheckStep activeStep={activeStep} checkNum={5} message="시작하기!" />
 			</div>
-			{CamDisplay ? (
-				<div className="image-wrapper">
+			<div className="image-wrapper">
+				<img className="loading-image" src={loadingImage} alt="" />
+				{CamDisplay ? (
 					<div className="loading">
 						<CamDisplay />
 					</div>
-				</div>
-			) : (
-				<img className="loading" src={loadingImage} alt="" />
-			)}
+				) : (
+					<img className="loading-image" src={loadingImage} alt="" />
+				)}
+			</div>
 			<Button text="다음" handleClick={() => testClick()} />
 		</Wrapper>
 	);
