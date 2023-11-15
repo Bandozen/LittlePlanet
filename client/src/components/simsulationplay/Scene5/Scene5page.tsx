@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import axios from 'axios';
-import { Button } from '@material-tailwind/react';
+import { Button, Alert, Typography } from '@material-tailwind/react';
 import useMovePage from 'hooks/useMovePage';
 import { useRecoilValue } from 'recoil';
 import { studentName } from '../../../store/RecoilState';
@@ -10,6 +10,7 @@ import outroSound from '../../../assets/music/outro_sound.mp3';
 import outroSound2 from '../../../assets/music/outro_sound2.mp3';
 import outroVoice from '../../../assets/music/outro_voice.mp3';
 import edMusic from '../../../assets/music/ending_music.mp3';
+import coach from '../../../assets/images/coach.png';
 
 function Scene5Page() {
 	document.body.style.overflow = 'hidden';
@@ -103,7 +104,14 @@ function Scene5Page() {
 		<div>
 			{!showBg2Wrapper ? (
 				// 소방차가 도착하는 배경
-				<Scene5Wrapper />
+				<Scene5Wrapper>
+					<Alert>
+						<div className="flex flex-row items-center">
+							<img className="w-16 h-14 mr-2" src={coach} alt="하준이" />
+							<Typography variant="h3">구급차가 도착했어!</Typography>
+						</div>
+					</Alert>
+				</Scene5Wrapper>
 			) : (
 				// 소방관이 칭찬하는 배경
 				<Bg2Wrapper>
