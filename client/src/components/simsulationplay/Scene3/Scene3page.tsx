@@ -37,12 +37,12 @@ function Scene3page() {
 	const memberEmail = useRecoilValue(userEmail);
 	const [socket, setSocket] = useState<WebSocket | null>(null);
 	const [hwsocket, setHWSocket] = useState<WebSocket | null>(null);
-	const [left, setLeft] = useState(400);
+	const [left, setLeft] = useState(0);
 	const [rightHandX, setRightHandX] = useState(0);
 	const [rightHandY, setRightHandY] = useState(0);
 	const [leftHandX, setLeftHandX] = useState(0);
 	const [leftHandY, setLeftHandY] = useState(0);
-	let imgleft = 400;
+	let imgleft = 0;
 
 	// 웹소켓에서 메세지를 받고 그 메세지 값에 따라 다르게 실행하는 함수 설정
 	function getMessage(message: string) {
