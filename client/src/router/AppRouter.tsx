@@ -59,13 +59,12 @@ function AppRouter() {
 							<Route path="/gamedetail/:gameId" element={<GameDetailPage />} />
 							<Route path="/mypage" element={<MyPage />} />
 							<Route path="/teaminfo" element={<TeamInfoPage />} />
+							<Route path="/simulation/test" element={<EmergencyCall />} />
+							<Route path="/machineconfirm" element={<MachineConfirmPage />} />
 							<Route element={<ProtectedReverseConnectRoute />}>
 								<Route path="/simulationmachine" element={<SimulationMachinePage />} />
 							</Route>
-							<Route element={<ProtectedConnectRoute />}>
-								<Route path="/simulation/test" element={<EmergencyCall />} />
-								<Route path="/machineconfirm" element={<MachineConfirmPage />} />
-							</Route>
+							<Route element={<ProtectedConnectRoute />} />
 						</Route>
 					</Routes>
 				</BrowserRouter>
