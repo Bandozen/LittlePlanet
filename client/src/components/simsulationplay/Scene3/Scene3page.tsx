@@ -8,10 +8,16 @@ import { userEmail } from '../../../store/RecoilState';
 import CharacterDisplay from '../../CharacterDisplay';
 import { Scene3Wrapper } from './style3';
 import SimulationChat from '../SimulationChat/index';
+import narr from '../../../assets/music/narr_3.mp3';
+import wrongNarr from '../../../assets/music/narr_6.mp3';
 
 // 다리를 다쳐서 피가 나요.
 function Scene3page() {
 	document.body.style.overflow = 'hidden';
+
+	const [narrAudio] = useState(new Audio(narr));
+	const [wrongNarrAudio] = useState(new Audio(wrongNarr));
+
 	// 화면 첫번째 나레이션을 나타내고 없애주기 위한 변수
 	const [firstNarr, setFirstNarr] = useState(true);
 	// 친구에게 도달했을 때 상황을 나타내기 위한 변수
@@ -43,14 +49,15 @@ function Scene3page() {
 		if (mes.type === 'web') {
 			console.log('web에서 접속한거임');
 		}
-		if (mes.type === 'narr' && mes.content === 'first') {
-			setFirstNarr(false);
+		if (mes.type === 'narr') {
+			narrAudio.play().catch((error) => console.log('자동 재생 실패:', error));
 		}
 		if (mes.type === 'text3') {
 			setText(mes.content);
 		}
 		if (mes.type === 'wrong') {
 			setIsWrong(true);
+			wrongNarrAudio.play().catch((error) => console.log('자동 재생 실패:', error));
 		}
 	}
 
