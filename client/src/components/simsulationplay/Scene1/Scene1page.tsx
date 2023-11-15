@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { Alert, Typography } from '@material-tailwind/react';
-import { PhoneArrowUpRightIcon, SparklesIcon } from '@heroicons/react/24/outline';
+import { PhoneArrowUpRightIcon } from '@heroicons/react/24/outline';
 import { useRecoilValue } from 'recoil';
 import api from '../../../api';
 import { CallGPT } from '../gpt/gpt';
@@ -10,6 +10,9 @@ import SimulationChat from '../SimulationChat/index';
 import CharacterDisplay from '../../CharacterDisplay/index';
 import narr from '../../../assets/music/narr_1.mp3';
 import wrongNarr from '../../../assets/music/narr_6.mp3';
+import coach from '../../../assets/images/coach.png';
+import coachNarr from '../../../assets/music/coach_1.mp3';
+import coachWrongNarr from '../../../assets/music/coach_1_wrong.mp3';
 
 type Content = {
 	contentsUrlName: string;
@@ -21,8 +24,11 @@ type Content = {
 // 친구가 다쳤어요.
 function Scene1page() {
 	document.body.style.overflow = 'hidden';
+
 	const [narrAudio] = useState(new Audio(narr));
 	const [wrongNarrAudio] = useState(new Audio(wrongNarr));
+	const [coachAudio] = useState(new Audio(coachNarr));
+	const [coachWrong] = useState(new Audio(coachWrongNarr));
 
 	// 1. 화면
 	// asset 불러오기.
@@ -42,8 +48,8 @@ function Scene1page() {
 
 	// 캐릭터 이동시키기
 	const [left, setLeft] = useState(500);
-	const handleLeft = () => setLeft((prevLeft) => prevLeft - 5);
-	const handleRight = () => setLeft((prevLeft) => prevLeft + 5);
+	const handleLeft = () => setLeft((prevLeft) => prevLeft - 20);
+	const handleRight = () => setLeft((prevLeft) => prevLeft + 20);
 
 	// 2. 소켓
 	// 소켓 통신을 위한 메일 받아오고, 소켓 관련 초기 설정하기
@@ -60,6 +66,9 @@ function Scene1page() {
 
 	// 오답이라면 소방관과의 대화도 변경되어야 함.
 	const [wrongSignal, setWrongSignal] = useState(false);
+
+	// 처음 틀리면 배경 변경하기 위해
+	const [fail, setFail] = useState(false);
 
 	// 처음 컴포넌트가 마운트되면,
 	useEffect(() => {
@@ -90,6 +99,9 @@ function Scene1page() {
 			if (eventMessage.type === 'wrong') {
 				setWrongSignal(true);
 				wrongNarrAudio.play().catch((error) => console.log('자동 재생 실패:', error));
+				wrongNarrAudio.onended = () => {
+					setIsWrong(false);
+				};
 			}
 			if (eventMessage.type === 'narr') {
 				narrAudio.play().catch((error) => console.log('자동 재생 실패:', error));
@@ -128,17 +140,22 @@ function Scene1page() {
 			console.log('WebSocket connection closed.');
 		};
 
-		// 3초 타이머 설정해서 Alert
-		const timer = setTimeout(() => {
+		coachAudio.play().catch((error) => console.log('자동 재생 실패:', error));
+		coachAudio.onended = () => {
 			setShowAlert(false);
 			newSocket.send(JSON.stringify({ type: 'narr', content: 1 }));
-		}, 3000);
+		};
+		// 3초 타이머 설정해서 Alert
+		// const timer = setTimeout(() => {
+		// 	setShowAlert(false);
+		// 	newSocket.send(JSON.stringify({ type: 'narr', content: 1 }));
+		// }, 3000);
 
 		// 컴포넌트 닫히면 소켓, 타이머 초기화
 		return () => {
 			newSocket.close();
 			moveSocket.close();
-			clearTimeout(timer);
+			// clearTimeout(timer);
 		};
 	}, []);
 
@@ -179,10 +196,8 @@ function Scene1page() {
 							socket?.send(JSON.stringify(message));
 						} else {
 							setIsWrong(true);
+							setFail(true);
 							setText('');
-							setTimeout(() => {
-								socket?.send(JSON.stringify({ type: 'wrong' }));
-							}, 3000);
 						}
 					}
 				} catch (error) {
@@ -201,6 +216,10 @@ function Scene1page() {
 		if (isWrong) {
 			alertTimer = setTimeout(() => {
 				setWrongAlert(true);
+				coachWrong.play().catch((error) => console.log('자동 재생 실패:', error));
+				coachWrong.onended = () => {
+					socket?.send(JSON.stringify({ type: 'wrong' }));
+				};
 			}, 500);
 		}
 
@@ -209,22 +228,14 @@ function Scene1page() {
 		};
 	}, [isWrong]);
 
-	// const handleClickSetText = () => {
-	// 	setText('선생님이 다쳤어요.');
-	// };
-
-	// const handleCorrectAnswer = () => {
-	// 	setText('친구가 높은 곳에서 떨어져서 다쳤어요.');
-	// };
-
-	return isWrong ? (
+	return fail ? (
 		<WrongWrapper>
 			<div className="wrong-container">
 				<Alert className="flex justify-center" variant="gradient" open={wrongAlert && !text}>
 					<div className="flex flex-row items-center m-2">
-						<SparklesIcon className="w-5 h-5 mr-2" color="yellow" />
+						<img className="w-16 h-14 mr-2" src={coach} alt="하준이" />
 						<Typography variant="h4" color="yellow">
-							이렇게 말해볼까?
+							신고를 할 때엔 정확한 상황을 말해야 해. 이렇게 말해볼까?
 						</Typography>
 					</div>
 					<div className="flex flex-row items-center m-2">
@@ -237,20 +248,19 @@ function Scene1page() {
 		</WrongWrapper>
 	) : (
 		<Scene1Wrapper>
-			{/* <Button onClick={handleClickSetText}>오답 한번 보내보자.</Button>
-			<Button onClick={handleCorrectAnswer}>정답 한번 보내보자.</Button>
-			<Button onClick={handleLeft}>왼쪽</Button>
-			<Button onClick={handleRight}>오른쪽</Button> */}
 			{showAlert ? (
 				<div className="alert-container">
 					<Alert>
-						<Typography variant="h3">다친 친구가 있다는 사실을 소방관에게 알려줘!</Typography>
+						<div className="flex flex-row items-center">
+							<img className="w-16 h-14 mr-2" src={coach} alt="하준이" />
+							<Typography variant="h3">먼저 다친 친구가 있다는 사실을 소방관에게 알려야 해!</Typography>
+						</div>
 					</Alert>
 				</div>
 			) : (
 				<SimulationChat chatNumber={text ? 2 : 1} text={text || '네, 119입니다. 무슨 일이세요?'} />
 			)}
-			<div style={{ position: 'absolute', left: `${left}px`, bottom: '25px' }}>
+			<div style={{ position: 'absolute', left: `${left}px`, bottom: '25px', width: '480px', height: '360px' }}>
 				<CharacterDisplay />
 			</div>
 		</Scene1Wrapper>

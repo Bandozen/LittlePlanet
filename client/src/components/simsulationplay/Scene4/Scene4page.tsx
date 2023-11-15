@@ -10,6 +10,8 @@ import SimulationChat from '../SimulationChat/index';
 import CharacterDisplay from '../../CharacterDisplay/index';
 import narr from '../../../assets/music/narr_4.mp3';
 import wrongNarr from '../../../assets/music/narr_6.mp3';
+import coach from '../../../assets/images/coach.png';
+import coachNarr from '../../../assets/music/coach_4.mp3';
 
 type Content = {
 	contentsUrlName: string;
@@ -24,6 +26,7 @@ function Scene4page() {
 
 	const [narrAudio] = useState(new Audio(narr));
 	const [wrongNarrAudio] = useState(new Audio(wrongNarr));
+	const [coachAudio] = useState(new Audio(coachNarr));
 
 	// 1.화면
 	// asset 불러오기.
@@ -43,8 +46,8 @@ function Scene4page() {
 
 	// 캐릭터 이동시키기
 	const [left, setLeft] = useState(500);
-	const handleLeft = () => setLeft((prevLeft) => prevLeft - 5);
-	const handleRight = () => setLeft((prevLeft) => prevLeft + 5);
+	const handleLeft = () => setLeft((prevLeft) => prevLeft - 20);
+	const handleRight = () => setLeft((prevLeft) => prevLeft + 20);
 
 	// 2. 소켓
 	// 소켓 통신을 위한 메일 받아오고, 소켓 관련 초기 설정하기
@@ -130,10 +133,18 @@ function Scene4page() {
 		};
 
 		// 3초 타이머 설정해서 Alert
-		const timer = setTimeout(() => {
+
+		coachAudio.play().catch((error) => console.log('자동 재생 실패:', error));
+
+		coachAudio.onended = () => {
 			setShowAlert(false);
 			newSocket.send(JSON.stringify({ type: 'narr', content: 4 }));
-		}, 3000);
+		};
+
+		// const timer = setTimeout(() => {
+		// 	setShowAlert(false);
+		// 	newSocket.send(JSON.stringify({ type: 'narr', content: 4 }));
+		// }, 3000);
 
 		// 컴포넌트 닫히면 소켓 닫기
 		return () => {
@@ -143,7 +154,7 @@ function Scene4page() {
 			};
 			newSocket.send(JSON.stringify(endmessage));
 			newSocket.close();
-			clearTimeout(timer);
+			// clearTimeout(timer);
 		};
 	}, []);
 
@@ -222,7 +233,10 @@ function Scene4page() {
 			{showAlert && (
 				<div className="alert-container">
 					<Alert>
-						<Typography variant="h3">네 이름을 말해볼까?</Typography>
+						<div className="flex flex-row items-center">
+							<img className="w-16 h-14 mr-2" src={coach} alt="하준이" />
+							<Typography variant="h3">이제 마지막이야! 네 이름을 알려줘!</Typography>
+						</div>
 					</Alert>
 				</div>
 			)}
@@ -246,7 +260,7 @@ function Scene4page() {
 			{!showAlert && !isWrong && wrongSignal && (
 				<SimulationChat chatNumber={text ? 2 : 1} text={text || '다시 한번 얘기해볼래요?'} />
 			)}
-			<div style={{ position: 'absolute', left: `${left}px`, bottom: '25px' }}>
+			<div style={{ position: 'absolute', left: `${left}px`, bottom: '50px', width: '480px', height: '360px' }}>
 				<CharacterDisplay />
 			</div>
 		</Scene4Wrapper>

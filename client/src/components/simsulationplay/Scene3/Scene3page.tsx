@@ -8,10 +8,19 @@ import { userEmail } from '../../../store/RecoilState';
 import CharacterDisplay from '../../CharacterDisplay';
 import { Scene3Wrapper } from './style3';
 import SimulationChat from '../SimulationChat/index';
+import narr from '../../../assets/music/narr_3.mp3';
+import wrongNarr from '../../../assets/music/narr_6.mp3';
+import coach from '../../../assets/images/coach.png';
+import coachNarr from '../../../assets/music/coach_3.mp3';
 
 // 다리를 다쳐서 피가 나요.
 function Scene3page() {
 	document.body.style.overflow = 'hidden';
+
+	const [narrAudio] = useState(new Audio(narr));
+	const [wrongNarrAudio] = useState(new Audio(wrongNarr));
+	const [coachAudio] = useState(new Audio(coachNarr));
+
 	// 화면 첫번째 나레이션을 나타내고 없애주기 위한 변수
 	const [firstNarr, setFirstNarr] = useState(true);
 	// 친구에게 도달했을 때 상황을 나타내기 위한 변수
@@ -28,12 +37,12 @@ function Scene3page() {
 	const memberEmail = useRecoilValue(userEmail);
 	const [socket, setSocket] = useState<WebSocket | null>(null);
 	const [hwsocket, setHWSocket] = useState<WebSocket | null>(null);
-	const [left, setLeft] = useState(500);
+	const [left, setLeft] = useState(400);
 	const [rightHandX, setRightHandX] = useState(0);
 	const [rightHandY, setRightHandY] = useState(0);
 	const [leftHandX, setLeftHandX] = useState(0);
 	const [leftHandY, setLeftHandY] = useState(0);
-	let imgleft = 500;
+	let imgleft = 400;
 
 	// 웹소켓에서 메세지를 받고 그 메세지 값에 따라 다르게 실행하는 함수 설정
 	function getMessage(message: string) {
@@ -43,14 +52,15 @@ function Scene3page() {
 		if (mes.type === 'web') {
 			console.log('web에서 접속한거임');
 		}
-		if (mes.type === 'narr' && mes.content === 'first') {
-			setFirstNarr(false);
+		if (mes.type === 'narr') {
+			narrAudio.play().catch((error) => console.log('자동 재생 실패:', error));
 		}
 		if (mes.type === 'text3') {
 			setText(mes.content);
 		}
 		if (mes.type === 'wrong') {
 			setIsWrong(true);
+			wrongNarrAudio.play().catch((error) => console.log('자동 재생 실패:', error));
 		}
 	}
 
@@ -82,16 +92,16 @@ function Scene3page() {
 			const eventMessage = JSON.parse(event.data);
 			if (eventMessage.type === 'HW') {
 				if (eventMessage.movedir === 'left') {
-					imgleft -= 10;
+					imgleft -= 20;
 					setLeft(imgleft);
 				} else if (eventMessage.movedir === 'right') {
-					imgleft += 10;
+					imgleft += 20;
 					setLeft(imgleft);
 				}
-				setRightHandX(Number(imgleft) + Number(eventMessage.righthandX / 2));
-				setRightHandY(340 - Number(eventMessage.righthandY / 2));
-				setLeftHandX(Number(imgleft) + Number(eventMessage.lefthandX / 2));
-				setLeftHandY(340 - Number(eventMessage.lefthandY / 2));
+				setRightHandX(Number(imgleft) + Number(eventMessage.righthandX * 0.75));
+				setRightHandY(340 - Number(eventMessage.righthandY * 0.75));
+				setLeftHandX(Number(imgleft) + Number(eventMessage.lefthandX * 0.75));
+				setLeftHandY(340 - Number(eventMessage.lefthandY * 0.75));
 			}
 		};
 
@@ -100,9 +110,15 @@ function Scene3page() {
 		};
 
 		// 컴포넌트가 렌더링되고 3초 뒤 첫번째 나레이션 자동으로 사라지게 하기
-		setTimeout(() => {
+
+		coachAudio.play().catch((error) => console.log('자동 재생 실패:', error));
+		coachAudio.onended = () => {
 			setFirstNarr(false);
-		}, 3000);
+		};
+
+		// setTimeout(() => {
+		// 	setFirstNarr(false);
+		// }, 3000);
 
 		return () => {
 			newSocket.close();
@@ -189,10 +205,10 @@ function Scene3page() {
 	};
 
 	useEffect(() => {
-		if (rightHandX >= 900 && rightHandX <= 1000 && rightHandY >= 100 && rightHandY <= 310 && !zoom) {
+		if (rightHandX >= 875 && rightHandX <= 1025 && !zoom) {
 			arrive();
 		}
-		if (leftHandX >= 900 && leftHandX <= 1000 && leftHandY >= 100 && leftHandY <= 310 && !zoom) {
+		if (leftHandX >= 875 && leftHandX <= 1025 && !zoom) {
 			arrive();
 		}
 	}, [rightHandX, rightHandY, leftHandX, leftHandY]);
@@ -232,9 +248,12 @@ function Scene3page() {
 				{firstNarr && (
 					<div className="alert-container">
 						<Alert>
-							<Typography variant="h3">
-								이제 소방관에게 친구가 어디를 다쳤는지 알려줘야 해. 친구에게 다가가 볼까?
-							</Typography>
+							<div className="flex flex-row items-center">
+								<img className="w-16 h-14 mr-2" src={coach} alt="하준이" />
+								<Typography variant="h3" className="whitespace-nowrap">
+									대단한데! 이제 친구가 어디를 다쳤는지 알려야 해. 친구에게 다가가볼까?
+								</Typography>
+							</div>
 						</Alert>
 					</div>
 				)}
@@ -242,7 +261,12 @@ function Scene3page() {
 				{/* <Alert open={isTouched}> */}
 				{arrived && (
 					<Alert>
-						<Typography variant="h3">친구가 어디를 다쳤는지 소방관에게 설명해줘!</Typography>
+						<div className="flex flex-row items-center">
+							<img className="w-16 h-14 mr-2" src={coach} alt="하준이" />
+							<Typography variant="h3" className="whitespace-nowrap">
+								친구가 어디를 다쳤는지 소방관에게 설명해줘!
+							</Typography>
+						</div>
 					</Alert>
 				)}
 				{firefighter && !isWrong && (
@@ -270,7 +294,7 @@ function Scene3page() {
 					<CharacterDisplay />
 				</div>
 			) : (
-				<div style={{ position: 'absolute', left: `${left}px`, bottom: '100px', width: '320px', height: '240px' }}>
+				<div style={{ position: 'absolute', left: `${left}px`, bottom: '50px', width: '480px', height: '320px' }}>
 					<CharacterDisplay />
 				</div>
 			)}
@@ -280,11 +304,11 @@ function Scene3page() {
 				<div
 					style={{
 						position: 'absolute',
-						left: `900px`,
-						bottom: '180px',
-						width: '100px',
-						height: '180px',
-						backgroundColor: 'rgba( 255, 255, 255, 0 )',
+						left: `875px`,
+						bottom: '50px',
+						width: '150px',
+						height: '360px',
+						backgroundColor: 'rgba( 255, 255, 255, 0.5 )',
 					}}
 				/>
 			)}
