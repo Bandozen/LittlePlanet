@@ -189,10 +189,10 @@ function Scene3page() {
 	};
 
 	useEffect(() => {
-		if (rightHandX >= 900 && rightHandX <= 1000 && rightHandY >= 100 && rightHandY <= 310 && !zoom) {
+		if (rightHandX >= 875 && rightHandX <= 1025 && !zoom) {
 			arrive();
 		}
-		if (leftHandX >= 900 && leftHandX <= 1000 && leftHandY >= 100 && leftHandY <= 310 && !zoom) {
+		if (leftHandX >= 875 && leftHandX <= 1025 && !zoom) {
 			arrive();
 		}
 	}, [rightHandX, rightHandY, leftHandX, leftHandY]);
