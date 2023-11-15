@@ -24,6 +24,7 @@ type Content = {
 // 친구가 다쳤어요.
 function Scene1page() {
 	document.body.style.overflow = 'hidden';
+
 	const [narrAudio] = useState(new Audio(narr));
 	const [wrongNarrAudio] = useState(new Audio(wrongNarr));
 	const [coachAudio] = useState(new Audio(coachNarr));
@@ -66,6 +67,9 @@ function Scene1page() {
 	// 오답이라면 소방관과의 대화도 변경되어야 함.
 	const [wrongSignal, setWrongSignal] = useState(false);
 
+	// 처음 틀리면 배경 변경하기 위해
+	const [fail, setFail] = useState(false);
+
 	// 처음 컴포넌트가 마운트되면,
 	useEffect(() => {
 		// asset 불러오고
@@ -95,6 +99,9 @@ function Scene1page() {
 			if (eventMessage.type === 'wrong') {
 				setWrongSignal(true);
 				wrongNarrAudio.play().catch((error) => console.log('자동 재생 실패:', error));
+				wrongNarrAudio.onended = () => {
+					setIsWrong(false);
+				};
 			}
 			if (eventMessage.type === 'narr') {
 				narrAudio.play().catch((error) => console.log('자동 재생 실패:', error));
@@ -189,6 +196,7 @@ function Scene1page() {
 							socket?.send(JSON.stringify(message));
 						} else {
 							setIsWrong(true);
+							setFail(true);
 							setText('');
 						}
 					}
@@ -220,15 +228,7 @@ function Scene1page() {
 		};
 	}, [isWrong]);
 
-	// const handleClickSetText = () => {
-	// 	setText('선생님이 다쳤어요.');
-	// };
-
-	// const handleCorrectAnswer = () => {
-	// 	setText('친구가 높은 곳에서 떨어져서 다쳤어요.');
-	// };
-
-	return isWrong ? (
+	return fail ? (
 		<WrongWrapper>
 			<div className="wrong-container">
 				<Alert className="flex justify-center" variant="gradient" open={wrongAlert && !text}>
@@ -248,10 +248,6 @@ function Scene1page() {
 		</WrongWrapper>
 	) : (
 		<Scene1Wrapper>
-			{/* <Button onClick={handleClickSetText}>오답 한번 보내보자.</Button>
-			<Button onClick={handleCorrectAnswer}>정답 한번 보내보자.</Button>
-			<Button onClick={handleLeft}>왼쪽</Button>
-		<Button onClick={handleRight}>오른쪽</Button> */}
 			{showAlert ? (
 				<div className="alert-container">
 					<Alert>

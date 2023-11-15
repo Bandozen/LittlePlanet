@@ -60,11 +60,11 @@ function AppRouter() {
 							<Route path="/gamedetail/:gameId" element={<GameDetailPage />} />
 							<Route path="/mypage" element={<MyPage />} />
 							<Route path="/teaminfo" element={<TeamInfoPage />} />
-							<Route path="/simulation/test" element={<EmergencyCall />} />
 							<Route element={<ProtectedReverseConnectRoute />}>
 								<Route path="/simulationmachine" element={<SimulationMachinePage />} />
 							</Route>
 							<Route element={<ProtectedConnectRoute />}>
+								<Route path="/simulation/test" element={<EmergencyCall />} />
 								<Route path="/machineconfirm" element={<MachineConfirmPage />} />
 								<Route path="/redistest" element={<RedisTestPage />} />
 							</Route>
