@@ -104,6 +104,7 @@ function EmergencyCall() {
 		<>
 			<div style={{ position: 'absolute', zIndex: '9999' }}>
 				<Button onClick={sendNextPageMessage}> 다음 페이지 이동 </Button>
+				<Button onClick={sendKeypadMessage}> 인트로 끝남 </Button>
 			</div>
 			{/* <Button onClick={sendKeypadMessage}> 인트로 끝남 </Button> */}
 			{/* 1번부터 5번씬 차례대로 status에 따라 */}
