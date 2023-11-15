@@ -43,8 +43,8 @@ function Scene4page() {
 
 	// 캐릭터 이동시키기
 	const [left, setLeft] = useState(500);
-	const handleLeft = () => setLeft((prevLeft) => prevLeft - 5);
-	const handleRight = () => setLeft((prevLeft) => prevLeft + 5);
+	const handleLeft = () => setLeft((prevLeft) => prevLeft - 20);
+	const handleRight = () => setLeft((prevLeft) => prevLeft + 20);
 
 	// 2. 소켓
 	// 소켓 통신을 위한 메일 받아오고, 소켓 관련 초기 설정하기

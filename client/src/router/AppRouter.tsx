@@ -18,6 +18,7 @@ import ScrollToTop from 'components/common/ScrollToTop';
 import EmergencyCall from 'components/simsulationplay/EmergencyCall';
 // import SimulationPlayPage from 'pages/SimulationPlayPage';
 import RedisTestPage from 'pages/RedisTestPage';
+import TeamInfoPage from 'pages/TeamInfoPage';
 
 function ProtectedRoute() {
 	const email = useRecoilValue(userEmail);
@@ -58,6 +59,7 @@ function AppRouter() {
 							<Route path="/gamelist" element={<GameListPage />} />
 							<Route path="/gamedetail/:gameId" element={<GameDetailPage />} />
 							<Route path="/mypage" element={<MyPage />} />
+							<Route path="/teaminfo" element={<TeamInfoPage />} />
 							<Route element={<ProtectedReverseConnectRoute />}>
 								<Route path="/simulationmachine" element={<SimulationMachinePage />} />
 							</Route>
