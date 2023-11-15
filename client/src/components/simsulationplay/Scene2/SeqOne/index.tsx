@@ -1,6 +1,8 @@
 import React, { Dispatch, SetStateAction, useEffect, useState } from 'react';
 import { Alert, Typography } from '@material-tailwind/react';
 import { SeqOneWrapper } from './style';
+import coach from '../../../../assets/images/coach.png';
+import coachNarr from '../../../../assets/music/coach_2.mp3';
 
 interface ISeqOneProps {
 	setStep: Dispatch<SetStateAction<number>>;
@@ -11,17 +13,24 @@ function SeqOne(props: ISeqOneProps) {
 	const [showNarr, setShowNarr] = useState(true);
 	const { setStep } = props;
 
+	const [coachAudio] = useState(new Audio(coachNarr));
+
 	useEffect(() => {
-		const timer = setTimeout(() => {
+		coachAudio.play().catch((error) => console.log('자동 재생 실패:', error));
+		coachAudio.onended = () => {
 			setShowNarr(false);
-		}, 3000);
+		};
+
+		// const timer = setTimeout(() => {
+		// 	setShowNarr(false);
+		// }, 3000);
 
 		const nextSeqTimer = setTimeout(() => {
 			setStep(1);
 		}, 15000);
 
 		return () => {
-			clearTimeout(timer);
+			// clearTimeout(timer);
 			clearTimeout(nextSeqTimer);
 		};
 	}, []);
@@ -31,7 +40,12 @@ function SeqOne(props: ISeqOneProps) {
 			{showNarr ? (
 				<div className="alert-container">
 					<Alert>
-						<Typography variant="h3">이제 소방관에게 위치를 알려줘야 해. 먼저 주변을 살펴볼까?</Typography>
+						<div className="flex flex-row items-center">
+							<img className="w-16 h-14 mr-2" src={coach} alt="하준이" />
+							<Typography variant="h3" className="whitespace-nowrap">
+								잘했어! 이제 소방관에게 위치를 알려야 해. 여기가 어딘지 주변을 살펴볼까?
+							</Typography>
+						</div>
 					</Alert>
 				</div>
 			) : (
