@@ -1,5 +1,5 @@
 import React, {useState, useEffect} from 'react';
-import {View, Text} from 'react-native';
+import {View, Text, StyleSheet} from 'react-native';
 import Voice from '@react-native-community/voice';
 
 interface STTComponentProps {
@@ -95,5 +95,12 @@ const STTComponent: React.FC<STTComponentProps> = ({
     </View>
   );
 };
-
+const styles = StyleSheet.create({
+  sttText: {
+    color: 'red',
+    padding: 10,
+    flexShrink: 1,
+    fontFamily: 'GowunDodum-Regular',
+  }
+});
 export default STTComponent;

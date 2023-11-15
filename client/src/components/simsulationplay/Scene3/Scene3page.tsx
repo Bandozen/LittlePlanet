@@ -89,10 +89,10 @@ function Scene3page() {
 			const eventMessage = JSON.parse(event.data);
 			if (eventMessage.type === 'HW') {
 				if (eventMessage.movedir === 'left') {
-					imgleft -= 10;
+					imgleft -= 20;
 					setLeft(imgleft);
 				} else if (eventMessage.movedir === 'right') {
-					imgleft += 10;
+					imgleft += 20;
 					setLeft(imgleft);
 				}
 				setRightHandX(Number(imgleft) + Number(eventMessage.righthandX / 2));
@@ -291,7 +291,7 @@ function Scene3page() {
 						bottom: '180px',
 						width: '100px',
 						height: '180px',
-						backgroundColor: 'rgba( 255, 255, 255, 0 )',
+						backgroundColor: 'rgba( 255, 255, 255, 0.5 )',
 					}}
 				/>
 			)}
