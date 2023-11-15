@@ -24,4 +24,40 @@ export const Bg2Wrapper = styled.div`
 	.btn-style {
 		margin-top: 50px;
 	}
+	@keyframes marquee {
+		from {
+			bottom: -100%; /* 시작 위치를 화면 아래로 설정 */
+		}
+		to {
+			bottom: 100%; /* 종료 위치를 화면 위로 설정 */
+			visibility: hidden;
+		}
+	}
+
+	.marquee {
+		position: absolute;
+		bottom: 0;
+		left: 50%;
+		transform: translateX(-50%); /* 중앙 정렬 */
+		background-color: black;
+		color: white;
+		// width: 300px;
+		padding: 20px;
+		white-space: pre-line; /* 줄바꿈과 공백 처리 */
+		animation: marquee 20s linear;
+		animation-iteration-count: 1;
+		animation-fill-mode: forwards;
+		overflow: hidden;
+	}
+
+	/* 화면 밑에서 시작하도록 설정 */
+	.marquee::before {
+		content: '';
+		display: block;
+		height: 100vh; /* 화면 높이만큼의 공간 */
+		position: absolute;
+		top: -100vh;
+		left: 0;
+		right: 0;
+	}
 `;
