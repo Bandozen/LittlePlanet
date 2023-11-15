@@ -8,10 +8,19 @@ import { userEmail } from '../../../store/RecoilState';
 import CharacterDisplay from '../../CharacterDisplay';
 import { Scene3Wrapper } from './style3';
 import SimulationChat from '../SimulationChat/index';
+import narr from '../../../assets/music/narr_3.mp3';
+import wrongNarr from '../../../assets/music/narr_6.mp3';
+import coach from '../../../assets/images/coach.png';
+import coachNarr from '../../../assets/music/coach_3.mp3';
 
 // 다리를 다쳐서 피가 나요.
 function Scene3page() {
 	document.body.style.overflow = 'hidden';
+
+	const [narrAudio] = useState(new Audio(narr));
+	const [wrongNarrAudio] = useState(new Audio(wrongNarr));
+	const [coachAudio] = useState(new Audio(coachNarr));
+
 	// 화면 첫번째 나레이션을 나타내고 없애주기 위한 변수
 	const [firstNarr, setFirstNarr] = useState(true);
 	// 친구에게 도달했을 때 상황을 나타내기 위한 변수
@@ -43,14 +52,15 @@ function Scene3page() {
 		if (mes.type === 'web') {
 			console.log('web에서 접속한거임');
 		}
-		if (mes.type === 'narr' && mes.content === 'first') {
-			setFirstNarr(false);
+		if (mes.type === 'narr') {
+			narrAudio.play().catch((error) => console.log('자동 재생 실패:', error));
 		}
 		if (mes.type === 'text3') {
 			setText(mes.content);
 		}
 		if (mes.type === 'wrong') {
 			setIsWrong(true);
+			wrongNarrAudio.play().catch((error) => console.log('자동 재생 실패:', error));
 		}
 	}
 
@@ -100,9 +110,15 @@ function Scene3page() {
 		};
 
 		// 컴포넌트가 렌더링되고 3초 뒤 첫번째 나레이션 자동으로 사라지게 하기
-		setTimeout(() => {
+
+		coachAudio.play().catch((error) => console.log('자동 재생 실패:', error));
+		coachAudio.onended = () => {
 			setFirstNarr(false);
-		}, 3000);
+		};
+
+		// setTimeout(() => {
+		// 	setFirstNarr(false);
+		// }, 3000);
 
 		return () => {
 			newSocket.close();
@@ -232,9 +248,12 @@ function Scene3page() {
 				{firstNarr && (
 					<div className="alert-container">
 						<Alert>
-							<Typography variant="h3">
-								이제 소방관에게 친구가 어디를 다쳤는지 알려줘야 해. 친구에게 다가가 볼까?
-							</Typography>
+							<div className="flex flex-row items-center">
+								<img className="w-16 h-14 mr-2" src={coach} alt="하준이" />
+								<Typography variant="h3" className="whitespace-nowrap">
+									대단한데! 이제 친구가 어디를 다쳤는지 알려야 해. 친구에게 다가가볼까?
+								</Typography>
+							</div>
 						</Alert>
 					</div>
 				)}
@@ -242,7 +261,12 @@ function Scene3page() {
 				{/* <Alert open={isTouched}> */}
 				{arrived && (
 					<Alert>
-						<Typography variant="h3">친구가 어디를 다쳤는지 소방관에게 설명해줘!</Typography>
+						<div className="flex flex-row items-center">
+							<img className="w-16 h-14 mr-2" src={coach} alt="하준이" />
+							<Typography variant="h3" className="whitespace-nowrap">
+								친구가 어디를 다쳤는지 소방관에게 설명해줘!
+							</Typography>
+						</div>
 					</Alert>
 				)}
 				{firefighter && !isWrong && (

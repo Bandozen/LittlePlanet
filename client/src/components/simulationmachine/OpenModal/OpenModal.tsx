@@ -103,13 +103,15 @@ function OpenModal() {
 	};
 
 	const modalContent = (
-		<div>
-			<div className="flex justify-center">
-				<p style={{ fontSize: '32px' }}>{otpNum}</p>
-			</div>
-			<div className="flex justify-center">
-				<Button text="확인" handleClick={() => getApiConnected()} />
+		<div className="flex flex-col items-center">
+			<p className="m-1" style={{ fontSize: '32px' }}>
+				{otpNum}
+			</p>
+			<div className="m-1">
 				<Timer onTimerEnd={clickModal} />
+			</div>
+			<div className="m-1">
+				<Button text="확인" handleClick={() => getApiConnected()} />
 			</div>
 		</div>
 	);
