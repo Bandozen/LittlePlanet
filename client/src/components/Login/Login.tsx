@@ -291,6 +291,8 @@ function Login() {
 				</Dialog>
 				<Button
 					onClick={() => {
+						document.body.style.overflow = 'auto';
+						document.body.style.overflowX = 'hidden';
 						navigate('/main');
 					}}
 					style={{
