@@ -71,8 +71,6 @@ wss.on("connection", (ws, req) => {
     // 현재 클라이언트들 담은 배열에서 해당 클라이언트 제거
     clients = clients.filter((client) => client !== ws);
   });
-
-  return;
 });
 
 // 서버를 7777 포트에서 시작
