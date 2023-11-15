@@ -18,6 +18,7 @@ import FontAwesome from 'react-native-vector-icons/FontAwesome';
 import {StackNavigationProp} from '@react-navigation/stack';
 import {MemberAPI} from '../utils/MemberAPI';
 import STTComponent from '../components/STTComponent';
+import CommonModal from '../components/CommonModal';
 import {FlipInEasyX} from 'react-native-reanimated';
 
 type MainProps = {
@@ -35,6 +36,8 @@ export default function Main({navigation}: MainProps) {
   const [isSTTActive, setIsSTTActive] = useState(false);
   const [transcript, setTranscript] = useState('');
   const [narrstatus, setnarrstatus] = useState('');
+  const [isModalVisible, setModalVisible] = useState(false);
+  const [modalMessage, setModalMessage] = useState('');
 
   const handleLogin = async () => {
     try {
@@ -43,7 +46,9 @@ export default function Main({navigation}: MainProps) {
       if (jwt) {
         await MemberAPI.setJwtToken(jwt);
         await MemberAPI.setEmail(email);
-        Alert.alert('로그인 성공', '환영합니다!');
+        // Alert.alert('로그인 성공', '환영합니다!');
+        setModalMessage('로그인 성공, 환영합니다!');
+        toggleModal();
         setIsLoggedin(true);
         // 로그인 성공 후 WebSocket 연결 초기화
         // const newSocket = new WebSocket('ws://192.168.100.85:7777');
@@ -82,19 +87,25 @@ export default function Main({navigation}: MainProps) {
       }
     } catch (error) {
       console.log('로그인 실패', error);
-      Alert.alert('로그인 실패', '이메일 또는 비밀번호가 틀립니다.');
+      // Alert.alert('로그인 실패', '이메일 또는 비밀번호가 틀립니다.');
+      setModalMessage('이메일 또는 비밀번호가 틀립니다.');
+      toggleModal();
       setIsLoggedin(false);
     }
   };
 
   const handleLogout = async () => {
     try {
-      Alert.alert('로그아웃 성공', '다녀오세요!');
+      // Alert.alert('로그아웃 성공', '다녀오세요!');
+      setModalMessage('로그아웃 성공, 다녀오세요!');
+      toggleModal();
       await MemberAPI.logout();
       setIsLoggedin(false);
       navigation.navigate('Main');
     } catch (error) {
-      Alert.alert('로그아웃 실패', '다시 시도해주세요.');
+      // Alert.alert('로그아웃 실패', '다시 시도해주세요.');
+      setModalMessage('로그아웃 실패, 다시 시도해주세요.');
+      toggleModal();
       console.log(error);
     }
   };
@@ -126,25 +137,40 @@ export default function Main({navigation}: MainProps) {
   const toggleSTT = () => {
     setIsSTTActive(!isSTTActive);
   };
+
+  const toggleModal = () => {
+    setModalVisible(!isModalVisible);
+  };
   return (
     <View style={styles.container}>
+      <CommonModal
+        isVisible={isModalVisible}
+        onRequestClose={toggleModal}
+        message={modalMessage}>
+        <Text style={styles.modaltext}>{modalMessage}</Text>
+        <TouchableOpacity
+                    style={styles.modalbtn}
+                    onPress={toggleModal}>
+                    <Text style={styles.buttonText}>닫기</Text>
+                  </TouchableOpacity>
+      </CommonModal>
       <ImageBackground
         source={require('../assets/images/login_img.jpg')}
         style={styles.backgroundImage}>
         <KeyboardAwareScrollView
-        style={{ flex: 1 }}
-        contentContainerStyle={{
-          flexGrow: 1,
-          justifyContent: 'center', 
-          alignItems: 'center'
-        }}
-        keyboardShouldPersistTaps="handled">
-          <View style={{ width: '100%', alignItems: 'center' }}>
+          style={{flex: 1}}
+          contentContainerStyle={{
+            flexGrow: 1,
+            justifyContent: 'center',
+            alignItems: 'center',
+          }}
+          keyboardShouldPersistTaps="handled">
+          <View style={{width: '100%', alignItems: 'center'}}>
             <Image
               source={require('../assets/images/logo.png')}
               style={styles.logo}></Image>
             {IsLoggedin ? (
-              // 로그인 상태일 때 보이는 버튼
+              // 로그인 상태일 때 보이는 화면
               <React.Fragment>
                 <Text style={styles.textStyle}>
                   소행성에 오신 것을 환영합니다!
@@ -160,7 +186,7 @@ export default function Main({navigation}: MainProps) {
                 </TouchableOpacity>
               </React.Fragment>
             ) : (
-              // 로그아웃 상태일 때 보이는 버튼
+              // 로그아웃 상태일 때 보이는 화면
               <React.Fragment>
                 <Text style={styles.textStyle}>
                   소행성에 오신 것을 환영합니다!
@@ -200,14 +226,18 @@ export default function Main({navigation}: MainProps) {
                 </View>
               </React.Fragment>
             )}
-            {/* <TouchableOpacity
+            <TouchableOpacity
               style={[styles.extraButton]}
               onPress={() => navigation.navigate('Call')}>
               <Icon name="phone" size={40} color="yellow" />
               <Text style={styles.textStyle}>전화</Text>
             </TouchableOpacity>
-
-            <TouchableOpacity
+            {/* <TouchableOpacity
+              style={[styles.buttonStyle]}
+              onPress={() => navigation.navigate('Logo')}>
+                <Text>로고</Text>
+              </TouchableOpacity> */}
+            {/* <TouchableOpacity
               style={[styles.extraButton]}
               onPress={toggleSTT}
               activeOpacity={0.7} // 옵셔널: 눌렀을 때 투명도 효과를 줍니다.
@@ -248,6 +278,7 @@ const styles = StyleSheet.create({
     fontFamily: 'GowunDodum-Regular',
     fontSize: 20,
     color: 'white',
+    marginBottom: 5,
   },
   buttonStyle: {
     backgroundColor: 'yellow',
@@ -263,7 +294,7 @@ const styles = StyleSheet.create({
     shadowRadius: 3,
     shadowOffset: {width: 0, height: 2},
     elevation: 5,
-    marginBottom: 20, 
+    marginBottom: 20,
   },
   buttonText: {
     color: 'black',
@@ -318,4 +349,15 @@ const styles = StyleSheet.create({
     elevation: 5,
     marginLeft: 0,
   },
+  modaltext: {
+    fontFamily: 'GowunDodum-Regular',
+    fontSize: 20,
+    marginBottom: 15,
+  },
+  modalbtn: {
+    borderRadius: 10,
+    backgroundColor: 'yellow',
+    padding: 8,
+    paddingHorizontal: 20,
+  }
 });

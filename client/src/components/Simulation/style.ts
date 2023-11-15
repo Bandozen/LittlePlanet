@@ -89,6 +89,9 @@ export const SimulationDetailWrapper = styled.div`
 	.btn-div-play {
 		margin: 10px;
 	}
+	.detail-text {
+		margin: 10px;
+	}
 `;
 
 export const SimulationMainWrapper = styled.div`
