@@ -37,7 +37,7 @@ function StepFour(props: IStepFourProps) {
 				<CheckStep activeStep={activeStep} checkNum={5} message="시작하기!" />
 			</div>
 			<div className="cam-wrapper">
-				<img className="loading" src={loadingImage} alt="" />
+				{/* <img className="loading" src={loadingImage} alt="" /> */}
 				{CharacterDisplay ? (
 					<div className="image-wrapper">
 						<CharacterDisplay />
