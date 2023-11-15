@@ -28,12 +28,12 @@ function Scene3page() {
 	const memberEmail = useRecoilValue(userEmail);
 	const [socket, setSocket] = useState<WebSocket | null>(null);
 	const [hwsocket, setHWSocket] = useState<WebSocket | null>(null);
-	const [left, setLeft] = useState(500);
+	const [left, setLeft] = useState(400);
 	const [rightHandX, setRightHandX] = useState(0);
 	const [rightHandY, setRightHandY] = useState(0);
 	const [leftHandX, setLeftHandX] = useState(0);
 	const [leftHandY, setLeftHandY] = useState(0);
-	let imgleft = 500;
+	let imgleft = 400;
 
 	// 웹소켓에서 메세지를 받고 그 메세지 값에 따라 다르게 실행하는 함수 설정
 	function getMessage(message: string) {
@@ -88,10 +88,10 @@ function Scene3page() {
 					imgleft += 20;
 					setLeft(imgleft);
 				}
-				setRightHandX(Number(imgleft) + Number(eventMessage.righthandX / 2));
-				setRightHandY(340 - Number(eventMessage.righthandY / 2));
-				setLeftHandX(Number(imgleft) + Number(eventMessage.lefthandX / 2));
-				setLeftHandY(340 - Number(eventMessage.lefthandY / 2));
+				setRightHandX(Number(imgleft) + Number(eventMessage.righthandX * 0.75));
+				setRightHandY(340 - Number(eventMessage.righthandY * 0.75));
+				setLeftHandX(Number(imgleft) + Number(eventMessage.lefthandX * 0.75));
+				setLeftHandY(340 - Number(eventMessage.lefthandY * 0.75));
 			}
 		};
 
@@ -270,7 +270,7 @@ function Scene3page() {
 					<CharacterDisplay />
 				</div>
 			) : (
-				<div style={{ position: 'absolute', left: `${left}px`, bottom: '100px', width: '320px', height: '240px' }}>
+				<div style={{ position: 'absolute', left: `${left}px`, bottom: '50px', width: '480px', height: '320px' }}>
 					<CharacterDisplay />
 				</div>
 			)}
@@ -280,10 +280,10 @@ function Scene3page() {
 				<div
 					style={{
 						position: 'absolute',
-						left: `900px`,
-						bottom: '180px',
-						width: '100px',
-						height: '180px',
+						left: `875px`,
+						bottom: '50px',
+						width: '150px',
+						height: '360px',
 						backgroundColor: 'rgba( 255, 255, 255, 0.5 )',
 					}}
 				/>

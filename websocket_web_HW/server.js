@@ -111,6 +111,8 @@ wss.on("connection", (ws, req) => {
   ws.on("close", () => {
     console.log("Client disconnected");
   });
+
+  return;
 });
 
 // 서버를 7777 포트에서 시작
