@@ -1,5 +1,5 @@
 import React, { Dispatch, SetStateAction, useEffect, useState } from 'react';
-import { Alert, Typography } from '@material-tailwind/react';
+import { Alert, Button, Typography } from '@material-tailwind/react';
 import { InformationCircleIcon } from '@heroicons/react/24/outline';
 import CharacterDisplay from 'components/CharacterDisplay';
 import { userEmail } from 'store/RecoilState';
@@ -113,16 +113,16 @@ function SeqTwo(props: ISeqTwoProps) {
 			const eventMessage = JSON.parse(event.data);
 			if (eventMessage.type === 'HW') {
 				if (eventMessage.movedir === 'left') {
-					imgleft -= 10;
+					imgleft -= 20;
 					setLeft(imgleft);
 				} else if (eventMessage.movedir === 'right') {
-					imgleft += 10;
+					imgleft += 20;
 					setLeft(imgleft);
 				}
-				setRightHandX(Number(imgleft) + Number(eventMessage.righthandX / 2));
-				setRightHandY(340 - Number(eventMessage.righthandY / 2));
-				setLeftHandX(Number(imgleft) + Number(eventMessage.lefthandX / 2));
-				setLeftHandY(340 - Number(eventMessage.lefthandY / 2));
+				setRightHandX(Number(imgleft) + Number(eventMessage.righthandX * 0.75));
+				setRightHandY(340 - Number(eventMessage.righthandY * 0.75));
+				setLeftHandX(Number(imgleft) + Number(eventMessage.lefthandX * 0.75));
+				setLeftHandY(340 - Number(eventMessage.lefthandY * 0.75));
 				console.log(rightHandX, rightHandY, leftHandX, leftHandY);
 			}
 		};
@@ -152,25 +152,25 @@ function SeqTwo(props: ISeqTwoProps) {
 	}, [hwsocket]); // socket가 변경될 때 : 즉 소켓에 설정한 링크로 변경 됐을 때 자동으로 실행
 
 	useEffect(() => {
-		if (rightHandX >= 1300 && rightHandX <= 1400 && rightHandY >= 100 && rightHandY <= 310 && !littleplanetInfo) {
+		if (rightHandX >= 1250 && rightHandX <= 1450 && !littleplanetInfo) {
 			littlePlanet();
 		}
-		if (leftHandX >= 1300 && leftHandX <= 1400 && leftHandY >= 100 && leftHandY <= 310 && !littleplanetInfo) {
+		if (rightHandX >= 1250 && rightHandX <= 1450 && !littleplanetInfo) {
 			littlePlanet();
 		}
-		if (rightHandX >= 250 && rightHandX <= 350 && rightHandY >= 100 && rightHandY <= 310 && !buildingInfo) {
+		if (rightHandX >= 200 && rightHandX <= 400 && !buildingInfo) {
 			samsungBuilding();
 		}
-		if (leftHandX >= 250 && leftHandX <= 350 && leftHandY >= 100 && leftHandY <= 310 && !buildingInfo) {
+		if (leftHandX >= 200 && leftHandX <= 400 && !buildingInfo) {
 			samsungBuilding();
 		}
 	}, [rightHandX, rightHandY, leftHandX, leftHandY]);
 
 	return (
 		<SeqTwoWrapper>
-			{/* <Button onClick={littlePlanet}>소행성로</Button>
-			<Button onClick={samsungBuilding}>삼성빌딩</Button> */}
-			<div style={{ position: 'absolute', left: `${left}px`, bottom: '100px', width: '320px', height: '240px' }}>
+			<Button onClick={littlePlanet}>소행성로</Button>
+			<Button onClick={samsungBuilding}>삼성빌딩</Button>
+			<div style={{ position: 'absolute', left: `${left}px`, bottom: '50px', width: '480px', height: '360px' }}>
 				<CharacterDisplay />
 			</div>
 			<div style={{ position: 'absolute', top: '150px', left: '50px' }}>
@@ -188,21 +188,21 @@ function SeqTwo(props: ISeqTwoProps) {
 			<div
 				style={{
 					position: 'absolute',
-					left: `1300px`,
-					bottom: '180px',
-					width: '100px',
-					height: '180px',
-					backgroundColor: 'rgba( 255, 255, 255, 0 )',
+					left: `1250px`,
+					bottom: '50px',
+					width: '200px',
+					height: '360px',
+					backgroundColor: 'rgba( 255, 255, 255, 0.5 )',
 				}}
 			/>
 			<div
 				style={{
 					position: 'absolute',
 					left: `200px`,
-					bottom: '180px',
-					width: '100px',
-					height: '180px',
-					backgroundColor: 'rgba( 255, 255, 255, 0 )',
+					bottom: '50px',
+					width: '200px',
+					height: '360px',
+					backgroundColor: 'rgba( 255, 255, 255, 0.5 )',
 				}}
 			/>
 			{littleplanetInfo && (

@@ -19,4 +19,12 @@ export const Wrapper = styled.div`
 		align-items: center;
 		justify-content: center;
 	}
+
+	.loading-image {
+		height: 480px;
+		width: 600px;
+		align-items: center;
+		justify-content: center;
+		z-index: 9999;
+	}
 `;
