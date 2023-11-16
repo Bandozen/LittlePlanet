@@ -44,7 +44,7 @@ export const Bg2Wrapper = styled.div`
 		// width: 300px;
 		padding: 20px;
 		white-space: pre-line; /* 줄바꿈과 공백 처리 */
-		animation: marquee 20s linear;
+		animation: marquee 15s linear;
 		animation-iteration-count: 1;
 		animation-fill-mode: forwards;
 		overflow: hidden;

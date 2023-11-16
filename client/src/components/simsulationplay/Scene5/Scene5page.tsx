@@ -66,15 +66,15 @@ function Scene5Page() {
 				voice: { languageCode: 'ko-KR', name: 'ko-KR-Standard-D', ssmlGender: 'MALE' },
 				audioConfig: { audioEncoding: 'MP3' },
 			});
-			console.log('응답 데이터', response.data); // 응답 데이터 확인
+			// console.log('응답 데이터', response.data); // 응답 데이터 확인
 			// base64 인코딩된 문자열을 디코딩하고 Uint8Array로 변환
 			const audioStr = atob(response.data.audioContent);
-			console.log('디코딩된 문자열', audioStr);
+			// console.log('디코딩된 문자열', audioStr);
 			const audioBytes = new Uint8Array(audioStr.length);
 			for (let i = 0; i < audioStr.length; i += 1) {
 				audioBytes[i] = audioStr.charCodeAt(i);
 			}
-			console.log('변환된바이트배열', audioBytes);
+			// console.log('변환된바이트배열', audioBytes);
 			const audioBlob = new Blob([audioBytes], { type: 'audio/mp3' });
 			const audioURL = URL.createObjectURL(audioBlob);
 			// TTS 음성 재생

@@ -1,12 +1,15 @@
-import React from 'react';
+import React, { useState } from 'react';
 import PlayButton from 'components/Button/PlayButton';
 import { useParams } from 'react-router-dom';
 // import { Carousel } from '@material-tailwind/react';
 import { SimulationDetailWrapper, SimulationLink } from './style';
 import simulations from '../../dummys/simulations';
 import detailImg from '../../assets/images/detail_ver2.png';
+import NotYetModal from './NotYetModal/NotYetModal';
 
 function SimulationDetail() {
+	const [showNotYetModal, setShowNotYetModal] = useState(false);
+
 	const { simulationId } = useParams();
 	const simulation = simulations.find((sim) => sim.id === Number(simulationId));
 	if (!simulation) {
@@ -32,6 +35,9 @@ function SimulationDetail() {
 						<SimulationLink to="/simulationmachine">
 							<PlayButton text="시작하기" />
 						</SimulationLink>
+						{showNotYetModal && simulation.id === 1 && (
+							<NotYetModal isOpen={showNotYetModal} onClose={() => setShowNotYetModal(false)} />
+						)}
 					</div>
 				</div>
 				<div className="detail-img">
