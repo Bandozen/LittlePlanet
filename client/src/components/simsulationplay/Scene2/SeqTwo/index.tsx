@@ -185,7 +185,7 @@ function SeqTwo(props: ISeqTwoProps) {
 					bottom: '50px',
 					width: '200px',
 					height: '360px',
-					backgroundColor: 'rgba( 255, 255, 255, 0.5 )',
+					backgroundColor: 'rgba( 255, 255, 255, 0 )',
 				}}
 			/>
 			<div
@@ -195,7 +195,7 @@ function SeqTwo(props: ISeqTwoProps) {
 					bottom: '50px',
 					width: '200px',
 					height: '360px',
-					backgroundColor: 'rgba( 255, 255, 255, 0.5 )',
+					backgroundColor: 'rgba( 255, 255, 255, 0 )',
 				}}
 			/>
 			{littleplanetInfo && (
