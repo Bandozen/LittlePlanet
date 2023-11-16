@@ -105,7 +105,7 @@
 
 |                         소행성                          |
 | :-----------------------------------------------------: |
-| ![메인페이지](exec/images/screenshot/00_메인페이지.gif) |
+| ![메인페이지](exec/images/screenshot/WEB_메인페이지.gif) |
 
 <hr>
 
@@ -113,7 +113,7 @@
 
 |                     로그인                     |                     회원가입                     |
 | :--------------------------------------------: | :----------------------------------------------: |
-| ![image](exec/images/screenshot/04_로그인.png) | ![image](exec/images/screenshot/05_회원가입.png) |
+| ![image](exec/images/screenshot/WEB_로그인.png) | ![image](exec/images/screenshot/WEB_회원가입.png) |
 
 <hr>
 
@@ -121,7 +121,7 @@
 
 |                     마이페이지                     |                          회원정보수정                           |                          학생등록                           |
 | :------------------------------------------------: | :-------------------------------------------------------------: | :---------------------------------------------------------: |
-| ![image](exec/images/screenshot/01_마이페이지.png) | ![image](exec/images/screenshot/02_마이페이지_회원정보수정.png) | ![image](exec/images/screenshot/03_마이페이지_학생등록.png) |
+| ![image](exec/images/screenshot/WEB_마이페이지.png) | ![image](exec/images/screenshot/WEB_마이페이지_회원정보수정.png) | ![image](exec/images/screenshot/WEB_마이페이지_학생등록.png) |
 
 <hr>
 
@@ -129,7 +129,7 @@
 
 |                       시뮬레이션                       |                       게임                       |
 | :----------------------------------------------------: | :----------------------------------------------: |
-| ![image](exec/images/screenshot/06_시뮬레이션목록.png) | ![image](exec/images/screenshot/07_게임목록.png) |
+| ![image](exec/images/screenshot/WEB_시뮬레이션_목록.png) | ![image](exec/images/screenshot/WEB_게임_목록.png) |
 
 <hr>
 
@@ -137,7 +137,7 @@
 
 |                    기기연결 가이드                     |                     OTP                     |                    기기연결 확인                     |
 | :----------------------------------------------------: | :-----------------------------------------: | :--------------------------------------------------: |
-| ![image](exec/images/screenshot/08_기기연결가이드.png) | ![image](exec/images/screenshot/09_otp.png) | ![image](exec/images/screenshot/10_기기연결확인.png) |
+| ![image](exec/images/screenshot/WEB_기기연결가이드.png) | ![image](exec/images/screenshot/WEB_otp.png) | ![image](exec/images/screenshot/WEB_기기연결확인.png) |
 
 <hr>
 
@@ -149,15 +149,19 @@
 
 <hr>
 
-### 시뮬레이션 플레이 💢
+### 시뮬레이션 플레이
 
 |                          인트로                          |                     아웃트로                     |
 | :------------------------------------------------------: | :----------------------------------------------: |
-| ![image](exec/images/screenshot/11_시뮬레이션_intro.gif) | ![image](exec/images/screenshot/12_아웃트로.png) |
+| ![image](exec/images/screenshot/WEB_시뮬레이션_인트로.gif) | ![image](exec/images/screenshot/WEB_시뮬레이션_아웃트로.gif) |
 
-|                     정답                     |                     오답                     |
+|                     지시문                     |                     오답                     |
 | :------------------------------------------: | :------------------------------------------: |
-| ![image](exec/images/screenshot/13_정답.png) | ![image](exec/images/screenshot/14_오답.png) |
+| ![image](exec/images/screenshot/WEB_시뮬레이션_지시문.png) | ![image](exec/images/screenshot/WEB_시뮬레이션_오답.png) |
+
+|                     소방관                     |                     사용자                     |
+| :------------------------------------------: | :------------------------------------------: |
+| ![image](exec/images/screenshot/WEB_시뮬레이션_소방관.png) | ![image](exec/images/screenshot/WEB_시뮬레이션_사용자.png) |
 
 ### APP
 

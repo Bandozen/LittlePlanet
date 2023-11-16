@@ -22,8 +22,6 @@ function SeqThree(props: ISeqThreeProps) {
 
 	const { address, setStep, setStatus } = props;
 
-	console.log(address);
-
 	const [narrAudio] = useState(new Audio(narration));
 	const [wrongNarrAudio] = useState(new Audio(wrongNarration));
 	const [coachAudio] = useState(new Audio(coach5Narr));
@@ -41,16 +39,11 @@ function SeqThree(props: ISeqThreeProps) {
 
 	const [location, setLocation] = useState(true);
 
-	// const [address, setAddress] = useState('');
-
 	const memberEmail = useRecoilValue(userEmail);
 
 	useEffect(() => {
 		// 소켓 연결 부분(ip주소 및 배포주소)
 		const newSocket = new WebSocket('wss://k9c203.p.ssafy.io:17777');
-		// const newSocket = new WebSocket('ws://192.168.100.36:7777');
-		// const newSocket = new WebSocket('ws://192.168.100.38:7777');
-		// const newSocket = new WebSocket('ws://localhost:7777');
 
 		newSocket.onopen = () => {
 			setSocket(newSocket);
@@ -89,14 +82,8 @@ function SeqThree(props: ISeqThreeProps) {
 			newSocket.send(JSON.stringify({ type: 'narr', content: 2 }));
 		};
 
-		// const narr = setTimeout(() => {
-		// 	setAlert(false);
-		// 	newSocket.send(JSON.stringify({ type: 'narr', content: 2 }));
-		// }, 3000);
-
 		return () => {
 			newSocket.close();
-			// clearTimeout(narr);
 		};
 	}, []);
 

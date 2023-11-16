@@ -14,7 +14,6 @@ import coach from '../../../assets/images/coach.png';
 import coachNarr from '../../../assets/music/coach_3.mp3';
 import coachNarr2 from '../../../assets/music/coach_6.mp3';
 
-// 다리를 다쳐서 피가 나요.
 function Scene3page() {
 	document.body.style.overflow = 'hidden';
 
@@ -52,10 +51,6 @@ function Scene3page() {
 	function getMessage(message: string) {
 		// 메세지를 mes 변수에 JSON 파싱한것을 변환
 		const mes = JSON.parse(message);
-		console.log(mes);
-		if (mes.type === 'web') {
-			console.log('web에서 접속한거임');
-		}
 		if (mes.type === 'narr') {
 			narrAudio.play().catch((error) => console.log('자동 재생 실패:', error));
 		}
@@ -158,34 +153,53 @@ function Scene3page() {
 		}
 	}, [hwsocket]); // socket가 변경될 때 : 즉 소켓에 설정한 링크로 변경 됐을 때 자동으로 실행
 
+	function handleTimer(time: number) {
+		return new Promise((resolve) => {
+			setTimeout(() => {
+				resolve(true);
+			}, time);
+		});
+	}
+
 	useEffect(() => {
-		if (text) {
-			const prompt = {
-				role: 'user',
-				content: `1. [GOAL] : Let the firefighters know where friend got hurt 2. [FIREFIGHTER'S QUESTION] : 친구가 어디를 다쳤나요? 3. [CHILD'S ANSWER] : ${text} ## Use the output in the JSON format. ##`,
-			};
-			CallGPT(prompt)
-				.then((isCorrect) => {
-					if (isCorrect) {
-						const message = {
-							type: 'page',
-							content: 4,
-						};
-						// setIsWrong(false);
-						socket?.send(JSON.stringify(message));
-					} else {
-						const message = {
-							type: 'wrong',
-						};
-						setIsWrong(true);
-						setText('');
-						socket?.send(JSON.stringify(message));
+		async function handleAsyncOperations() {
+			if (text) {
+				const prompt = {
+					role: 'user',
+					content: `1. [GOAL] : Let the firefighters know where friend got hurt 2. [FIREFIGHTER'S QUESTION] : 친구가 어디를 다쳤나요? 3. [CHILD'S ANSWER] : ${text} ## Use the output in the JSON format. ##`,
+				};
+
+				const textLength = text.length;
+				const animationTime = textLength * 0.05 * 1000 + 2000;
+
+				try {
+					const [timerResult, isCorrect] = await Promise.all([
+						handleTimer(animationTime), // 글자 수에 맞춰서 타이머 설정
+						CallGPT(prompt), // CallGPT 호출
+					]);
+
+					if (timerResult) {
+						if (isCorrect) {
+							const message = {
+								type: 'page',
+								content: 4,
+							};
+							socket?.send(JSON.stringify(message));
+						} else {
+							const message = {
+								type: 'wrong',
+							};
+							setIsWrong(true);
+							setText('');
+							socket?.send(JSON.stringify(message));
+						}
 					}
-				})
-				.catch((error) => {
+				} catch (error) {
 					console.log(error);
-				});
+				}
+			}
 		}
+		handleAsyncOperations();
 	}, [text]);
 
 	// 친구에게 도달했을 때 실행되는 함수
@@ -225,35 +239,6 @@ function Scene3page() {
 	return (
 		<Scene3Wrapper>
 			<div className={`${zoom ? 'background-zoomed' : 'background-image'}`}>
-				{/* <Button
-					type="button"
-					onClick={() => {
-						setText('친구가 아픈척 해요!');
-					}}
-				>
-					오답
-				</Button>
-				<Button
-					type="button"
-					onClick={() => {
-						setText('친구 다리에 피가 나요');
-						// const nextPage = { type: 'page', content: 4 };
-						// socket?.send(JSON.stringify(nextPage));
-					}}
-				>
-					정답
-				</Button>
-				<div style={{ position: 'absolute', left: '200px' }}>
-					<Button
-						type="button"
-						onClick={() => {
-							arrive();
-						}}
-					>
-						친구한테 도착했을 때
-					</Button>
-				</div> */}
-
 				{firstNarr && (
 					<div className="alert-container">
 						<Alert>
