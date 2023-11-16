@@ -2,7 +2,7 @@
 import styled from 'styled-components';
 
 export const SimulationMachineWrapper = styled.div`
-	margin: 20px 0px 0px 150px;
+	margin: 20px 0px 0px 100px;
 
 	.how-item {
 		display: flex;

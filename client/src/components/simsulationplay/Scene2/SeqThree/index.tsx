@@ -7,6 +7,7 @@ import { useRecoilValue } from 'recoil';
 import { userEmail } from 'store/RecoilState';
 import narration from 'assets/music/narr_2.mp3';
 import wrongNarration from 'assets/music/narr_6.mp3';
+import coach5Narr from 'assets/music/coach_5.mp3';
 import { CallGPT } from '../../gpt/gpt';
 import { SeqThreeWrapper } from './style';
 
@@ -25,6 +26,7 @@ function SeqThree(props: ISeqThreeProps) {
 
 	const [narrAudio] = useState(new Audio(narration));
 	const [wrongNarrAudio] = useState(new Audio(wrongNarration));
+	const [coachAudio] = useState(new Audio(coach5Narr));
 
 	const [socket, setSocket] = useState<WebSocket | null>(null);
 
@@ -81,14 +83,20 @@ function SeqThree(props: ISeqThreeProps) {
 			console.log('WebSocket connection closed.');
 		};
 
-		const narr = setTimeout(() => {
+		coachAudio.play().catch((error) => console.log('자동 재생 실패:', error));
+		coachAudio.onended = () => {
 			setAlert(false);
 			newSocket.send(JSON.stringify({ type: 'narr', content: 2 }));
-		}, 3000);
+		};
+
+		// const narr = setTimeout(() => {
+		// 	setAlert(false);
+		// 	newSocket.send(JSON.stringify({ type: 'narr', content: 2 }));
+		// }, 3000);
 
 		return () => {
 			newSocket.close();
-			clearTimeout(narr);
+			// clearTimeout(narr);
 		};
 	}, []);
 
