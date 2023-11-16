@@ -158,34 +158,53 @@ function Scene3page() {
 		}
 	}, [hwsocket]); // socket가 변경될 때 : 즉 소켓에 설정한 링크로 변경 됐을 때 자동으로 실행
 
+	function handleTimer(time: number) {
+		return new Promise((resolve) => {
+			setTimeout(() => {
+				resolve(true);
+			}, time);
+		});
+	}
+
 	useEffect(() => {
-		if (text) {
-			const prompt = {
-				role: 'user',
-				content: `1. [GOAL] : Let the firefighters know where friend got hurt 2. [FIREFIGHTER'S QUESTION] : 친구가 어디를 다쳤나요? 3. [CHILD'S ANSWER] : ${text} ## Use the output in the JSON format. ##`,
-			};
-			CallGPT(prompt)
-				.then((isCorrect) => {
-					if (isCorrect) {
-						const message = {
-							type: 'page',
-							content: 4,
-						};
-						// setIsWrong(false);
-						socket?.send(JSON.stringify(message));
-					} else {
-						const message = {
-							type: 'wrong',
-						};
-						setIsWrong(true);
-						setText('');
-						socket?.send(JSON.stringify(message));
+		async function handleAsyncOperations() {
+			if (text) {
+				const prompt = {
+					role: 'user',
+					content: `1. [GOAL] : Let the firefighters know where friend got hurt 2. [FIREFIGHTER'S QUESTION] : 친구가 어디를 다쳤나요? 3. [CHILD'S ANSWER] : ${text} ## Use the output in the JSON format. ##`,
+				};
+
+				const textLength = text.length;
+				const animationTime = textLength * 0.05 * 1000 + 2000;
+
+				try {
+					const [timerResult, isCorrect] = await Promise.all([
+						handleTimer(animationTime), // 글자 수에 맞춰서 타이머 설정
+						CallGPT(prompt), // CallGPT 호출
+					]);
+
+					if (timerResult) {
+						if (isCorrect) {
+							const message = {
+								type: 'page',
+								content: 4,
+							};
+							socket?.send(JSON.stringify(message));
+						} else {
+							const message = {
+								type: 'wrong',
+							};
+							setIsWrong(true);
+							setText('');
+							socket?.send(JSON.stringify(message));
+						}
 					}
-				})
-				.catch((error) => {
+				} catch (error) {
 					console.log(error);
-				});
+				}
+			}
 		}
+		handleAsyncOperations();
 	}, [text]);
 
 	// 친구에게 도달했을 때 실행되는 함수
