@@ -60,11 +60,12 @@ function AppRouter() {
 							<Route path="/mypage" element={<MyPage />} />
 							<Route path="/teaminfo" element={<TeamInfoPage />} />
 							<Route element={<ProtectedReverseConnectRoute />}>
-								<Route path="/simulation/test" element={<EmergencyCall />} />
-								<Route path="/machineconfirm" element={<MachineConfirmPage />} />
 								<Route path="/simulationmachine" element={<SimulationMachinePage />} />
 							</Route>
-							<Route element={<ProtectedConnectRoute />} />
+							<Route element={<ProtectedConnectRoute />}>
+								<Route path="/machineconfirm" element={<MachineConfirmPage />} />
+								<Route path="/simulation/test" element={<EmergencyCall />} />
+							</Route>
 						</Route>
 					</Routes>
 				</BrowserRouter>
