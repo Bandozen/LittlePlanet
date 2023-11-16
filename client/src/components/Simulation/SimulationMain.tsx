@@ -7,7 +7,7 @@ import simulations from '../../dummys/simulations';
 import NotYetModal from './NotYetModal/NotYetModal';
 
 function Simulation() {
-	const [showNotYetModal, setShowNotYetModal] = useState<boolean>(false);
+	const [showNotYetModal, setShowNotYetModal] = useState(false);
 	const [selectedSimulationId, setSelectedSimulationId] = useState<number | null>(null);
 
 	const handleSimulationClick = (id: number) => {
@@ -51,15 +51,15 @@ function Simulation() {
 							tabIndex={0}
 						>
 							<div className="main-simulation-img">
-								{showNotYetModal && selectedSimulationId === simulation.id && (
-									<NotYetModal isOpen={showNotYetModal} onClose={() => setShowNotYetModal(false)} />
-								)}
 								<div>
 									<img
 										className="h-96 w-full rounded-lg object-cover object-center shadow-md shadow-blue-gray-900/50 hover:scale-[1.02] focus:scale-[1.02] active:scale-100"
 										src={simulation.imageUrl}
 										alt={simulation.name}
 									/>
+									{showNotYetModal && selectedSimulationId === simulation.id && (
+										<NotYetModal isOpen={showNotYetModal} onClose={() => setShowNotYetModal(false)} />
+									)}
 
 									<Typography variant="h5" color="blue-gray" className="mt-3 text-center">
 										{simulation.name}

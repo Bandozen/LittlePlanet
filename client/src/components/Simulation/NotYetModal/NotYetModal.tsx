@@ -12,6 +12,7 @@ interface NotYetModalProps {
 
 function NotYetModal({ isOpen, onClose }: NotYetModalProps) {
 	const clickModal = () => {
+		console.log('닫기눌렀음');
 		onClose(); // 모달 닫기
 	};
 	const modalContent = (
