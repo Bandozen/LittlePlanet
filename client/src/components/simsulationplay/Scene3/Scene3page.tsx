@@ -14,7 +14,6 @@ import coach from '../../../assets/images/coach.png';
 import coachNarr from '../../../assets/music/coach_3.mp3';
 import coachNarr2 from '../../../assets/music/coach_6.mp3';
 
-// 다리를 다쳐서 피가 나요.
 function Scene3page() {
 	document.body.style.overflow = 'hidden';
 
@@ -52,10 +51,6 @@ function Scene3page() {
 	function getMessage(message: string) {
 		// 메세지를 mes 변수에 JSON 파싱한것을 변환
 		const mes = JSON.parse(message);
-		console.log(mes);
-		if (mes.type === 'web') {
-			console.log('web에서 접속한거임');
-		}
 		if (mes.type === 'narr') {
 			narrAudio.play().catch((error) => console.log('자동 재생 실패:', error));
 		}
@@ -244,35 +239,6 @@ function Scene3page() {
 	return (
 		<Scene3Wrapper>
 			<div className={`${zoom ? 'background-zoomed' : 'background-image'}`}>
-				{/* <Button
-					type="button"
-					onClick={() => {
-						setText('친구가 아픈척 해요!');
-					}}
-				>
-					오답
-				</Button>
-				<Button
-					type="button"
-					onClick={() => {
-						setText('친구 다리에 피가 나요');
-						// const nextPage = { type: 'page', content: 4 };
-						// socket?.send(JSON.stringify(nextPage));
-					}}
-				>
-					정답
-				</Button>
-				<div style={{ position: 'absolute', left: '200px' }}>
-					<Button
-						type="button"
-						onClick={() => {
-							arrive();
-						}}
-					>
-						친구한테 도착했을 때
-					</Button>
-				</div> */}
-
 				{firstNarr && (
 					<div className="alert-container">
 						<Alert>
