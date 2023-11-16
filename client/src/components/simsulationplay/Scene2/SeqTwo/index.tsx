@@ -1,5 +1,5 @@
 import React, { Dispatch, SetStateAction, useEffect, useState } from 'react';
-import { Alert, Button, Typography } from '@material-tailwind/react';
+import { Alert, Typography } from '@material-tailwind/react';
 import { InformationCircleIcon } from '@heroicons/react/24/outline';
 import CharacterDisplay from 'components/CharacterDisplay';
 import { userEmail } from 'store/RecoilState';
@@ -44,8 +44,6 @@ function SeqTwo(props: ISeqTwoProps) {
 			content: '소행성로',
 		};
 
-		setAddress(message.content);
-
 		socket?.send(JSON.stringify(message));
 
 		const timer = setTimeout(() => {
@@ -64,6 +62,8 @@ function SeqTwo(props: ISeqTwoProps) {
 			content: '삼성스토어',
 		};
 		socket?.send(JSON.stringify(message));
+
+		setAddress(message.content);
 
 		const timer = setTimeout(() => {
 			setStep(2);
@@ -155,7 +155,7 @@ function SeqTwo(props: ISeqTwoProps) {
 		if (rightHandX >= 1250 && rightHandX <= 1450 && !littleplanetInfo) {
 			littlePlanet();
 		}
-		if (rightHandX >= 1250 && rightHandX <= 1450 && !littleplanetInfo) {
+		if (leftHandX >= 1250 && leftHandX <= 1450 && !littleplanetInfo) {
 			littlePlanet();
 		}
 		if (rightHandX >= 200 && rightHandX <= 400 && !buildingInfo) {
@@ -168,8 +168,12 @@ function SeqTwo(props: ISeqTwoProps) {
 
 	return (
 		<SeqTwoWrapper>
-			<Button onClick={littlePlanet}>소행성로</Button>
-			<Button onClick={samsungBuilding}>삼성빌딩</Button>
+			{/* <Button style={{ position: 'absolute', top: '150px', left: '50px' }} onClick={littlePlanet}>
+				소행성로
+			</Button>
+			<Button style={{ position: 'absolute', top: '150px', left: '50px' }} onClick={samsungBuilding}>
+				삼성빌딩
+			</Button> */}
 			<div style={{ position: 'absolute', left: `${left}px`, bottom: '50px', width: '480px', height: '360px' }}>
 				<CharacterDisplay />
 			</div>
