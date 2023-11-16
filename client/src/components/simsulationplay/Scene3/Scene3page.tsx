@@ -302,7 +302,7 @@ function Scene3page() {
 						bottom: '50px',
 						width: '150px',
 						height: '360px',
-						backgroundColor: 'rgba( 255, 255, 255, 0.5 )',
+						backgroundColor: 'rgba( 255, 255, 255, 0 )',
 					}}
 				/>
 			)}
