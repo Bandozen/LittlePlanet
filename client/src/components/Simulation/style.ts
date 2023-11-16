@@ -4,7 +4,10 @@ import { NavLink } from 'react-router-dom';
 
 export const SimulationWrapper = styled.div`
 	.container {
-		margin: 40px 0px 40px 200px;
+		display: flex;
+		flex-direction: column;
+		align-items: center;
+		margin-top: 40px;
 	}
 	.simulation-item {
 		display: flex;
