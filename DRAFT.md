@@ -117,23 +117,36 @@
 
 
 
+**Hardware - raspi**
+<br />
 
-## 사용기술스택 -> 하드웨어 내용추가하기
+    - OTP 입력 페이지
+        - OTP 인증
+    - web 상태 check 페이지
+        - redis를 통해 웹 상태 확인
+    - 시뮬레이션 cam 페이지
+        - 카메라 화면을 소켓으로 서버에 전송
+    - 시뮬레이션 start 페이지
+        - posenet을 통해 관절 좌표 redis로 서버에 전송
+    - 서보모터
+        - 상체의 중심좌표를 기준으로 서보모터 회전
 
-| Tech         | Stack                |
-| ------------ | -------------------- |
-| **Language** | TypeScript, Java     |
-| **Backend**  | Java, SpringBoot      |
-| **Frontend** | React, React-Native  |
-| **Database** | MariaDB              |
-| **Server**   | AWS EC2, S3              |
-| **DevOps**   | Git, Docker, Jenkins |
+**Hardware - server**
+<br />
 
-|     | **WEB**             | **APP**       | **Backend**  | **CI/CD** | **Server** |
-| --- | ------------------- | ------------- | ------------ | --------- | ---------- |
-|     | - React             | - React-Native | - MariaDB    | - Docker  | - AWS EC2  |
-|     | - Tailwind CSS      |               | - SpringBoot | - Jenkins |            |
-|     | - styled-components |               |              | - Nginx   |            |
+    - 연결된 기기와 소켓 통신
+    - 캐릭터 이미지 변환
+        - redis로 받아온 관절 좌표를 통해 분할된 이미지 변환(multiprocessing으로 속도 향상)
+
+
+## 사용기술스택
+
+|     | **WEB**             | **APP**       | **Backend**  | **CI/CD** | **Server** | **Hardware** |
+| --- | ------------------- | ------------- | ------------ | --------- | ---------- | ---------- |
+|     | - React             | - React-Native | - MariaDB    | - Docker  | - AWS EC2  | - Raspberrypi  |
+|     | - Tailwind CSS      |               | - SpringBoot | - Jenkins |            | - Python  | 
+|     | - styled-components |               |              | - Nginx   |            | - Posenet  |
+|     |                     |               |              |           |            | - Tpu |
 
 ## 시스템아키텍쳐
 
