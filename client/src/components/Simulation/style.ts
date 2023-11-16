@@ -3,12 +3,10 @@ import styled from 'styled-components';
 import { NavLink } from 'react-router-dom';
 
 export const SimulationWrapper = styled.div`
-	.container {
-		display: flex;
-		flex-direction: column;
-		align-items: center;
-		margin-top: 40px;
-	}
+	display: flex;
+	flex-direction: column;
+	align-items: center;
+
 	.simulation-item {
 		display: flex;
 		padding: 20px 20px;
@@ -52,9 +50,10 @@ export const SimulationLink = styled(NavLink)`
 	}`;
 
 export const SimulationDetailWrapper = styled.div`
-	.detail-container {
-		margin: 40px 0px 40px 200px;
-	}
+	display: flex;
+	flex-direction: column;
+	align-items: center;
+
 	.simulation-item {
 		display: flex;
 		padding: 20px 20px;
