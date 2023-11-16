@@ -27,10 +27,6 @@ function GameDetail() {
 					</div>
 					<div className="btn-div">
 						<div className="btn-div-play">
-							{/* 게임 기기연결페이지 생기면 이렇게 바꾸기
-								<GameLink to="/gamemachine">
-									<PlayButton text="시작하기" />
-								</GameLink> */}
 							<PlayButton text="게임시작" />
 						</div>
 					</div>
