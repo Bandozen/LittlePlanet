@@ -279,7 +279,7 @@ function Scene3page() {
 					</Alert>
 				)}
 				{firefighter && !isWrong && (
-					<SimulationChat chatNumber={text ? 2 : 1} text={text || '친구가 어디를 다쳤나요?'} />
+					<SimulationChat chatNumber={text ? 2 : 1} text={text || '친구가 어디를 다쳤는지 말해줄래요?'} />
 				)}
 				{firefighter && isWrong && <SimulationChat chatNumber={text ? 2 : 1} text={text || '다시 한번 말해줄래요?'} />}
 				{/* 소켓에서 받아온 메시지에 따라 isWrong 설정하고 스크립트 보여주기 */}

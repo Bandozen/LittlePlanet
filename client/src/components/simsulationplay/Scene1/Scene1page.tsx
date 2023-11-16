@@ -218,7 +218,9 @@ function Scene1page() {
 				setWrongAlert(true);
 				coachWrong.play().catch((error) => console.log('자동 재생 실패:', error));
 				coachWrong.onended = () => {
-					socket?.send(JSON.stringify({ type: 'wrong' }));
+					setTimeout(() => {
+						socket?.send(JSON.stringify({ type: 'wrong' }));
+					}, 3000);
 				};
 			}, 500);
 		}

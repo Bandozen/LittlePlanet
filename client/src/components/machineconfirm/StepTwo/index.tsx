@@ -1,5 +1,6 @@
 import React, { Dispatch, SetStateAction, useEffect, useState } from 'react';
 import api from 'api';
+import { ChevronRightIcon, ChevronLeftIcon } from '@heroicons/react/24/outline';
 import { useRecoilValue } from 'recoil';
 import manImage from 'assets/images/realman.png';
 import womanImage from 'assets/images/realwoman.png';
@@ -61,14 +62,16 @@ function StepTwo(props: IStepTwoProps) {
 					<div className="image-wrapper">
 						<img className="loading" src={manImage} alt="남자이미지" />
 						<div className="change-caracter">
-							<Button text="캐릭터 변경" handleClick={() => changeClick()} />
+							{/* <Button text="캐릭터 변경" handleClick={() => changeClick()} /> */}
+							<ChevronRightIcon className="w-10 h-10" onClick={changeClick} />
 						</div>
 					</div>
 				) : (
 					<div className="image-wrapper">
 						<img className="loading" src={womanImage} alt="여자이미지" />
-						<div className="change-caracter">
-							<Button text="캐릭터 변경" handleClick={() => changeClick()} />
+						<div className="change-character2">
+							{/* <Button text="캐릭터 변경" handleClick={() => changeClick()} /> */}
+							<ChevronLeftIcon className="w-10 h-10" onClick={changeClick} />
 						</div>
 					</div>
 				)}
