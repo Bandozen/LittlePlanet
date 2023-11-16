@@ -20,14 +20,13 @@ function SeqOne(props: ISeqOneProps) {
 		coachAudio.onended = () => {
 			setShowNarr(false);
 		};
-
 		// const timer = setTimeout(() => {
 		// 	setShowNarr(false);
 		// }, 3000);
 
 		const nextSeqTimer = setTimeout(() => {
 			setStep(1);
-		}, 15000);
+		}, 19000);
 
 		return () => {
 			// clearTimeout(timer);
