@@ -1,7 +1,6 @@
 import React, { Dispatch, SetStateAction, useEffect, useState } from 'react';
-import { Typography, Alert, Button } from '@material-tailwind/react';
+import { Typography, Alert } from '@material-tailwind/react';
 import { PhoneArrowUpRightIcon, SparklesIcon } from '@heroicons/react/24/outline';
-import Button1 from 'components/common/Button';
 import SimulationChat from 'components/simsulationplay/SimulationChat';
 import { useRecoilValue } from 'recoil';
 import { userEmail } from 'store/RecoilState';
@@ -36,8 +35,6 @@ function SeqThree(props: ISeqThreeProps) {
 	// 사용자의 음성이 틀렸을 경우
 	const [isWrong, setIsWrong] = useState(false);
 	const [wrongSeq, setWrongSeq] = useState(false);
-
-	const [location, setLocation] = useState(true);
 
 	const memberEmail = useRecoilValue(userEmail);
 
@@ -97,6 +94,11 @@ function SeqThree(props: ISeqThreeProps) {
 		});
 	}
 
+	const testClick = () => {
+		setStatus(3);
+		setStep(4);
+	};
+
 	useEffect(() => {
 		async function handleAsyncOperations() {
 			if (text) {
@@ -127,6 +129,7 @@ function SeqThree(props: ISeqThreeProps) {
 						}
 					}
 				} catch (e) {
+					testClick();
 					console.log(e);
 				}
 			}
@@ -134,15 +137,6 @@ function SeqThree(props: ISeqThreeProps) {
 
 		handleAsyncOperations();
 	}, [text]);
-
-	const testClick = () => {
-		setStatus(3);
-		setStep(4);
-	};
-
-	const changeLocation = () => {
-		setLocation((prev) => !prev);
-	};
 
 	useEffect(() => {
 		let alertTimer: any;
@@ -159,8 +153,6 @@ function SeqThree(props: ISeqThreeProps) {
 
 	return (
 		<SeqThreeWrapper>
-			<Button onClick={changeLocation}>장소바꾸기</Button>
-			<Button1 text="테스트버튼입니다." handleClick={() => testClick()} />
 			{alert && (
 				<div className="alert-container">
 					<Alert>
@@ -178,7 +170,7 @@ function SeqThree(props: ISeqThreeProps) {
 							<SparklesIcon className="w-10 h-10 mr-2" color="yellow" />
 							<Typography variant="h3">이렇게 말해볼까?</Typography>
 						</div>
-						{location ? (
+						{address === '소행성로' ? (
 							<div className="flex flex-row items-center">
 								<PhoneArrowUpRightIcon className="w-5 h-5 mr-2" />
 								<Typography variant="h5">여기는 소행성로 203 근처에요.</Typography>
