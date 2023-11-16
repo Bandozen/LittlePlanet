@@ -77,9 +77,6 @@ function SeqTwo(props: ISeqTwoProps) {
 	useEffect(() => {
 		// 소켓 연결 부분(ip주소 및 배포주소)
 		const newSocket = new WebSocket('wss://k9c203.p.ssafy.io:17777');
-		// const newSocket = new WebSocket('ws://192.168.100.36:7777');
-		// const newSocket = new WebSocket('ws://192.168.100.38:7777');
-		// const newSocket = new WebSocket('ws://localhost:7777');
 
 		newSocket.onopen = () => {
 			setSocket(newSocket);
@@ -89,8 +86,6 @@ function SeqTwo(props: ISeqTwoProps) {
 			};
 			newSocket.send(JSON.stringify(handshake));
 		};
-
-		console.log(socket);
 
 		// 받아온 메시지는 사용자 답변의 정답 여부
 		newSocket.onmessage = (event) => {
@@ -168,12 +163,6 @@ function SeqTwo(props: ISeqTwoProps) {
 
 	return (
 		<SeqTwoWrapper>
-			{/* <Button style={{ position: 'absolute', top: '150px', left: '50px' }} onClick={littlePlanet}>
-				소행성로
-			</Button>
-			<Button style={{ position: 'absolute', top: '150px', left: '50px' }} onClick={samsungBuilding}>
-				삼성빌딩
-			</Button> */}
 			<div style={{ position: 'absolute', left: `${left}px`, bottom: '50px', width: '480px', height: '360px' }}>
 				<CharacterDisplay />
 			</div>
