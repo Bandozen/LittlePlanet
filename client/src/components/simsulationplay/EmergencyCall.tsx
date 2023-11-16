@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { Button } from '@material-tailwind/react';
+// import { Button } from '@material-tailwind/react';
 import { useRecoilValue } from 'recoil';
 import api from '../../api';
 import Scene1page from './Scene1/Scene1page';
@@ -90,20 +90,20 @@ function EmergencyCall() {
 		}
 	};
 
-	const sendNextPageMessage = () => {
-		const message = {
-			type: 'page',
-			content: status + 1,
-		};
-		if (socket) {
-			socket.send(JSON.stringify(message));
-		}
-	};
+	// const sendNextPageMessage = () => {
+	// 	const message = {
+	// 		type: 'page',
+	// 		content: status + 1,
+	// 	};
+	// 	if (socket) {
+	// 		socket.send(JSON.stringify(message));
+	// 	}
+	// };
 
 	return (
 		<>
 			{/* <div style={{ position: 'absolute', zIndex: '9999' }}> */}
-			<Button onClick={sendNextPageMessage}> 다음 페이지 이동 </Button>
+			{/* <Button onClick={sendNextPageMessage}> 다음 페이지 이동 </Button> */}
 			{/* <Button onClick={sendKeypadMessage}> 인트로 끝남 </Button> */}
 			{/* </div> */}
 			{/* <Button onClick={sendKeypadMessage}> 인트로 끝남 </Button> */}
