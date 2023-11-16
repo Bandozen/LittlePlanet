@@ -1,6 +1,6 @@
 import React from 'react';
 import { Typography } from '@material-tailwind/react';
-import Button from 'components/common/Button';
+// import Button from 'components/common/Button';
 import WindModal from 'components/common/Modal/WindModal';
 import { NotYetModalWrapper } from './style';
 
@@ -11,10 +11,10 @@ interface NotYetModalProps {
 }
 
 function NotYetModal({ isOpen, onClose }: NotYetModalProps) {
-	const clickModal = () => {
-		console.log('닫기눌렀음');
-		onClose(); // 모달 닫기
-	};
+	// const clickModal = () => {
+	// 	console.log('닫기눌렀음');
+	// 	onClose(); // 모달 닫기
+	// };
 	const modalContent = (
 		<div className="flex flex-col flex-wrap items-center">
 			<Typography variant="h4" className="text-center mb-3">
@@ -23,7 +23,7 @@ function NotYetModal({ isOpen, onClose }: NotYetModalProps) {
 			<Typography variant="h4" className="text-center mb-3">
 				기대해주세요!
 			</Typography>
-			<Button text="닫기" handleClick={() => clickModal()} />
+			{/* <Button text="닫기" handleClick={() => clickModal()} /> */}
 		</div>
 	);
 	return (
