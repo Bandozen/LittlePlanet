@@ -1,8 +1,8 @@
-import React, { useState } from 'react';
+import React from 'react';
 import styled from 'styled-components';
-import { HeartIcon as HeartOutlineIcon, RocketLaunchIcon, SparklesIcon } from '@heroicons/react/24/outline';
-import { HeartIcon as HeartSolidIcon } from '@heroicons/react/24/solid';
-import { Button, Card, CardHeader, CardBody, CardFooter, Typography } from '@material-tailwind/react';
+import { RocketLaunchIcon, SparklesIcon } from '@heroicons/react/24/outline';
+// import { HeartIcon as HeartSolidIcon } from '@heroicons/react/24/solid';
+import { Card, CardHeader, CardBody, CardFooter, Typography } from '@material-tailwind/react';
 import teaminfos from '../dummys/teaminfo';
 import NavBar from '../components/common/NavBar/NavBar';
 import Footer from '../components/Footer/Footer';
@@ -34,19 +34,19 @@ const TeamInfoWrapper = styled.div`
 `;
 
 function TeamInfoPage() {
-	// 각 팀의 좋아요 수를 관리하는 상태 배열을 생성합니다.
-	const [likes, setLikes] = useState(teaminfos.map(() => 0));
-	const [liked, setLiked] = useState(teaminfos.map(() => false));
+	// // 각 팀의 좋아요 수를 관리하는 상태 배열을 생성합니다.
+	// const [likes, setLikes] = useState(teaminfos.map(() => 0));
+	// const [liked, setLiked] = useState(teaminfos.map(() => false));
 
-	// 좋아요 버튼 클릭 핸들러
-	const handleLike = (index: number) => {
-		const newLikes = [...likes];
-		const newLiked = [...liked];
-		newLikes[index] += 1;
-		newLiked[index] = true; // 좋아요 상태 업데이트
-		setLikes(newLikes);
-		setLiked(newLiked);
-	};
+	// // 좋아요 버튼 클릭 핸들러
+	// const handleLike = (index: number) => {
+	// 	const newLikes = [...likes];
+	// 	const newLiked = [...liked];
+	// 	newLikes[index] += 1;
+	// 	newLiked[index] = true; // 좋아요 상태 업데이트
+	// 	setLikes(newLikes);
+	// 	setLiked(newLiked);
+	// };
 	return (
 		<div>
 			<NavBar />
@@ -59,7 +59,7 @@ function TeamInfoPage() {
 					<SparklesIcon className="h-6 w-6 m-4" />
 				</div>
 				<div className="container">
-					{teaminfos.map((teaminfo, index) => (
+					{teaminfos.map((teaminfo) => (
 						<div key={teaminfo.id} className="info-items">
 							<Card className="w-96">
 								<CardHeader shadow={false} floated={false} className="h-96">
@@ -85,7 +85,7 @@ function TeamInfoPage() {
 								</CardBody>
 								<CardFooter className="pt-0">
 									<div className="like-btn">
-										<Button
+										{/* <Button
 											ripple={false}
 											className="bg-blue-gray-900/10 text-blue-gray-900 shadow-none hover:scale-105 hover:shadow-none focus:scale-105 focus:shadow-none active:scale-100"
 											onClick={() => handleLike(index)}
@@ -97,7 +97,7 @@ function TeamInfoPage() {
 										) : (
 											<HeartOutlineIcon className="h-6 w-6 m-4" /> // 좋아요가 눌리지 않은 경우 기본 하트 아이콘
 										)}
-										<Typography className="text-blue-gray-900">{likes[index]}</Typography>
+										<Typography className="text-blue-gray-900">{likes[index]}</Typography> */}
 									</div>
 								</CardFooter>
 							</Card>

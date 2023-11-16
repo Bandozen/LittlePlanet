@@ -2,7 +2,7 @@ import React, { useState, KeyboardEvent } from 'react';
 import DetailButton from 'components/Button/DetailButton';
 import { NavBarLink } from 'components/common/NavBar/style';
 import { Typography } from '@material-tailwind/react';
-import { GameMainWrapper, GameLink } from './style';
+import { GameMainWrapper } from './style';
 import games from '../../dummys/games';
 import NotYetModal from '../Simulation/NotYetModal/NotYetModal';
 
@@ -11,21 +11,17 @@ function Game() {
 	const [selectedGameId, setSelectedGameId] = useState<number | null>(null);
 
 	const handleGameClick = (id: number) => {
-		if (id === 1) {
-			// ID가 1인 경우, 페이지 이동
-			window.location.href = `/gamedetail/${id}`;
-		} else {
-			// 다른 ID의 경우, 모달 표시
-			setSelectedGameId(id);
-			setShowNotYetModal(true);
-		}
+		setSelectedGameId(id);
+		setShowNotYetModal(true);
 	};
+
 	const handleKeyDown = (event: KeyboardEvent<HTMLDivElement>, id: number) => {
 		// Enter 키나 Space 키가 눌렸을 때 클릭 핸들러를 호출
 		if (event.key === 'Enter' || event.key === ' ') {
 			handleGameClick(id);
 		}
 	};
+
 	return (
 		<GameMainWrapper>
 			<div className="container">
@@ -35,7 +31,7 @@ function Game() {
 					</p>
 					<div className="main-btn-div">
 						<div className="main-btn-div-detail">
-							<NavBarLink to="gamelist">
+							<NavBarLink to="/gamelist">
 								<DetailButton text="더보기 +" />
 							</NavBarLink>
 						</div>
@@ -52,20 +48,18 @@ function Game() {
 							tabIndex={0}
 						>
 							<div className="game-img">
-								<GameLink to={`/gamedetail/${game.id}`}>
-									<img
-										className="h-96 w-full rounded-lg object-cover object-center shadow-md shadow-blue-gray-900/50 hover:scale-[1.02] focus:scale-[1.02] active:scale-100"
-										src={game.imageUrl}
-										alt={game.name}
-									/>
-									{showNotYetModal && selectedGameId === game.id && (
-										<NotYetModal isOpen={showNotYetModal} onClose={() => setShowNotYetModal(false)} />
-									)}
+								<img
+									className="h-96 w-full rounded-lg object-cover object-center shadow-md shadow-blue-gray-900/50 hover:scale-[1.02] focus:scale-[1.02] active:scale-100"
+									src={game.imageUrl}
+									alt={game.name}
+								/>
+								{showNotYetModal && selectedGameId === game.id && (
+									<NotYetModal isOpen={showNotYetModal} onClose={() => setShowNotYetModal(false)} />
+								)}
 
-									<Typography variant="h5" color="blue-gray" className="mt-3 text-center">
-										{game.name}
-									</Typography>
-								</GameLink>
+								<Typography variant="h5" color="blue-gray" className="mt-3 text-center">
+									{game.name}
+								</Typography>
 							</div>
 						</div>
 					))}
