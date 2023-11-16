@@ -50,9 +50,6 @@ function Scene2page(props: IScene2pageProps) {
 	useEffect(() => {
 		// 소켓 연결 부분(ip주소 및 배포주소)
 		const newSocket = new WebSocket('wss://k9c203.p.ssafy.io:17777');
-		// const newSocket = new WebSocket('ws://192.168.100.36:7777');
-		// const newSocket = new WebSocket('ws://192.168.100.38:7777');
-		// const newSocket = new WebSocket('ws://localhost:7777');
 
 		newSocket.onopen = () => {
 			setSocket(newSocket);
@@ -63,13 +60,12 @@ function Scene2page(props: IScene2pageProps) {
 			newSocket.send(JSON.stringify(handshake));
 		};
 
-		console.log(socket);
-
 		// 받아온 메시지는 사용자 답변의 정답 여부
 		newSocket.onmessage = (event) => {
 			const eventMessage = JSON.parse(event.data);
 			if (eventMessage.type === 'address') {
 				setAddress(eventMessage.content);
+				socket?.send(JSON.stringify({ type: 'correct' }));
 			}
 		};
 
