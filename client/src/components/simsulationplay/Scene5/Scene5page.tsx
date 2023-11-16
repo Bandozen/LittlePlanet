@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import axios from 'axios';
-import { Button, Alert, Typography } from '@material-tailwind/react';
+import { Alert, Typography } from '@material-tailwind/react';
 import { useRecoilValue } from 'recoil';
 import EndingModal from '../EndingModal/EndingModal';
 import { studentName } from '../../../store/RecoilState';
@@ -134,9 +134,9 @@ function Scene5Page() {
 			) : (
 				// 소방관이 칭찬하는 배경
 				<Bg2Wrapper>
-					<Button className="btn-style" onClick={handleTTS}>
+					{/* <Button className="btn-style" onClick={handleTTS}>
 						TTS음성
-					</Button>
+					</Button> */}
 					{showSimulationChat && (
 						<SimulationChat
 							chatNumber={3}
