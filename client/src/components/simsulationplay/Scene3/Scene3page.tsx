@@ -12,6 +12,7 @@ import narr from '../../../assets/music/narr_3.mp3';
 import wrongNarr from '../../../assets/music/narr_6.mp3';
 import coach from '../../../assets/images/coach.png';
 import coachNarr from '../../../assets/music/coach_3.mp3';
+import coachNarr2 from '../../../assets/music/coach_6.mp3';
 
 // 다리를 다쳐서 피가 나요.
 function Scene3page() {
@@ -20,9 +21,12 @@ function Scene3page() {
 	const [narrAudio] = useState(new Audio(narr));
 	const [wrongNarrAudio] = useState(new Audio(wrongNarr));
 	const [coachAudio] = useState(new Audio(coachNarr));
+	const [coachAudio2] = useState(new Audio(coachNarr2));
 
 	// 화면 첫번째 나레이션을 나타내고 없애주기 위한 변수
 	const [firstNarr, setFirstNarr] = useState(true);
+	// 화면 두번째 나레이션을 나타내고 없애주기 위한 변수
+	const [secondNarr, setSecondNarr] = useState(true);
 	// 친구에게 도달했을 때 상황을 나타내기 위한 변수
 	const [arrived, setArrived] = useState(false);
 	// 친구 모습을 확대하기 위한 변수
@@ -37,12 +41,12 @@ function Scene3page() {
 	const memberEmail = useRecoilValue(userEmail);
 	const [socket, setSocket] = useState<WebSocket | null>(null);
 	const [hwsocket, setHWSocket] = useState<WebSocket | null>(null);
-	const [left, setLeft] = useState(400);
+	const [left, setLeft] = useState(0);
 	const [rightHandX, setRightHandX] = useState(0);
 	const [rightHandY, setRightHandY] = useState(0);
 	const [leftHandX, setLeftHandX] = useState(0);
 	const [leftHandY, setLeftHandY] = useState(0);
-	let imgleft = 400;
+	let imgleft = 0;
 
 	// 웹소켓에서 메세지를 받고 그 메세지 값에 따라 다르게 실행하는 함수 설정
 	function getMessage(message: string) {
@@ -186,6 +190,11 @@ function Scene3page() {
 
 	// 친구에게 도달했을 때 실행되는 함수
 	const arrive = () => {
+		// 나레이션 발생
+		coachAudio2.play().catch((error) => console.log('자동 재생 실패:', error));
+		coachAudio2.onended = () => {
+			setSecondNarr(false);
+		};
 		// 확대하기
 		setZoom(true);
 		// alert 띄우기
@@ -259,7 +268,7 @@ function Scene3page() {
 				)}
 				{/* 구조물 터치하면 구조물 확대하고 터치된 구조물 seq로 touched 변경 */}
 				{/* <Alert open={isTouched}> */}
-				{arrived && (
+				{arrived && secondNarr && (
 					<Alert>
 						<div className="flex flex-row items-center">
 							<img className="w-16 h-14 mr-2" src={coach} alt="하준이" />
