@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import axios from 'axios';
-import { Button } from '@material-tailwind/react';
+// import { Button } from '@material-tailwind/react';
 import useMovePage from 'hooks/useMovePage';
 
 import { useRecoilValue } from 'recoil';
@@ -83,9 +83,9 @@ function Scene5Page() {
 
 	return (
 		<Scene5Wrapper>
-			<Button className="btn-style" onClick={handleTTS}>
+			{/* <Button className="btn-style" onClick={handleTTS}>
 				TTS음성
-			</Button>
+			</Button> */}
 			{showSimulationChat && (
 				<SimulationChat
 					chatNumber={3}

@@ -23,7 +23,13 @@ export const Wrapper = styled.div`
 
 	.change-caracter {
 		position: absolute;
-		align-items: center;
-		justify-content: center;
+		left: 90%;
+		top: 45%;
+	}
+
+	.change-character2 {
+		position: absolute;
+		right: 90%;
+		top: 45%;
 	}
 `;
