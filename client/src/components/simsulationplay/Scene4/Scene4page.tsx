@@ -260,7 +260,7 @@ function Scene4page() {
 			{!showAlert && !isWrong && wrongSignal && (
 				<SimulationChat chatNumber={text ? 2 : 1} text={text || '다시 한번 얘기해볼래요?'} />
 			)}
-			<div style={{ position: 'absolute', left: `${left}px`, bottom: '50px', width: '480px', height: '360px' }}>
+			<div style={{ position: 'absolute', left: `${left}px`, bottom: '50px', width: '640px', height: '480px' }}>
 				<CharacterDisplay />
 			</div>
 		</Scene4Wrapper>

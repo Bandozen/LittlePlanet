@@ -97,10 +97,10 @@ function Scene3page() {
 					imgleft += 20;
 					setLeft(imgleft);
 				}
-				setRightHandX(Number(imgleft) + Number(eventMessage.righthandX * 0.75));
-				setRightHandY(340 - Number(eventMessage.righthandY * 0.75));
-				setLeftHandX(Number(imgleft) + Number(eventMessage.lefthandX * 0.75));
-				setLeftHandY(340 - Number(eventMessage.lefthandY * 0.75));
+				setRightHandX(Number(imgleft) + Number(eventMessage.righthandX));
+				setRightHandY(340 - Number(eventMessage.righthandY));
+				setLeftHandX(Number(imgleft) + Number(eventMessage.lefthandX));
+				setLeftHandY(340 - Number(eventMessage.lefthandY));
 			}
 		};
 
@@ -288,7 +288,7 @@ function Scene3page() {
 					<CharacterDisplay />
 				</div>
 			) : (
-				<div style={{ position: 'absolute', left: `${left}px`, bottom: '50px', width: '480px', height: '360px' }}>
+				<div style={{ position: 'absolute', left: `${left}px`, bottom: '50px', width: '640px', height: '480px' }}>
 					<CharacterDisplay />
 				</div>
 			)}
