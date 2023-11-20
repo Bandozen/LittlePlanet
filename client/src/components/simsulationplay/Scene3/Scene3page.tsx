@@ -288,7 +288,7 @@ function Scene3page() {
 					<CharacterDisplay />
 				</div>
 			) : (
-				<div style={{ position: 'absolute', left: `${left}px`, bottom: '50px', width: '480px', height: '320px' }}>
+				<div style={{ position: 'absolute', left: `${left}px`, bottom: '50px', width: '480px', height: '360px' }}>
 					<CharacterDisplay />
 				</div>
 			)}
