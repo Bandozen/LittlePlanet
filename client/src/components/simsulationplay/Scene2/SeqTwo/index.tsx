@@ -114,10 +114,10 @@ function SeqTwo(props: ISeqTwoProps) {
 					imgleft += 20;
 					setLeft(imgleft);
 				}
-				setRightHandX(Number(imgleft) + Number(eventMessage.righthandX * 0.75));
-				setRightHandY(340 - Number(eventMessage.righthandY * 0.75));
-				setLeftHandX(Number(imgleft) + Number(eventMessage.lefthandX * 0.75));
-				setLeftHandY(340 - Number(eventMessage.lefthandY * 0.75));
+				setRightHandX(Number(imgleft) + Number(eventMessage.righthandX));
+				setRightHandY(340 - Number(eventMessage.righthandY));
+				setLeftHandX(Number(imgleft) + Number(eventMessage.lefthandX));
+				setLeftHandY(340 - Number(eventMessage.lefthandY));
 				console.log(rightHandX, rightHandY, leftHandX, leftHandY);
 			}
 		};
@@ -147,10 +147,10 @@ function SeqTwo(props: ISeqTwoProps) {
 	}, [hwsocket]); // socket가 변경될 때 : 즉 소켓에 설정한 링크로 변경 됐을 때 자동으로 실행
 
 	useEffect(() => {
-		if (rightHandX >= 1250 && rightHandX <= 1450 && !littleplanetInfo) {
+		if (rightHandX >= 1100 && rightHandX <= 13000 && !littleplanetInfo) {
 			littlePlanet();
 		}
-		if (leftHandX >= 1250 && leftHandX <= 1450 && !littleplanetInfo) {
+		if (leftHandX >= 1100 && leftHandX <= 1300 && !littleplanetInfo) {
 			littlePlanet();
 		}
 		if (rightHandX >= 200 && rightHandX <= 400 && !buildingInfo) {
@@ -163,7 +163,7 @@ function SeqTwo(props: ISeqTwoProps) {
 
 	return (
 		<SeqTwoWrapper>
-			<div style={{ position: 'absolute', left: `${left}px`, bottom: '50px', width: '480px', height: '360px' }}>
+			<div style={{ position: 'absolute', left: `${left}px`, bottom: '50px', width: '640px', height: '480px' }}>
 				<CharacterDisplay />
 			</div>
 			<div style={{ position: 'absolute', top: '150px', left: '50px' }}>
@@ -181,10 +181,10 @@ function SeqTwo(props: ISeqTwoProps) {
 			<div
 				style={{
 					position: 'absolute',
-					left: `1250px`,
+					left: `1100px`,
 					bottom: '50px',
 					width: '200px',
-					height: '360px',
+					height: '480px',
 					backgroundColor: 'rgba( 255, 255, 255, 0 )',
 				}}
 			/>
@@ -194,7 +194,7 @@ function SeqTwo(props: ISeqTwoProps) {
 					left: `200px`,
 					bottom: '50px',
 					width: '200px',
-					height: '360px',
+					height: '480px',
 					backgroundColor: 'rgba( 255, 255, 255, 0 )',
 				}}
 			/>
