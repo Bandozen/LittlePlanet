@@ -1,7 +1,6 @@
 import React, { Dispatch, SetStateAction, useEffect, useState } from 'react';
 // import api from 'api';
 // import { useRecoilValue } from 'recoil';
-import loadingImage from 'assets/images/livecam_loading.jpg';
 import useMovePage from 'hooks/useMovePage';
 import Button from 'components/common/Button';
 import CheckStep from '../atoms/CheckStep';
@@ -46,9 +45,7 @@ function StepFive(props: IStepFiveProps) {
 				<CheckStep activeStep={activeStep} checkNum={4} message="캐릭터 연동 확인" />
 				<CheckStep activeStep={activeStep} checkNum={5} message="시작하기!" />
 			</div>
-			<div className="image-wrapper">
-				<img src={loadingImage} alt="이미지 없음." />
-			</div>
+			<div className="image-wrapper" />
 			<Button text="다음" handleClick={() => testClick()} />
 		</Wrapper>
 	);

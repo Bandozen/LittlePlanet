@@ -40,12 +40,12 @@ function Scene3page() {
 	const memberEmail = useRecoilValue(userEmail);
 	const [socket, setSocket] = useState<WebSocket | null>(null);
 	const [hwsocket, setHWSocket] = useState<WebSocket | null>(null);
-	const [left, setLeft] = useState(1100);
+	const [left, setLeft] = useState(100);
 	const [rightHandX, setRightHandX] = useState(0);
 	const [rightHandY, setRightHandY] = useState(0);
 	const [leftHandX, setLeftHandX] = useState(0);
 	const [leftHandY, setLeftHandY] = useState(0);
-	let imgleft = 1100;
+	let imgleft = 100;
 
 	// 웹소켓에서 메세지를 받고 그 메세지 값에 따라 다르게 실행하는 함수 설정
 	function getMessage(message: string) {
@@ -166,7 +166,7 @@ function Scene3page() {
 			if (text) {
 				const prompt = {
 					role: 'user',
-					content: `1. [GOAL] : Let the firefighters know where friend got hurt 2. [FIREFIGHTER'S QUESTION] : 친구가 어디를 다쳤나요? 3. [CHILD'S ANSWER] : ${text} ## Use the output in the JSON format. ##`,
+					content: `1. [GOAL] : Child must explain to the firefighters where their friend was injured. 2. [FIREFIGHTER'S QUESTION] : 친구가 어디를 다쳤나요? 3. [CHILD'S ANSWER] : ${text} ## Use the output in the JSON format. ##`,
 				};
 
 				const textLength = text.length;
@@ -236,8 +236,19 @@ function Scene3page() {
 		}
 	}, [rightHandX, rightHandY, leftHandX, leftHandY]);
 
+	// const sendNextPageMessage = () => {
+	// 	const message = {
+	// 		type: 'page',
+	// 		content: 4,
+	// 	};
+	// 	if (socket) {
+	// 		socket.send(JSON.stringify(message));
+	// 	}
+	// };
+
 	return (
 		<Scene3Wrapper>
+			{/* <Button onClick={sendNextPageMessage}>NEXT</Button> */}
 			<div className={`${zoom ? 'background-zoomed' : 'background-image'}`}>
 				{firstNarr && (
 					<div className="alert-container">
