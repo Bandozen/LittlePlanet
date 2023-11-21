@@ -174,7 +174,7 @@ function Scene4page() {
 			if (text) {
 				const prompt = {
 					role: 'user',
-					content: `1. [GOAL] : Child must must explain to the firefighters about their identity(the answer is ${answer}.) in case the phone is disconnected. If the child's answer does not match the answer, return false. 2. [FIREFIGHTER'S QUESTION] : 전화하고 있는 학생 이름을 말해줄래요? 3. [CHILD'S ANSWER] : ${text} ## Use the output in the JSON format. ##`,
+					content: `1. [GOAL] : Child must must explain to the firefighters about their identity(the answer is ${answer}) in case the phone is disconnected. If the child's answer does not match the answer, return false. 2. [FIREFIGHTER'S QUESTION] : 전화하고 있는 학생 이름을 말해줄래요? 3. [CHILD'S ANSWER] : ${text} ## Use the output in the JSON format. ##`,
 				};
 
 				const textLength = text.length;
@@ -228,8 +228,19 @@ function Scene4page() {
 		};
 	}, [isWrong]);
 
+	// const sendNextPageMessage = () => {
+	// 	const message = {
+	// 		type: 'page',
+	// 		content: 5,
+	// 	};
+	// 	if (socket) {
+	// 		socket.send(JSON.stringify(message));
+	// 	}
+	// };
+
 	return (
 		<Scene4Wrapper>
+			{/* <Button onClick={sendNextPageMessage}>NEXT</Button> */}
 			{showAlert && (
 				<div className="alert-container">
 					<Alert>
@@ -260,7 +271,7 @@ function Scene4page() {
 			{!showAlert && !isWrong && wrongSignal && (
 				<SimulationChat chatNumber={text ? 2 : 1} text={text || '다시 한번 얘기해볼래요?'} />
 			)}
-			<div style={{ position: 'absolute', left: `${left}px`, bottom: '50px', width: '480px', height: '360px' }}>
+			<div style={{ position: 'absolute', left: `${left}px`, bottom: '50px', width: '640px', height: '480px' }}>
 				<CharacterDisplay />
 			</div>
 		</Scene4Wrapper>
