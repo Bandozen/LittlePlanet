@@ -86,7 +86,7 @@ function StepOne(props: IStepOneProps) {
 				<div className="image-wrapper">
 					<h3 className="text-4xl m-4 font-semibold text-gray-900 dark:text-white">학생 명단</h3>
 					<ul className="w-50 font-medium text-gray-900 bg-white border border-gray-200 rounded-lg dark:bg-gray-700 dark:border-gray-600 dark:text-white">
-						<li className="w-full border-b border-gray-200 rounded-t-lg dark:border-gray-600">
+						<li className="w-full pr-16 border-b border-gray-200 rounded-t-lg dark:border-gray-600">
 							<div className="flex items-center">
 								<p className="w-full text-base font-medium text-gray-900 dark:text-gray-300">선택</p>
 								<p className="w-full text-base font-medium text-gray-900 dark:text-gray-300">이름</p>
@@ -100,7 +100,7 @@ function StepOne(props: IStepOneProps) {
 						{activeStep === 1 ? (
 							studentInfo.map((student) => (
 								<li
-									className="w-full border-b border-gray-200 rounded-t-lg dark:border-gray-600"
+									className="w-full border-b border-gray-200 rounded-t-lg dark:border-gray-600 pl-10"
 									key={student.studentSeq}
 								>
 									<div className="flex items-center pl-3">
@@ -113,7 +113,7 @@ function StepOne(props: IStepOneProps) {
 										/>
 										<label
 											htmlFor="vue-checkbox"
-											className="w-full py-3 ml-2 text-cl font-medium text-gray-900 dark:text-gray-300"
+											className="w-full py-3 ml-2 text-cl font-medium text-gray-900 dark:text-gray-300 pl-12"
 										>
 											{student.studentName}
 										</label>
@@ -125,13 +125,13 @@ function StepOne(props: IStepOneProps) {
 										</label>
 										<label
 											htmlFor="vue-checkbox"
-											className="w-full py-3 ml-2 text-cl font-medium text-gray-900 dark:text-gray-300"
+											className="w-full py-3 ml-2 text-cl font-medium text-gray-900 dark:text-gray-300 pr-8"
 										>
 											{student.studentClass}
 										</label>
 										<label
 											htmlFor="vue-checkbox"
-											className="w-full py-3 ml-2 text-cl font-medium text-gray-900 dark:text-gray-300"
+											className="w-full py-3 ml-2 text-cl font-medium text-gray-900 dark:text-gray-300 pr-10"
 										>
 											{history.includes(student.studentSeq) ? (
 												<SolidCheckCircleIcon className="h-9 w-9" />
