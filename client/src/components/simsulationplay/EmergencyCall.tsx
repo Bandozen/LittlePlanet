@@ -1,5 +1,4 @@
 import React, { useState, useEffect } from 'react';
-// import { Button } from '@material-tailwind/react';
 import { useRecoilValue } from 'recoil';
 import api from '../../api';
 import Scene1page from './Scene1/Scene1page';
@@ -10,7 +9,6 @@ import Scene5page from './Scene5/Scene5page';
 import Intro from '../../assets/intro.mp4';
 import { userEmail } from '../../store/RecoilState';
 import bgMusic from '../../assets/music/simulation_music.mp3';
-// import edMusic from '../../assets/music/ending_music.mp3';
 
 function EmergencyCall() {
 	document.body.style.overflow = 'hidden';
@@ -71,8 +69,8 @@ function EmergencyCall() {
 
 	useEffect(() => {
 		// status 값에 따라 음악 재생 제어
-		if (status >= 0 && status <= 4) {
-			audio.volume = 0.5;
+		if (status === 0) {
+			audio.volume = 0.3;
 			audio.play().catch((error) => console.log('자동 재생 실패:', error));
 		} else {
 			audio.pause();
@@ -90,24 +88,19 @@ function EmergencyCall() {
 		}
 	};
 
-	// const sendNextPageMessage = () => {
-	// 	const message = {
-	// 		type: 'page',
-	// 		content: status + 1,
-	// 	};
-	// 	if (socket) {
-	// 		socket.send(JSON.stringify(message));
-	// 	}
-	// };
+	const sendNextPageMessage = () => {
+		setStatus(status + 1);
+	};
 
 	return (
 		<>
-			{/* <div style={{ position: 'absolute', zIndex: '9999' }}> */}
-			{/* <Button onClick={sendNextPageMessage}> 다음 페이지 이동 </Button> */}
-			{/* <Button onClick={sendKeypadMessage}> 인트로 끝남 </Button> */}
-			{/* </div> */}
-			{/* <Button onClick={sendKeypadMessage}> 인트로 끝남 </Button> */}
-			{/* 1번부터 5번씬 차례대로 status에 따라 */}
+			<button
+				style={{ color: 'rgba(255, 255, 255, 0)', position: 'absolute', bottom: 0, cursor: 'cursor' }}
+				type="button"
+				onClick={sendNextPageMessage}
+			>
+				NEXT
+			</button>
 			{status === 0 && (
 				<video width="100%" height="auto" autoPlay onEnded={sendKeypadMessage}>
 					<source src={Intro} type="video/mp4" />

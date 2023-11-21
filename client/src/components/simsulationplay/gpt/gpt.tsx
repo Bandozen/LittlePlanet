@@ -12,43 +12,56 @@ export const CallGPT = async (prompt: object) => {
 			{
 				role: 'user',
 				content:
-					"1. [GOAL] : Let the firefighters know that your friend is injured. 2. [FIREFIGHTER'S QUESTION] : 네, 119입니다. 무슨 일이시죠? 3. [CHILD'S ANSWER] : 친구가 다쳤어요. ## Use the output in the following JSON format. { success : true ( boolean, whether the child's answer is appropriate or not)} ##",
+					"1. [GOAL] : The child should tell the firefighter that his or her friend was injured. 2. [FIREFIGHTER'S QUESTION] : 네, 119입니다. 무슨 일이시죠? 3. [CHILD'S ANSWER] : 친구가 높은 곳에서 뛰어내려서 많이 다쳤어요 ## Use the output in the following JSON format. { success : true ( boolean, whether the child's answer is appropriate or not)} ##",
 			},
 			{
 				role: 'user',
 				content:
-					"1. [GOAL] : Let the firefighters know that your friend is injured. 2. [FIREFIGHTER'S QUESTION] : 네, 119입니다. 무슨 일이시죠? 3. [CHILD'S ANSWER] : 강아지가 다쳤어요. ## Use the output in the following JSON format. { success : false ( boolean, whether the child's answer is appropriate or not)} ##",
+					"1. [GOAL] : The child should tell the firefighter that his or her friend was injured. 2. [FIREFIGHTER'S QUESTION] : 네, 119입니다. 무슨 일이시죠? 3. [CHILD'S ANSWER] : 잘 모르겠어요. ## Use the output in the following JSON format. { success : false ( boolean, whether the child's answer is appropriate or not)} ##",
 			},
 			{
 				role: 'user',
 				content:
-					"1. [GOAL] : Child must convey their current location (the answer is 소행성로 203) to the firefighters. 2. [FIREFIGHTER'S QUESTION] : 친구가 있는 위치를 말해주세요. 3. [CHILD'S ANSWER] : 소행성로 203이에요. ## Use the output in the following JSON format. { success : true ( boolean, whether the child's answer is appropriate or not)} ##",
+					"1. [GOAL] : The child should tell the firefighter that his or her friend was injured. 2. [FIREFIGHTER'S QUESTION] : 네, 119입니다. 무슨 일이시죠? 3. [CHILD'S ANSWER] : 현재 시간은 3시 30분이에요 ## Use the output in the following JSON format. { success : false ( boolean, whether the child's answer is appropriate or not)} ##",
 			},
 			{
 				role: 'user',
 				content:
-					"1. [GOAL] : Child must convey their current location (the answer is 삼성스토어 소행성지점) to the firefighters. 2. [FIREFIGHTER'S QUESTION] : 친구가 있는 위치를 말해주세요. 3. [CHILD'S ANSWER] : 삼성스토어 소행성지점이에요. ## Use the output in the following JSON format. { success : true ( boolean, whether the child's answer is appropriate or not)} ##",
+					"1. [GOAL] : Child must convey their current location (the answer is 소행성로 203) to the firefighters. 2. [FIREFIGHTER'S QUESTION] : 친구가 있는 위치를 말해줄래요? 3. [CHILD'S ANSWER] : 소행성로 203이에요 ## Use the output in the following JSON format. { success : true ( boolean, whether the child's answer is appropriate or not)} ##",
 			},
 			{
 				role: 'user',
 				content:
-					"1. [GOAL] : Child must convey their current location (the answer is 삼성스토어 소행성지점) to the firefighters. 2. [FIREFIGHTER'S QUESTION] : 친구가 있는 위치를 말해주세요. 3. [CHILD'S ANSWER] : 소행성로 203이에요. ## Use the output in the following JSON format. { success : false ( boolean, whether the child's answer is appropriate or not)} ##",
+					"1. [GOAL] : Child must convey their current location (the answer is 삼성스토어 소행성지점) to the firefighters. 2. [FIREFIGHTER'S QUESTION] : 친구가 있는 위치를 말해줄래요? 3. [CHILD'S ANSWER] : 여기는 삼성스토어 소행성지점이에요 ## Use the output in the following JSON format. { success : true ( boolean, whether the child's answer is appropriate or not)} ##",
 			},
 			{
 				role: 'user',
 				content:
-					"1. [GOAL] : Child must explain to the firefighters where their friend was injured. 2. [FIREFIGHTER'S QUESTION] : 친구가 어디를 다쳤나요? 3. [CHILD'S ANSWER] : 다리에서 피가 많이 나요. ## Use the output in the following JSON format. { success : true ( boolean, whether the child's answer is appropriate or not)} ##",
+					"1. [GOAL] : Child must convey their current location (the answer is 삼성스토어 소행성지점) to the firefighters. 2. [FIREFIGHTER'S QUESTION] : 친구가 있는 위치를 말해줄래요? 3. [CHILD'S ANSWER] : 소행성로 203이에요 ## Use the output in the following JSON format. { success : false ( boolean, whether the child's answer is appropriate or not)} ##",
 			},
 			{
 				role: 'user',
 				content:
-					"1. [GOAL] : Child must explain to the firefighters where their friend was injured. 2. [FIREFIGHTER'S QUESTION] : 친구가 어디를 다쳤나요? 3. [CHILD'S ANSWER] : 머리에서 피가 많이 나요. ## Use the output in the following JSON format. { success : false ( boolean, whether the child's answer is appropriate or not)} ##",
+					"1. [GOAL] : Child must explain to the firefighters where their friend was injured. 2. [FIREFIGHTER'S QUESTION] : 친구가 어디를 다쳤나요? 3. [CHILD'S ANSWER] : 친구가 다리를 다쳐 피가 나요 ## Use the output in the following JSON format. { success : true ( boolean, whether the child's answer is appropriate or not)} ##",
+			},
+			{
+				role: 'user',
+				content:
+					"1. [GOAL] : Child must explain to the firefighters where their friend was injured. 2. [FIREFIGHTER'S QUESTION] : 친구가 어디를 다쳤나요? 3. [CHILD'S ANSWER] : 머리에서 피가 많이 나요 ## Use the output in the following JSON format. { success : false ( boolean, whether the child's answer is appropriate or not)} ##",
+			},
+			{
+				role: 'user',
+				content: `1. [GOAL] : Child must must explain to the firefighters about their identity(the answer is 조찬익) in case the phone is disconnected. If the child's answer does not match the answer, return false. 2. [FIREFIGHTER'S QUESTION] : 전화하고 있는 학생 이름을 말해줄래요? 3. [CHILD'S ANSWER] : 저는 조찬익이에요 ## Use the output in the following JSON format. { success : true ( boolean, whether the child's answer is appropriate or not)} ##`,
+			},
+			{
+				role: 'user',
+				content: `1. [GOAL] : Child must must explain to the firefighters about their identity(the answer is 조찬익) in case the phone is disconnected. If the child's answer does not match the answer, return false. 2. [FIREFIGHTER'S QUESTION] : 전화하고 있는 학생 이름을 말해줄래요? 3. [CHILD'S ANSWER] : 저는 조찬익입니다 ## Use the output in the following JSON format. { success : true ( boolean, whether the child's answer is appropriate or not)} ##`,
 			},
 			prompt,
 		];
 
 		const requestData = {
-			model: 'gpt-3.5-turbo-0613',
+			model: 'gpt-3.5-turbo',
 			messages,
 			max_tokens: 100,
 		};
