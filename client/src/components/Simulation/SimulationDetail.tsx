@@ -18,33 +18,42 @@ function SimulationDetail() {
 	}
 	return (
 		<SimulationDetailWrapper>
-			<div className="detail-info mt-10">
-				<p className="text-xl">{simulation.name}</p>
-			</div>
 			<div className="simulation-item">
-				<div className="simulation-img">
-					<img src={simulation.imageUrl} alt={simulation.name} />
+				<div className="simulation-detail-top">
+					<div className="simulation-img">
+						<img src={simulation.imageUrl} alt={simulation.name} />
+					</div>
+					<div className="detail-info mt-10" />
+					<div className="simulation-data">
+						<div className="detail-info mt-10">
+							<p className="text-xl">{simulation.name}</p>
+						</div>
+						{simulation.description.split('\n').map((line) => (
+							<p className="description" key={line}>
+								{line}
+							</p>
+						))}
+						{simulation.need.split('\n').map((line) => (
+							<p className="need" key={line}>
+								{line}
+							</p>
+						))}
+					</div>
+					<div className="btn-div-play">
+						<SimulationLink to="/simulationmachine">
+							<PlayButton text="시작하기" />
+						</SimulationLink>
+						{showNotYetModal && simulation.id === 1 && (
+							<NotYetModal isOpen={showNotYetModal} onClose={() => setShowNotYetModal(false)} />
+						)}
+					</div>
 				</div>
-				<div className="simulation-data">
-					{simulation.description.split('\n').map((line) => (
-						<p key={line}>{line}</p>
-					))}
-					<div className="need">{simulation.need}</div>
+				<div>
+					<img src={bannerImg} alt={simulation.name} />
 				</div>
-				<div className="btn-div-play">
-					<SimulationLink to="/simulationmachine">
-						<PlayButton text="시작하기" />
-					</SimulationLink>
-					{showNotYetModal && simulation.id === 1 && (
-						<NotYetModal isOpen={showNotYetModal} onClose={() => setShowNotYetModal(false)} />
-					)}
+				<div className="detail-img">
+					<img src={detailImg} alt={simulation.name} />
 				</div>
-			</div>
-			<div>
-				<img src={bannerImg} alt={simulation.name} />
-			</div>
-			<div className="detail-img">
-				<img src={detailImg} alt={simulation.name} />
 			</div>
 		</SimulationDetailWrapper>
 	);
