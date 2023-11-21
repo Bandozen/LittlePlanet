@@ -153,10 +153,10 @@ function SeqTwo(props: ISeqTwoProps) {
 		if (leftHandX >= 1100 && leftHandX <= 1300 && !littleplanetInfo) {
 			littlePlanet();
 		}
-		if (rightHandX >= 200 && rightHandX <= 400 && !buildingInfo) {
+		if (rightHandX >= 300 && rightHandX <= 500 && !buildingInfo) {
 			samsungBuilding();
 		}
-		if (leftHandX >= 200 && leftHandX <= 400 && !buildingInfo) {
+		if (leftHandX >= 300 && leftHandX <= 500 && !buildingInfo) {
 			samsungBuilding();
 		}
 	}, [rightHandX, rightHandY, leftHandX, leftHandY]);
@@ -191,7 +191,7 @@ function SeqTwo(props: ISeqTwoProps) {
 			<div
 				style={{
 					position: 'absolute',
-					left: `200px`,
+					left: `300px`,
 					bottom: '50px',
 					width: '200px',
 					height: '480px',
