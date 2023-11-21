@@ -2,7 +2,6 @@ import React, { useState, useEffect } from 'react';
 import { Alert, Typography } from '@material-tailwind/react';
 import { PhoneArrowUpRightIcon } from '@heroicons/react/24/outline';
 import { useRecoilValue } from 'recoil';
-import api from '../../../api';
 import { CallGPT } from '../gpt/gpt';
 import { userEmail } from '../../../store/RecoilState';
 import { Scene1Wrapper, WrongWrapper } from './style';
@@ -14,13 +13,6 @@ import coach from '../../../assets/images/coach.png';
 import coachNarr from '../../../assets/music/coach_1.mp3';
 import coachWrongNarr from '../../../assets/music/coach_1_wrong.mp3';
 
-type Content = {
-	contentsUrlName: string;
-	contentsUrlAddress: string;
-	contentsUrlType: number;
-	contentsUrlNum: number;
-};
-
 // 친구가 다쳤어요.
 function Scene1page() {
 	document.body.style.overflow = 'hidden';
@@ -29,19 +21,6 @@ function Scene1page() {
 	const [wrongNarrAudio] = useState(new Audio(wrongNarr));
 	const [coachAudio] = useState(new Audio(coachNarr));
 	const [coachWrong] = useState(new Audio(coachWrongNarr));
-
-	// 1. 화면
-	// asset 불러오기.
-	const [contentsData, setContentsData] = useState<Content[]>([]);
-	const fetchData = async () => {
-		try {
-			const contentsResponse = await api.get('/contents?type=11&num=1');
-			setContentsData(contentsResponse.data);
-			console.log(contentsData);
-		} catch (e) {
-			console.log(e);
-		}
-	};
 
 	// 지시문 Alert 5초 타이머 걸기 위함
 	const [showAlert, setShowAlert] = useState(true);
@@ -73,7 +52,6 @@ function Scene1page() {
 	// 처음 컴포넌트가 마운트되면,
 	useEffect(() => {
 		// asset 불러오고
-		fetchData();
 
 		// 소켓 연결
 		const newSocket = new WebSocket('wss://k9c203.p.ssafy.io:17777');
@@ -145,11 +123,6 @@ function Scene1page() {
 			setShowAlert(false);
 			newSocket.send(JSON.stringify({ type: 'narr', content: 1 }));
 		};
-		// 3초 타이머 설정해서 Alert
-		// const timer = setTimeout(() => {
-		// 	setShowAlert(false);
-		// 	newSocket.send(JSON.stringify({ type: 'narr', content: 1 }));
-		// }, 3000);
 
 		// 컴포넌트 닫히면 소켓, 타이머 초기화
 		return () => {
@@ -175,7 +148,7 @@ function Scene1page() {
 			if (text) {
 				const prompt = {
 					role: 'user',
-					content: `1. [GOAL] : Let the firefighters know that your friend is injured. 2. [FIREFIGHTER'S QUESTION] : 네, 119입니다. 무슨 일이시죠? 3. [CHILD'S ANSWER] : ${text} ## Use the output in the JSON format. ##`,
+					content: `1. [GOAL] : The child should tell the firefighter that his or her friend was injured. 2. [FIREFIGHTER'S QUESTION] : 네, 119입니다. 무슨 일이시죠? 3. [CHILD'S ANSWER] : ${text} ## Use the output in the JSON format. ##`,
 				};
 
 				const textLength = text.length;
@@ -230,8 +203,19 @@ function Scene1page() {
 		};
 	}, [isWrong]);
 
+	// const sendNextPageMessage = () => {
+	// 	const message = {
+	// 		type: 'page',
+	// 		content: 2,
+	// 	};
+	// 	if (socket) {
+	// 		socket.send(JSON.stringify(message));
+	// 	}
+	// };
+
 	return fail ? (
 		<WrongWrapper>
+			{/* <Button onClick={sendNextPageMessage}>NEXT</Button> */}
 			<div className="wrong-container">
 				<Alert className="flex justify-center" variant="gradient" open={wrongAlert && !text}>
 					<div className="flex flex-row items-center m-2">
@@ -262,7 +246,7 @@ function Scene1page() {
 			) : (
 				<SimulationChat chatNumber={text ? 2 : 1} text={text || '네, 119입니다. 무슨 일이세요?'} />
 			)}
-			<div style={{ position: 'absolute', left: `${left}px`, bottom: '25px', width: '480px', height: '360px' }}>
+			<div style={{ position: 'absolute', left: `${left}px`, bottom: '25px', width: '640px', height: '480px' }}>
 				<CharacterDisplay />
 			</div>
 		</Scene1Wrapper>

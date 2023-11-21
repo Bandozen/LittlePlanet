@@ -104,7 +104,7 @@ function SeqThree(props: ISeqThreeProps) {
 			if (text) {
 				const prompt = {
 					role: 'user',
-					content: `1. [GOAL] : Let the firefighters know where you are. (the answer is ${address}) 2. [FIREFIGTER'S QUESTION] : 학생, 지금 어디에요? 3. [CHILD'S ANSWER] : ${text} ## Use the output in the JSON format. ##`,
+					content: `1. [GOAL] : Child must convey their current location(the answer is ${address}) to the firefighters. 2. [FIREFIGTER'S QUESTION] : 친구가 있는 위치를 말해줄래요? 3. [CHILD'S ANSWER] : ${text} ## Use the output in the JSON format. ##`,
 				};
 
 				const textLength = text.length;
@@ -151,8 +151,19 @@ function SeqThree(props: ISeqThreeProps) {
 		};
 	}, [isWrong]);
 
+	// const sendNextPageMessage = () => {
+	// 	const message = {
+	// 		type: 'page',
+	// 		content: 3,
+	// 	};
+	// 	if (socket) {
+	// 		socket.send(JSON.stringify(message));
+	// 	}
+	// };
+
 	return (
 		<SeqThreeWrapper>
+			{/* <Button onClick={sendNextPageMessage}>NEXT</Button> */}
 			{alert && (
 				<div className="alert-container">
 					<Alert>
