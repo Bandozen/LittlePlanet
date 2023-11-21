@@ -6,7 +6,7 @@ const simulations: Simulation[] = [
 		name: '119에 신고해요',
 		description:
 			'안전한 생활을 위해 꼭 필요한 긴급구조 119!\n아이들이 위급한 상황을 목격했을 때,\n직접 119에 전화해 볼 수 있습니다.',
-		need: '준비물 : 신고를 도와줄 스마트폰',
+		need: '※ 교과서 "안전한생활" 2단원 "119에 신고해요" 연계',
 		imageUrl:
 			'https://littleplanet.s3.ap-northeast-2.amazonaws.com/image/119%EC%97%90+%EC%8B%A0%EA%B3%A0%ED%95%B4%EC%9A%94.png',
 	},
