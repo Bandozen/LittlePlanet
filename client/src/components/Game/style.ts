@@ -6,7 +6,16 @@ export const GameWrapper = styled.div`
 	display: flex;
 	flex-direction: column;
 	align-items: center;
-
+	.game-banner {
+		display: flex;
+		align-items: center;
+		flex-direction: row;
+		justify-content: center;
+	}
+	.game-banner img {
+		// height: 250px;
+		width: 90%;
+	}
 	.game-item {
 		display: flex;
 		padding: 20px 20px;

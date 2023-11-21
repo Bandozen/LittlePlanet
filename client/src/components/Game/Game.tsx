@@ -3,6 +3,7 @@ import PlayButton from 'components/Button/PlayButton';
 import DetailButton from 'components/Button/DetailButton';
 import { GameWrapper } from './style';
 import games from '../../dummys/games';
+import bannerImg from '../../assets/images/banner2.png';
 import NotYetModal from '../Simulation/NotYetModal/NotYetModal';
 
 function Game() {
@@ -14,10 +15,8 @@ function Game() {
 
 	return (
 		<GameWrapper>
-			<div className="info mt-10 mb-5">
-				<p>
-					우리 아이 게임으로 생활지식<span className="colored"> 쑥쑥</span>!
-				</p>
+			<div className="mt-5 game-banner">
+				<img src={bannerImg} alt="소행성소개배너" />{' '}
 			</div>
 			{games.map((game) => (
 				<div key={game.id} className="game-item">
