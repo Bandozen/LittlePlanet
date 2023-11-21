@@ -55,24 +55,35 @@ export const SimulationDetailWrapper = styled.div`
 	align-items: center;
 
 	.simulation-item {
+		// display: flex;
+		padding-top: 20px;
+	}
+	.simulation-detail-top {
 		display: flex;
-		padding: 20px 20px;
+		justify-content: space-between;
+		margin-bottom: 20px;
 	}
 	.simulation-img img {
 		width: 300px;
 		height: auto;
-		padding: 0px 20px 0px 20px;
+		padding: 0px 20px 0px 0px;
 	}
 	.simulation-data {
 		width: 500px;
 		padding: 0px 20px 0px 20px;
 	}
-	.simulation-data p {
+	.description {
 		padding: 0px;
 		margin: 0px;
 	}
+	// .simulation-data need {
+	// 	padding: 0px;
+	// 	margin-top: 10px;
+	// }
 	.need {
 		margin-top: 10px;
+		font-weight: bold;
+		font-size: 1.3rem;
 	}
 	h2 {
 		margin-top: 0px;
@@ -80,7 +91,7 @@ export const SimulationDetailWrapper = styled.div`
 	.detail-info p {
 		font-size: 2rem;
 		font-weight: bold;
-		padding: 0px 0px 0px 30px;
+		padding: 0px 0px 30px 0px;
 	}
 	span.colored {
 		color: #188eb7;
@@ -89,7 +100,11 @@ export const SimulationDetailWrapper = styled.div`
 		margin: 10px;
 	}
 	.btn-div-play {
+		display: flex;
+		flex-direction: column;
 		margin: 10px;
+		align-items: ceter;
+		justify-content: center;
 	}
 	.detail-text {
 		margin: 10px;
