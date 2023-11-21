@@ -18,7 +18,6 @@ export const Wrapper = styled.div`
 	.image-wrapper {
 		position: relative;
 		border-radius: 10px;
-		margin: 20px;
 		width: 640px;
 		height: 480px;
 	}
