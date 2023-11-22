@@ -51,6 +51,7 @@ function Scene5Page() {
 	const playEdMusic = () => {
 		setShowSimulationChat(false);
 		setshowEndingCredit(true);
+		edAudio.volume = 0.3;
 		edAudio.play().catch((error) => console.log('자동 재생 실패:', error));
 		edAudio.onended = () => {
 			edAudio.pause();
