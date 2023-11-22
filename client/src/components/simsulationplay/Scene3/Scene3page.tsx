@@ -166,7 +166,7 @@ function Scene3page() {
 			if (text) {
 				const prompt = {
 					role: 'user',
-					content: `1. [GOAL] : Child must explain to the firefighters where their friend was injured. 2. [FIREFIGHTER'S QUESTION] : 친구가 어디를 다쳤나요? 3. [CHILD'S ANSWER] : ${text} ## Use the output in the JSON format. ##`,
+					content: `1. [GOAL] : The child must explain to the firefighter that his friend was injured on his leg. 2. [FIREFIGHTER'S QUESTION] : 친구가 어디를 다쳤나요? 3. [CHILD'S ANSWER] : ${text} ## Use the output in the JSON format. ##`,
 				};
 
 				const textLength = text.length;
