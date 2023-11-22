@@ -8,7 +8,7 @@ import Scene4page from './Scene4/Scene4page';
 import Scene5page from './Scene5/Scene5page';
 import Intro from '../../assets/intro.mp4';
 import { userEmail } from '../../store/RecoilState';
-import bgMusic from '../../assets/music/simulation_music.mp3';
+// import bgMusic from '../../assets/music/simulation_music.mp3';
 
 function EmergencyCall() {
 	document.body.style.overflow = 'hidden';
@@ -65,18 +65,17 @@ function EmergencyCall() {
 	}, []);
 
 	// Audio 객체를 상태로 관리
-	const [audio] = useState(new Audio(bgMusic));
+	// const [audio] = useState(new Audio(bgMusic));
 
-	useEffect(() => {
-		// status 값에 따라 음악 재생 제어
-		if (status === 0) {
-			audio.volume = 0.3;
-			audio.play().catch((error) => console.log('자동 재생 실패:', error));
-		} else {
-			audio.pause();
-			audio.currentTime = 0; // 재생 위치를 처음으로 되돌림
-		}
-	}, [status, audio]);
+	// useEffect(() => {
+	// 	if (status === 0) {
+	// 		audio.volume = 0.3;
+	// 		audio.play().catch((error) => console.log('자동 재생 실패:', error));
+	// 	} else {
+	// 		audio.pause();
+	// 		audio.currentTime = 0; // 재생 위치를 처음으로 되돌림
+	// 	}
+	// }, [status, audio]);
 
 	const sendKeypadMessage = () => {
 		const message = {
