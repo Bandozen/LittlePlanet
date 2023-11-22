@@ -104,7 +104,7 @@ function SeqThree(props: ISeqThreeProps) {
 			if (text) {
 				const prompt = {
 					role: 'user',
-					content: `1. [GOAL] : Child must convey their current location(the answer is ${address}) to the firefighters. 2. [FIREFIGTER'S QUESTION] : 친구가 있는 위치를 말해줄래요? 3. [CHILD'S ANSWER] : ${text} ## Use the output in the JSON format. ##`,
+					content: `1. [GOAL] : The child must convey their current location(that is ${address}) to the firefighters. 2. [FIREFIGTER'S QUESTION] : 친구가 있는 위치를 말해줄래요? 3. [CHILD'S ANSWER] : ${text} ## Use the output in the JSON format. ##`,
 				};
 
 				const textLength = text.length;
