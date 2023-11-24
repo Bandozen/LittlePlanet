@@ -76,7 +76,7 @@ function SeqTwo(props: ISeqTwoProps) {
 
 	useEffect(() => {
 		// 소켓 연결 부분(ip주소 및 배포주소)
-		const newSocket = new WebSocket('wss://k9c203.p.ssafy.io:17777');
+		const newSocket = new WebSocket('wss://littleplanet.kids:17777');
 
 		newSocket.onopen = () => {
 			setSocket(newSocket);
@@ -96,7 +96,7 @@ function SeqTwo(props: ISeqTwoProps) {
 			console.log('WebSocket connection closed.');
 		};
 
-		const moveSocket = new WebSocket('wss://k9c203.p.ssafy.io:17776');
+		const moveSocket = new WebSocket('wss://littleplanet.kids:17776');
 
 		moveSocket.onopen = () => {
 			console.log('WebSocket connection established.');

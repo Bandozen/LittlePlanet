@@ -52,7 +52,7 @@ export default function Main({navigation}: MainProps) {
         setIsLoggedin(true);
         // 로그인 성공 후 WebSocket 연결 초기화
         // const newSocket = new WebSocket('ws://192.168.100.85:7777');
-        const newSocket = new WebSocket('wss://k9c203.p.ssafy.io:17777');
+        const newSocket = new WebSocket('wss://littleplanet.kids:17777');
 
         newSocket.onopen = () => {
           console.log('웹소켓 연결');

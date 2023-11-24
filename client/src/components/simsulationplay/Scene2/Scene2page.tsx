@@ -49,7 +49,7 @@ function Scene2page(props: IScene2pageProps) {
 
 	useEffect(() => {
 		// 소켓 연결 부분(ip주소 및 배포주소)
-		const newSocket = new WebSocket('wss://k9c203.p.ssafy.io:17777');
+		const newSocket = new WebSocket('wss://littleplanet.kids:17777');
 
 		newSocket.onopen = () => {
 			setSocket(newSocket);

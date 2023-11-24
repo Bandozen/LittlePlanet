@@ -10,8 +10,6 @@ const server = http.createServer((req, res) => {
   res.setHeader(
     "Access-Control-Allow-Origin",
     "http://localhost:3000",
-    "http://k9c203.p.ssafy.io:3000",
-    "https://k9c203.p.ssafy.io",
     "http://littleplanet.kids:3000",
     "https://littleplanet.kids"
   );

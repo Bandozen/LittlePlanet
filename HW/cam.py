@@ -10,7 +10,7 @@ load_dotenv()
 
 email = sys.argv[1]
 
-server_ip = 'k9c203.p.ssafy.io'
+server_ip = os.getenv('SERVER_IP')
 server_port = 12345
 socket_client = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
 socket_client.connect((server_ip, server_port))
