@@ -64,7 +64,7 @@ function Scene3page() {
 	}
 
 	useEffect(() => {
-		const newSocket = new WebSocket('wss://k9c203.p.ssafy.io:17777');
+		const newSocket = new WebSocket('wss://littleplanet.kids:17777');
 
 		newSocket.onopen = () => {
 			console.log('WebSocket connection established.');
@@ -79,7 +79,7 @@ function Scene3page() {
 			console.log('WebSocket connection closed.');
 		};
 
-		const moveSocket = new WebSocket('wss://k9c203.p.ssafy.io:17776');
+		const moveSocket = new WebSocket('wss://littleplanet.kids:17776');
 
 		moveSocket.onopen = () => {
 			console.log('WebSocket connection established.');

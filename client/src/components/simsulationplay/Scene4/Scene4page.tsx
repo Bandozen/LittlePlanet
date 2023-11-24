@@ -70,7 +70,7 @@ function Scene4page() {
 		fetchData();
 
 		// 소켓 연결
-		const newSocket = new WebSocket('wss://k9c203.p.ssafy.io:17777');
+		const newSocket = new WebSocket('wss://littleplanet.kids:17777');
 
 		// 소켓 열리면
 		newSocket.onopen = () => {
@@ -105,7 +105,7 @@ function Scene4page() {
 			console.log('WebSocket connection closed.');
 		};
 
-		const moveSocket = new WebSocket('wss://k9c203.p.ssafy.io:17776');
+		const moveSocket = new WebSocket('wss://littleplanet.kids:17776');
 
 		moveSocket.onopen = () => {
 			console.log('WebSocket connection established.');

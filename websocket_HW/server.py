@@ -12,7 +12,7 @@ load_dotenv()
 server_ip = os.getenv('SERVER_IP')
 server_port = int(os.getenv('SERVER_PORT'))
 
-sio = socketio.Server(cors_allowed_origins=["http://localhost:3000", "http://k9c203.p.ssafy.io:3000", "https://k9c203.p.ssafy.io", "http://littleplanet.kids:3000", "https://littleplanet.kids"])
+sio = socketio.Server(cors_allowed_origins=["http://localhost:3000", "http://littleplanet.kids:3000", "https://littleplanet.kids"])
 app = socketio.WSGIApp(sio)
 
 # 이미지 업데이트 주기 (초)

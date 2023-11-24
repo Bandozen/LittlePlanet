@@ -32,7 +32,7 @@ function EmergencyCall() {
 	useEffect(() => {
 		fetchData();
 
-		const newSocket = new WebSocket('wss://k9c203.p.ssafy.io:17777');
+		const newSocket = new WebSocket('wss://littleplanet.kids:17777');
 		// const newSocket = new WebSocket('ws://localhost:7777');
 
 		newSocket.onopen = () => {
